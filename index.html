@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 
   /* ===================================================
@@ -358,12 +360,43 @@
   /* ===================================================
      ZEITSTRAHL & EVENT-FENSTER
      =================================================== */
+  .timeline__search-container{
+    margin: 20px 0 14px 14px;
+  }
+
+  .timeline__search-input{
+    width: 100%;
+    padding: 12px 16px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: #ffffff;
+    border: 1px solid rgba(43,33,64,0.12);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 6px rgba(43,33,64,0.04);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .timeline__search-input:focus{
+    border-color: var(--coral);
+    box-shadow: 0 0 0 3px rgba(255,111,94,0.15);
+  }
+
+  .timeline__no-results{
+    color: var(--ink-soft);
+    font-style: italic;
+    font-size: 0.95rem;
+    padding: 12px 0;
+    display: none;
+  }
+
   .timeline__bounds{
     display: flex;
     justify-content: space-between;
     font-size: 0.8rem;
     color: var(--ink-soft);
-    margin: 24px 0 20px 14px;
+    margin: 14px 0 20px 14px;
     padding-bottom: 8px;
     border-bottom: 1px dashed rgba(43,33,64,0.12);
   }
@@ -897,6 +930,129 @@
     .tab{ padding: 12px 16px; }
   }
 
+
+
+  /* --- Rubbelkarte für Poesie --- */
+  .scratch-card{
+    position:relative;
+    width:100%;
+    min-height:180px;
+    border-radius:16px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#fffaf2,#f4e7d3);
+    box-shadow:0 8px 24px rgba(43,33,64,.12);
+    user-select:none;
+    -webkit-user-select:none;
+    touch-action:none;
+  }
+  .scratch-card__message{
+    min-height:180px;
+    padding:32px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-family:var(--font-display);
+    font-size:clamp(1.15rem,3vw,1.55rem);
+    line-height:1.45;
+    color:var(--ink);
+  }
+  .scratch-card__hint{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    z-index:2;
+    pointer-events:none;
+    color:#fff;
+    font-family:var(--font-body);
+    font-weight:700;
+    font-size:.95rem;
+    letter-spacing:.03em;
+    text-shadow:0 1px 3px rgba(0,0,0,.35);
+    transition:opacity .25s ease;
+  }
+  .scratch-card canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:3;
+    cursor:crosshair;
+    touch-action:none;
+  }
+  .scratch-card.is-revealed canvas{
+    pointer-events:none;
+    opacity:0;
+    transition:opacity .45s ease;
+  }
+  .scratch-card.is-revealed .scratch-card__hint{ opacity:0; }
+  .confetti-piece{
+    position:fixed;
+    z-index:9999;
+    width:8px;
+    height:13px;
+    pointer-events:none;
+    animation:confettiFall 1.35s cubic-bezier(.2,.8,.3,1) forwards;
+  }
+  
+  .letter-rain-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: var(--paper);
+    animation: overlayFade 1.6s ease-in-out forwards;
+  }
+  .falling-letter{
+    position: absolute;
+    width: 140px;
+    height: 95px;
+    animation: elegantFall 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  .falling-letter-shape{
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(160deg, #ffffff, #FBF1E4);
+    border: 1.5px solid rgba(43,33,64,0.1);
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(43,33,64,0.18);
+    position: relative;
+  }
+  .falling-letter-shape::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    background: linear-gradient(135deg, var(--coral), var(--mustard));
+    clip-path: polygon(0 0, 100% 0, 100% 65%, 50% 100%, 0 65%);
+  }
+  @keyframes elegantFall{
+    0%{ transform: translateY(-300px) rotateZ(var(--letter-rot)) scaleY(0.8); opacity: 0; }
+    15%{ opacity: 1; }
+    85%{ opacity: 1; }
+    100%{ transform: translateY(150vh) rotateZ(var(--letter-rot)) scaleY(1); opacity: 0; }
+  }
+  @keyframes overlayFade{
+    0%{ opacity: 0; }
+    20%{ opacity: 1; }
+    80%{ opacity: 1; }
+    100%{ opacity: 0; visibility: hidden; }
+  }
+
+  .letters-empty-view{
+    text-align: center;
+    padding: 60px 28px;
+    animation: fadeInUp 0.6s ease 0.4s both;
+  }
+  .letters-empty-view__icon{ font-size: 4.5rem; margin-bottom: 20px; display: block; animation: float 3s ease-in-out infinite; }
+  @keyframes float{ 0%, 100%{ transform: translateY(0); } 50%{ transform: translateY(-12px); } }
+  .letters-empty-view__title{ font-family: var(--font-display); font-size: 1.4rem; margin: 0 0 12px; color: var(--ink); }
+  .letters-empty-view__text{ color: var(--ink-soft); font-size: 0.95rem; margin: 0; max-width: 45ch; margin-left: auto; margin-right: auto; line-height: 1.6; }
+  @keyframes fadeInUp{ from{ opacity: 0; transform: translateY(20px); } to{ opacity: 1; transform: translateY(0); } }
+
 </style>
 </head>
 <body class="intro-active">
@@ -966,10 +1122,15 @@
       <button class="back-link" data-target="startseite">← Zur Startseite</button>
       <h2 class="page__title">Zeitstrahl</h2>
       
+      <div class="timeline__search-container">
+        <input type="text" id="timelineSearch" class="timeline__search-input" placeholder="🔍 Nach Event oder Datum suchen...">
+      </div>
+
       <div class="timeline__bounds">
         <span id="timelineStartLabel">13. Juni 2024</span>
         <span id="timelineEndLabel">12. Sep 2026</span>
       </div>
+      <div class="timeline__no-results" id="timelineNoResults">Keine passenden Events gefunden.</div>
       <div class="timeline__line" id="timelineLine"></div>
     </section>
 
@@ -1030,19 +1191,13 @@
           <span class="info-item__label">🕐 Zeitunterschied</span>
           <span class="info-item__value" id="timeDiffValue">–</span>
         </div>
-        <div class="info-item">
-          <span class="info-item__label">🕑 Uhrzeit bei mir gerade</span>
-          <span class="info-item__value" id="localTimeValue">–</span>
-        </div>
-        <div class="info-item">
-          <span class="info-item__label">📅 Bis zum Wiedersehen</span>
-          <span class="info-item__value" id="daysUntilValue">–</span>
-        </div>
+
         <div class="info-item">
           <span class="info-item__label">💗 Wie sehr ich dich vermisse</span>
           <span class="info-item__value">unendlich sehr</span>
         </div>
       </div>
+      <div id="australienMap" style="width: 100%; height: 400px; border-radius: 14px; margin-top: 24px; box-shadow: 0 2px 6px rgba(43, 33, 64, 0.06), 0 16px 32px rgba(43, 33, 64, 0.14);"></div>
     </section>
 
     <section class="page page--fullscreen" id="sonstiges">
@@ -1213,27 +1368,422 @@
       ],
       suesseTexte: {
         nachrichten: [
-          "Ich hab gerade an dich gedacht.",
-          "Du fehlst mir gerade besonders.",
-          "Wie geht's dir gerade, mein Schatz?",
-          "Kleine Erinnerung: Ich liebe dich.",
-          "Was machst du gerade so Schönes?"
+          "Du bist mein Lieblingsgedanke an jedem Tag.",
+          "Wollte dir nur sagen, dass du toll bist.",
+          "Mein Tag ist einfach besser, wenn du da bist.",
+          "Ein kurzes Lächeln für deinen Tag – ich liebe dich!",
+          "Danke, dass du mein Leben so schön machst.",
+          "Ich habe gerade an dich gedacht und musste lächeln.",
+          "Du machst gewöhnliche Tage besonders.",
+          "Mein Herz schlägt einfach schneller bei dir.",
+          "Schön, dass es dich in meinem Leben gibt.",
+          "Du bist mein liebster Mensch.",
+          "Wollte dir nur eine kleine Dosis Liebe schicken.",
+          "Bei dir fühlt sich alles so leicht an.",
+          "Ich bin so froh, dich an meiner Seite zu haben.",
+          "Du bist mein kleines Stückchen Glück.",
+          "Mit dir ist alles einfach schöner.",
+          "Mein Herz gehört ganz dir.",
+          "Du bringst mich immer wieder zum Strahlen.",
+          "Ich liebe die Art, wie du mich ansiehst.",
+          "Danke, dass du genau so bist, wie du bist.",
+          "Du bist das Beste an meinem Tag.",
+          "Ein kleiner Gruß von jemandem, der dich über alles liebt.",
+          "Wenn ich an dich denke, geht die Sonne auf.",
+          "Du bist mein persönliches Highlight.",
+          "Einfach so: Ich liebe dich.",
+          "Du bist mein Ruhepol im Chaos.",
+          "Guten Morgen! Der Tag ist schön, weil du da bist.",
+          "Wach werden und wissen, dass es dich gibt = perfekter Morgen.",
+          "Start deinen Tag mit dem Wissen, wie sehr du geliebt wirst.",
+          "Ich wünsche dir den schönsten Tag, mein Schatz.",
+          "Mein erster Gedanke heute Morgen? Du.",
+          "Guten Morgen, Lieblingsmensch!",
+          "Möge dein Tag genauso strahlen wie dein Lächeln.",
+          "Mit dir im Kopf schläft es sich am besten.",
+          "Schlaf gut, träum von uns!",
+          "Gute Nacht, mein Herz.",
+          "Ich nehme dich gedanklich mit in den Schlaf.",
+          "Bis morgen in meinen Träumen.",
+          "Gute Nacht, du bedeutest mir die Welt.",
+          "Schliesse die Augen und spür meine Umarmung.",
+          "Schlaf schön, mein Lieblingsgedanke.",
+          "In deinen Armen fühle ich mich zu Hause.",
+          "Du bist mein sicherer Hafen.",
+          "Mit dir möchte ich alt werden.",
+          "Du machst mich zu einem besseren Menschen.",
+          "In deinen Augen habe ich mein Glück gefunden.",
+          "Du bist das beste Kapitel in meiner Geschichte.",
+          "Ich würde dich jedes Mal wieder wählen.",
+          "Meine Liebe zu dir wächst jeden Tag ein bisschen mehr.",
+          "Du bist das Puzzleteil, das mir immer gefehlt hat.",
+          "Egal was kommt, gemeinsam schaffen wir alles.",
+          "Mit dir vergeht die Zeit wie im Flug.",
+          "Du bist mein Zuhause, egal wo wir sind.",
+          "Ich liebe dich mehr als Worte sagen können.",
+          "Du bist der Ort, an den ich immer zurückkehren möchte.",
+          "An deiner Seite bin ich genau da, wo ich hingehöre.",
+          "Meine Welt ist viel farbenfroher, seit du da bist.",
+          "Du bist die schönste Überraschung meines Lebens.",
+          "Ich liebe dich nicht nur für das, was du bist, sondern wer ich mit dir bin.",
+          "Deine Liebe ist mein größtes Geschenk.",
+          "Du hast mein Herz im Sturm erobert.",
+          "Du bist süßer als jede Schokolade.",
+          "Ich habe eine Schwäche für dich... und sie wird täglich größer!",
+          "Wenn du ein Gemüsegarten wärst, wärst du meine Lieblingsbohne.",
+          "Du bist der Grund, warum ich dauernd auf mein Handy lächele.",
+          "Mein Herz macht Sprünge, sobald du den Raum betrittst.",
+          "Du bist die Kirsche auf meiner Torte.",
+          "Ich liebe dich mehr als meinen ersten Kaffee am Morgen.",
+          "Du bist schuld daran, dass ich unkonzentriert bin.",
+          "Meine Lieblingsbeschäftigung? Zeit mit dir verbringen.",
+          "Ich würde sogar Pommes mit dir teilen.",
+          "Du bist mein Lieblingsmensch zum Nichtstun.",
+          "Bitte bleib genau so bezaubernd, wie du bist.",
+          "Achtung: Diese Nachricht enthält eine Portion Liebe!",
+          "Bei dir bekomme ich nie genug.",
+          "Du bist wie mein Lieblingssong: Ich kann nie genug von dir hören.",
+          "Danke, dass du immer an mich glaubst.",
+          "Ich schätze alles, was du für uns tust.",
+          "Danke für deine Geduld und deine Wärme.",
+          "Bei dir kann ich einfach ich selbst sein.",
+          "Danke, dass du mein Leben so viel schöner machst.",
+          "Deine Nähe tut meiner Seele gut.",
+          "Danke für jedes Lächeln, das du mir schenkst.",
+          "Ich bin so stolz auf dich.",
+          "Danke für die vielen kleinen Glücksmomente mit dir.",
+          "Du bist mein bester Freund und meine große Liebe zugleich.",
+          "Mit dir an meiner Seite fühle ich mich stark.",
+          "Danke, dass du immer meine Hand hältst.",
+          "Ich liebe es, wie wir zusammen lachen.",
+          "Du machst mein Leben vollkommen.",
+          "Danke für dein offenes Ohr und dein warmes Herz.",
+          "Für immer du.",
+          "Mein Herz!",
+          "Ewig dein.",
+          "Einzigartig.",
+          "Mein Glück.",
+          "Vermisse dich.",
+          "Unendlich geliebt.",
+          "Nur du.",
+          "Mein Zuhause.",
+          "Unendlich dankbar.",
+          "Die Kilometer ändern nichts daran, dass mein Herz bei dir ist.",
+          "Ich vermisse deine Nähe.",
+          "Ein Tag ohne dich ist ein Tag zu lang.",
+          "Wenn ich die Augen schließe, bist du ganz nah bei mir.",
+          "Ich würde jetzt alles geben für eine Umarmung von dir.",
+          "Du fehlst mir hier an meiner Seite.",
+          "Mein Kissen riecht noch nach dir – ich vermisse dich so.",
+          "Die Entfernung ist hart, aber du bist es absolut wert.",
+          "Ich wünschte, du wärst genau jetzt hier.",
+          "Mein Herz reist jeden Tag zu dir.",
+          "Ein Stück von mir ist immer dort, wo du bist.",
+          "Ich zähle die Stunden, bis ich dich wieder im Arm halte.",
+          "Die Distanz zeigt mir nur, wie tief meine Gefühle sind.",
+          "Ohne dich ist alles nur halb so schön.",
+          "Ich schicke dir eine riesige Umarmung durch die Luft!",
+          "Kein Kilometer der Welt kann verhindern, dass ich an dich denke.",
+          "Du fehlst mir bei jedem Schritt.",
+          "Dein Platz in meinem Bett ist viel zu leer.",
+          "Ich wünschte, ich könnte mich zu dir beamen.",
+          "Vermisse dein Lächeln aus der Nähe.",
+          "Nur noch X Tage, bis ich dich wieder küssen darf!",
+          "Das beste Gefühl? Wenn der Countdown abläuft.",
+          "Ich kann das nächste Wiedersehen kaum erwarten!",
+          "Bald habe ich dich wieder ganz für mich.",
+          "Jeder vergangene Tag bringt mich dir einen Schritt näher.",
+          "Wenn wir uns wiedersehen, lasse ich dich so schnell nicht los.",
+          "Ich plane gedanklich schon unser nächstes Date.",
+          "Der Moment am Bahnhof/Flughafen wird der beste des Monats.",
+          "Vorfreude ist die schönste Freude – besonders auf dich!",
+          "Bald ist die Zeit des Vermissens wieder vorbei.",
+          "Ich mache schon eine Liste von allen Dingen, die wir tun werden!",
+          "Noch ein paar Mal schlafen, dann bist du da.",
+          "Das Wiedersehen wird jede Sekunde des Wartens wert sein.",
+          "Das Schönste am Warten ist zu wissen, auf wen man wartet.",
+          "Bald kann ich deine Hand endlich wieder richtig halten.",
+          "Mein Koffer packt sich im Kopf schon von alleine.",
+          "Bald tauschen wir das Display gegen die Realität!",
+          "Die Vorfreude lässt mein Herz heute schon hüpfen.",
+          "Nur noch wenige Sonnenuntergänge ohne dich.",
+          "Ich zähle nicht die Kilometer, sondern die Tage bis zu dir.",
+          "Guten Morgen! Ich schicke dir einen Kuss über alle Kilometer hinweg.",
+          "Der erste Gedanke beim Aufwachen fliegt direkt zu dir.",
+          "Trotz der Distanz wünsche ich dir den schönsten Morgen!",
+          "Ich wache auf und vermisse dich, liebe dich aber umso mehr.",
+          "Möge dein Tag voller schöner Momente sein – ich denke an dich!",
+          "Guten Morgen, mein Stern in der Ferne.",
+          "Schade, dass wir nicht zusammen aufwachen können, aber bald wieder!",
+          "Gute Nacht! Schau in die Sterne, wir sehen dieselben an.",
+          "Träum süß von mir, so wie ich von dir träume.",
+          "Gute Nacht – die Entfernung schrumpft in unseren Träumen.",
+          "Ich schicke dir einen Gute-Nacht-Kuss durch die Luft.",
+          "Schlaf gut, auch wenn du Kilometer entfernt bist.",
+          "In meinen Träumen gibt es keine Distanz.",
+          "Gute Nacht, mein Schatz. Bald wachen wir wieder nebeneinander auf.",
+          "Schließe die Augen und stell dir vor, ich liege neben dir.",
+          "Wir schaffen das, egal wie groß die Entfernung ist!",
+          "Unsere Liebe ist starker als jeder Kilometer.",
+          "Entfernung kann Körper trennen, aber niemals unsere Herzen.",
+          "Die Distanz ist nur vorübergehend, unsere Liebe bleibt.",
+          "Egal wie weit weg du bist: Du bist mein Zuhause.",
+          "Die schwersten Wege führen zu den schönsten gemeinsamen Zeiten.",
+          "Zusammen schaffst du und ich jede Hürde.",
+          "Warten lohnt sich, wenn es auf die richtige Person ist.",
+          "Die Entfernung prüft uns nur, um zu zeigen, wie stark wir sind.",
+          "Wir schreiben gerade die schönste Geschichte, auch mit Abstand.",
+          "Gib nicht auf – das nächste Kapitel gehört ganz uns.",
+          "Lass dich von den Kilometern nicht entmutigen, ich bin immer bei dir.",
+          "Unsere Verbindung braucht keine Nähe, um echt zu sein.",
+          "Wir sind ein Team, egal wie viele Länder dazwischen liegen.",
+          "Jeder Tag geschaffte Distanz ist ein Sieg für uns.",
+          "Du bist der schönste Anblick auf meinem Handydisplay!",
+          "Ich liebe dich mehr als mein stabiles WLAN-Signal.",
+          "Danke, dass du mein Datenvolumen jeden Monat aufbrauchst!",
+          "Mein Akku stirbt, aber meine Liebe zu dir nie.",
+          "Du bist mein liebster Videocall des Tages!",
+          "Schlechter Empfang, aber perfekte Gefühle.",
+          "Ich würde sogar den langweiligsten Flug buchen, nur um dich zu sehen.",
+          "Digital verbunden, im Herzen vereint.",
+          "Ich schicke dir 1.000 virtuelle Umarmungen.",
+          "Das Beste an Videoanrufen? Dein Gesicht zu sehen!",
+          "Wegen dir schaue ich 50 Mal am Tag auf mein Handy.",
+          "Wenn Küsse Pixel wären, würde ich dir ein ganzes 4K-Bild schicken.",
+          "Du bist der einzige Grund, warum ich Zeitverschiebungen verzeihe.",
+          "Danke, dass du trotz schlechter Verbindung immer für mich da bist.",
+          "Mein Handy ist warm, weil wir so lange telefoniert haben – genau wie mein Herz.",
+          "Nähe ist keine Frage der Distanz, sondern des Herzens.",
+          "Ich trage dich in jedem Moment bei mir.",
+          "Du bist das Erste, woran ich denke, und das Letzte vor dem Schlafen.",
+          "Keine Landkarte kann messen, wie viel du mir bedeutest.",
+          "Wo auch immer du bist, da ist auch mein Herz.",
+          "Entfernung zeigt, wie wertvoll gemeinsame Momente wirklich sind.",
+          "Du bist mein Anker, egal wie weit ich entfernt bin.",
+          "In einer Welt voller Distanz bist du mein fixer Punkt.",
+          "Die Sehnsucht ist der Beweis für unsere tiefe Liebe.",
+          "Kein Ozean ist zu groß für das, was wir fühlen.",
+          "Du machst die Ferne erträglich und die Nähe unbezahlbar.",
+          "Ich liebe dich von hier bis zu dir und noch viel weiter.",
+          "Deine Nachrichten machen den Abstand ein Stückchen kleiner.",
+          "Egal wie weit weg: Du bist und bleibst meine Wichtigste/mein Wichtigster.",
+          "Ein Tag näher an unserem endgültigen Zusammenkommen"
         ],
         poesie: [
           "Die Ferne schrumpft, wenn ich an dich denke.",
           "Zwei Herzen, ein Rhythmus, egal wie weit.",
           "In jedem Sonnenuntergang bist du mir nah.",
           "Manche Entfernungen misst man nicht in Kilometern.",
-          "Du bist die Zeile, die mein Tag noch braucht."
-        ]
+          "Du bist die Zeile, die mein Tag noch braucht.",
+          "Du bist das leise Licht, das meine Dunkelheit vertreibt.",
+          "In deinen Augen spiegelt sich das Universum meiner Sehnsucht.",
+          "Jeder Augenblick mit dir ist ein Vers in meinem Lebensgedicht. Magische Karten",
+          "Du machst aus gewöhnlichen Sekunden goldene Momente.",
+          "Dein Lachen klingt wie der schönste Akkord eines vergessenen Liedes.",
+          "Wo du bist, breitet sich Stille wie ein sanfter Mantel aus.",
+          "Du bist die Sonne, die selbst meine Schatten zum Blühen bringt.",
+          "Dein Blick fängt mich auf, ohne dass ich je zu fallen drohte.",
+          "Wie Tau auf den Blüten des Morgens erfrischt mich deine Nähe.",
+          "In deinem Schweigen finde ich die Antworten auf alle meine Fragen.",
+          "Du bist der Lichtstrahl, der durch das Dickicht meiner Gedanken bricht.",
+          "Deine Küsse schreiben Gedichte auf meine Haut.",
+          "Ein Tag an deiner Seite ist ein Geschenk der Ewigkeit.",
+          "Du tanzt durch mein Herz wie ein Sonnenstrahl auf dem Wasser.",
+          "Bei dir klingt das Leben wie eine sanfte, ruhige Symphonie.",
+          "Du verzauberst die Welt, einfach nur indem du atmest.",
+          "In deiner Gegenwart verblasst das Graue der Welt zu purem Gold.",
+          "Dein Herzschlag ist der schönste Rhythmus meines Tages.",
+          "Du bist der Moment, in dem die Zeit leise den Atem anhält.",
+          "Mit dir im selben Raum fühlt sich die Welt vollkommen an. **Geborgenheit & Tiefgang**",
+          "Deine Hände halten nicht nur meinen Körper, sondern meine Seele.",
+          "In deinen Armen bin ich angekommen – mein Herz ist gelandet.",
+          "Du bist mein Anker im stürmischen Meer des Lebens.",
+          "An deiner Seite schweigen die Ängste der Welt.",
+          "Du bist mein Zuhause, gebaut aus Wärme und Verständnis.",
+          "In deiner Tiefe verliere ich mich nur zu gern.",
+          "Du schützt mich vor den Winden des Lebens wie eine ruhige Bucht.",
+          "Deine Liebe füllt Räume in mir, von denen ich nicht wusste, dass sie leer waren.",
+          "Bei dir darf ich ganz ich sein – ungeschminkt und unverstellt.",
+          "Du legst deine Hand auf meine Seele und glättest die Wogen.",
+          "Wir sprechen eine Sprache, die nur unsere Herzen verstehen.",
+          "In dir habe ich den Spiegel meiner wahren Sehnsucht gefunden.",
+          "Wenn du mich hältst, fühl ich mich vor der Welt beschützt.",
+          "Deine Zärtlichkeit ist der sanfteste Zufluchtsort der Erde.",
+          "Mit dir ist jeder Raum von Geborgenheit erfüllt.",
+          "Du bist das stetige Band, das mein Herz im Gleichgewicht hält.",
+          "Bei dir wird das Chaos der Welt zu einer sanften Ordnung.",
+          "In deiner Hand liegt meine Zukunft geborgen.",
+          "Du bist die Ruhe im Zentrum meines eigenen Sturms.",
+          "Deine Liebe hebt mich hoch, ohne mich zu verlieren. weddingstyle+ 4 **Seele & Magie**",
+          "Zwei Seelen, die sich fanden, ohne lange zu suchen.",
+          "Du bist der Schimmer der Magie in meiner Wirklichkeit.",
+          "Meine Seele hat dich wiedererkannt, noch bevor mein Verstand es begriff.",
+          "Wenn du mich berührst, erwacht ein schlafendes Universum.",
+          "Unsere Liebe webt Fäden aus Sternenlicht.",
+          "Du bist das leise Wunder, das mein Leben verändert hat.",
+          "In deinen Spuren wachsen Blumen in meiner Welt.",
+          "Wir tanzen im gleichen Takt, auch wenn die Welt schweigt.",
+          "Du bist die Melodie, die meine Seele schon immer singen wollte.",
+          "Die Magie deiner Gegenwart reicht bis in meine tiefsten Träume.",
+          "Mit dir wird das Alltägliche zu einem unendlichen Gedicht.",
+          "Du hast Türen in meinem Herzen geöffnet, die nie zuvor existierten.",
+          "Unser Band webt sich aus Worten, Blicken und reinem Licht.",
+          "Du bist das Echo, auf das meine Seele ewig gewartet hat.",
+          "In deinem Wesen wohnt die Eleganz eines Sommermorgens.",
+          "Deine Stimme legt sich wie Seide um mein Herz.",
+          "Wir ziehen Kreise im Strom des Lebens, immer aufeinander zu.",
+          "Deine Liebe ist das schönste Geheimnis meiner Seele.",
+          "Bei dir fühlt sich die Ewigkeit wie ein einziger Herzschlag an.",
+          "Du bist der Raum, in dem all meine Wünsche Erfüllung finden. Magische Karten+ 2 **Zukunft & Unendlichkeit**",
+          "Lass uns der Welt trotzen und eigene Welten bauen.",
+          "Ich möchte jeden Morgen an deiner Seite der Sonne entgegen blicken.",
+          "Mit dir vergeht die Zeit nicht – sie entfaltet sich.",
+          "An deiner Hand gehe ich ohne Furcht bis ans Ende aller Wege.",
+          "Du bist mein Gestern, mein Heute und all meine Morgen.",
+          "Auf den Wogen deiner Liebe möchte ich für immer segeln.",
+          "Wir schreiben unser Buch Seite für Seite mit purem Glück.",
+          "Lass uns gemeinsam wachsen wie zwei Bäume, deren Wurzeln verwoben sind.",
+          "Jeder Schritt mit dir lehrt mich, was Leben wirklich bedeutet.",
+          "Du bist das Fundament, auf dem all meine Träume ruhen.",
+          "Die Zukunft schreckt mich nicht, solange dein Licht mich führt.",
+          "An deiner Seite verliert die Ewigkeit ihre Schrecken.",
+          "Ich will mit dir die Jahre sammeln wie kostbare Edelsteine.",
+          "Wir weben aus Momenten Teppiche für die Ewigkeit.",
+          "Mit dir möchte ich lernen, wie man unendlich liebt.",
+          "In deiner Zukunft sehe ich mein schönstes Zuhause.",
+          "Du bist die Reise und das Ziel zugleich.",
+          "Wir pflanzen Hoffnungen und ernten gemeinsame Träume.",
+          "Ich verspreche dir mein Herz, heute und in allen Gezeiten.",
+          "Mit jedem Tag wächst ein neuer Stern an unserem Himmel. QuillBot+ 3 **Kurze Verdichtungen (Mini-Verse)**",
+          "Du bist mein Lichtblick.",
+          "Mein Herz tanzt mit dir.",
+          "Du bist mein stiller Frieden.",
+          "In deinen Augen liegt die Welt.",
+          "Zwei Herzen, ein Takt.",
+          "Dein Lächeln heilt meine Welt.",
+          "Du bist mein schönster Traum.",
+          "An deiner Hand blüht mein Herz.",
+          "Für immer dein Schatten und dein Licht.",
+          "Du bist die Poesie meines Tages.",
+          "Wo du bist, ist mein Herz.",
+          "Deine Hand in meiner.",
+          "Ewig mit dir verwoben.",
+          "Mein Anker in den Wogen.",
+          "Du bist mein stilles Glück.",
+          "Deine Liebe trägt mich.",
+          "Ein Blick, eine Ewigkeit.",
+          "Du bist mein halbes Leben.",
+          "In dir angekommen.",
+          "Mein Herz ruht in deinem. QuillBot+ 7 **Teil 2: Poetische Fernbeziehung (100 Nachrichten)** **Entfernung & Sterne**",
+          "Die Meere zwischen uns tränken nur die Sehnsucht unserer Seelen.",
+          "Wir schauen in denselben Himmel und berühren dieselben Sterne.",
+          "Kein Kilometer kann das Band schwächen, das uns im Innersten hält.",
+          "Die Entfernung misst nur den Raum, niemals unsere Liebe.",
+          "Der Wind, der dich streift, bringt mir den Duft deiner Nähe.",
+          "Unter demselben Mond schlafen wir, von der gleichen Liebe getragen.",
+          "Die Landkarte zeigt Grenzen, aber mein Herz kennt keine.",
+          "Wenn der Abendschatten fällt, wandern meine Gedanken lautlos zu dir.",
+          "Wie zwei Planeten ziehen wir unsere Bahnen – voneinander angezogen.",
+          "Die Nacht legt ihr Tuch über uns beide und macht den Abstand klein.",
+          "Ein Horizont trennt uns, doch am Ende schaut derselbe Himmel zu.",
+          "Meine Gedanken fliegen schneller als das Licht zu deinen Händen.",
+          "Auch aus der Ferne strahlt deine Wärme bis tief in meine Brust.",
+          "Die Distanz ist nur ein Kleid aus Wolken um unsere feste Liebe.",
+          "Jeder Kilometer ist ein stummes Denkmal unserer Stärke.",
+          "Wo du auch stehst, blickt meine Seele in deine Richtung.",
+          "Die Sterne weben ein Netz, das deine Nacht mit meiner verbindet.",
+          "Der Himmel schrumpft, wenn ich dein Bild vor Augen habe.",
+          "Entfernung beugt nicht die Liebe, sie schleift sie wie einen Diamanten.",
+          "Du bist der Stern, nach dem mein Kompass sich immer ausrichtet. Magische Karten+ 1 **Sehnsucht & Gedanken fliegen lassen**",
+          "Ich schicke einen Kuss mit dem Wind, möge er sanft auf deinen Lippen landen.",
+          "Meine Sehnsucht breitet ihre Flügel aus und fliegt über die Welten.",
+          "Jede Stunde ohne dich webt ein Kleid aus sanfter Wehmut.",
+          "In der Stille des Abends lausche ich auf das Echo deiner Stimme.",
+          "Ich vermisse deine Hand in meiner, wie die Erde den ersten Regen.",
+          "Meine Gedanken streicheln dich leise, während du schläfst.",
+          "Die Sehnsucht lehrt mich, wie tief du in meinem Herzen verwurzelt bist.",
+          "Ich hülle mich in die Erinnerung deiner letzten Umarmung.",
+          "Ein Hauch von dir weht durch meinen Tag und hinterlässt ein Leuchten.",
+          "Wenn die Welt schweigt, bist du das lauteste Flüstern in mir.",
+          "Ich fange die Sonnenstrahlen ein, um sie dir gedanklich zu senden.",
+          "Die Distanz mag schmerzen, doch sie beweist, wie echt wir sind.",
+          "Ein Hauch von deinen Worten vertreibt die Kälte in meinem Raum.",
+          "Meine Liebe reist ohne Gepäck, nur mit dem Wunsch nach dir.",
+          "Wenn meine Augen sich schließen, schrumpft die Welt auf deine Nähe.",
+          "Die Weite lehrt mich, welchen unschätzbaren Wert dein Lächeln hat.",
+          "Ich schicke dir mein Herz als Boten durch die Dunkelheit.",
+          "Sehnsucht ist der Preis, den wir für ein großes Wunder zahlen.",
+          "Mein Geist weilt in deinem Raum, während mein Körper hier wartet.",
+          "Wenn ich an dich denke, zittert das Schweigen der Ferne vor Liebe. **Warten & Vorfreude**",
+          "Jeder Tag, der vergeht, ist ein Sieg über den Abstand.",
+          "Wir zählen die Tage wie Perlen an einer goldenen Schnur.",
+          "Das Warten ist die Vorbereitung auf die schönste aller Explosionen.",
+          "Bald wird der Raum zwischen uns wieder in deinen Armen schmelzen.",
+          "Die Vorfreude schreibt bereits Gedichte über unseren nächsten Blick.",
+          "Jeder Sonnenuntergang bringt uns dem Tag des Wiedersehens näher.",
+          "Ich bereite mein Herz darauf vor, dich bald wieder festzuhalten.",
+          "Wir messen die Zeit nicht in Stunden, sondern in Schritten zueinander.",
+          "Bald wird aus dem Stummschalten der Ferne das Brausen deiner Nähe.",
+          "Wenn wir uns wiedersehen, wird die Zeit vor Ehrfurcht stillstehen.",
+          "Die Tage des Trennens sind nur der dunkle Rahmen für unser Bild.",
+          "Ich sammle alle Küsse, um sie dir auf einmal zurückzugeben.",
+          "Das Wiedersehen wird die Narben der Sehnsucht heilen.",
+          "Jeder Schritt des Coundowns ist ein Schritt hinein ins Glück.",
+          "Das Warten verliert seinen Schrecken, wenn das Ziel du bist.",
+          "Wir wandern durch die Zeit, bis sich unsere Wege wieder kreuzen.",
+          "Bald streicht nicht mehr der Wind durch mein Haar, sondern deine Hand.",
+          "Die Vorfreude bringt meine Seele schon heute zum Tanzen.",
+          "Bald tauschen wir das Warten gegen das Fallen in deine Umarmung.",
+          "Ein Hauch von Geduld noch, dann liegt die Welt uns zu Füßen. **Unvergängliche Verbindung**",
+          "Unendlich weit weg und doch so tief in mir verankert.",
+          "Kein Ozean trennt Herzen, die auf derselben Frequenz schlagen.",
+          "Unser Band spannt sich über Länder, ohne je zu reißen.",
+          "Wo zwei Seelen eins sind, hat die Mathematik der Kilometer verloren.",
+          "Wir sind wie zwei Ufer desselben Flusses, verbunden durch die Strömung.",
+          "Die Welt versucht uns zu trennen, doch unsere Liebe hält dagegen.",
+          "Deine Liebe schützt mich aus der Ferne wie ein Schild aus Licht.",
+          "Man kann nicht trennen, was das Schicksal zusammengefügt hat.",
+          "Unsere Herzen schlagen in einem Rhythmus, den kein Abstand bricht.",
+          "Selbst im dunkelsten Schatten der Trennung kenne ich deinen Weg.",
+          "Wir besitzen eine Festung aus Vertrauen, gebaut über Grenzen hinweg.",
+          "Die Distanz macht kleine Gefühle klein, aber große Gefühle riesig.",
+          "Du bist mein Anker im Nirgendwo der Welt.",
+          "Durch alle Welten hindurch spüre ich deine unsichtbare Hand.",
+          "Unsere Liebe widersteht den Gesetzen der Geografie.",
+          "Egal wie viele Städte dazwischen liegen: Du bleibst meine Heimat.",
+          "Ein Faden aus Seide verbindet meine Brust mit deiner.",
+          "Die Entfernung brennt heiß, aber sie kann uns nicht verbrennen.",
+          "Wir sind das Versprechen, das allen Kilometern zum Trotz hält.",
+          "In meiner Seele trägst du das Siegel meiner ewigen Liebe. QuillBot **Poetische Gutenacht- & Morgen-Grüße aus der Ferne**",
+          "Möge der Wind dir meine Gutenacht-Küsse bringen.",
+          "Die Sonne geht auf und mein erster Gedanke sucht dein Licht.",
+          "Schlaf gut unter demselben Sternenhimmel, der mich beschützt.",
+          "Ein neuer Morgen erwacht und bringt mich dir ein Stück näher.",
+          "Ich hülle dich gedanklich in eine Decke aus Sternenstaub.",
+          "Mögen deine Träume dich heute Nacht direkt in meine Arme führen.",
+          "Der Morgen dämmert und schreibt deinen Namen in den Himmel.",
+          "Gute Nacht, mein weit entfernter Schatz – mein Herz schläft bei dir.",
+          "Wach auf mit dem Wissen, dass jemand aus der Ferne für dich schlägt.",
+          "Träum süß, bis die Realität uns wieder vereint. Magische Karten **Flüchtige Verdichtungen für die Ferne**",
+          "Weit weg, nah im Herzen.",
+          "Unter demselben Himmel.",
+          "Die Sehnsucht webt uns zusammen.",
+          "Kilometer vergehen, Liebe bleibt.",
+          "Ein Herzschlag über Grenzen hinweg.",
+          "Bald in deinen Armen.",
+          "Mein Kompass zeigt zu dir.",
+          "Getrennt im Raum, vereint im Traum.",
+          "Du bist meine Ferne und mein Zuhause.",
+          "Ewig dein, egal wie weit."
+        ],
       },
       letters: [
-        { condition: "du traurig bist", text: "Platzhaltertext — hier später den echten Brief einfügen." },
-        { condition: "du mich vermisst", text: "Platzhaltertext — hier später den echten Brief einfügen." },
-        { condition: "du einen schlechten Tag hattest", text: "Platzhaltertext — hier später den echten Brief einfügen." },
-        { condition: "du an uns zweifelst", text: "Platzhaltertext — hier später den echten Brief einfügen." },
-        { condition: "du dich einsam fühlst", text: "Platzhaltertext — hier später den echten Brief einfügen." },
-        { condition: "du diese Nachricht am meistem brauchst", text: "Platzhaltertext — hier später den echten Brief einfügen." }
+        { condition: "du traurig bist", text: "" },
+        { condition: "du mich vermisst", text: "" },
+        { condition: "du einen schlechten Tag hattest", text: "" },
+        { condition: "du an uns zweifelst", text: "" },
+        { condition: "du dich einsam fühlst", text: "" },
+        { condition: "du diese Nachricht am meistem brauchst", text: "" }
       ],
       secretCodes: [
         { code: "67", reveal: "Teil 1 der Überraschung: Platzhaltertext." },
@@ -1299,8 +1849,10 @@
       btn.addEventListener('click', () => showPage(btn.dataset.target));
     });
 
-    /* --- Zeitstrahl & Event-Fenster --- */
+    /* --- Zeitstrahl, Suche & Event-Fenster --- */
     const timelineLine = document.getElementById('timelineLine');
+    const timelineSearch = document.getElementById('timelineSearch');
+    const timelineNoResults = document.getElementById('timelineNoResults');
     const eventModal = document.getElementById('eventModal');
     const eventModalImage = document.getElementById('eventModalImage');
     const eventModalTitle = document.getElementById('eventModalTitle');
@@ -1325,19 +1877,60 @@
     });
 
     const sortedEvents = [...CONFIG.events].sort((a,b) => new Date(a.date) - new Date(b.date));
-    
-    if(sortedEvents.length > 0){
-      document.getElementById('timelineStartLabel').textContent = formatDateShort(sortedEvents[0].date);
-      document.getElementById('timelineEndLabel').textContent = formatDateShort(sortedEvents[sortedEvents.length - 1].date);
+    let eventElements = [];
+
+    function renderTimeline(){
+      timelineLine.innerHTML = '';
+      eventElements = [];
+
+      if(sortedEvents.length > 0){
+        document.getElementById('timelineStartLabel').textContent = formatDateShort(sortedEvents[0].date);
+        document.getElementById('timelineEndLabel').textContent = formatDateShort(sortedEvents[sortedEvents.length - 1].date);
+      }
+
+      sortedEvents.forEach(ev => {
+        const formattedDate = formatDateShort(ev.date);
+        const dot = document.createElement('button');
+        dot.className = 'timeline__dot';
+        dot.innerHTML = `<span class="timeline__dot-date">${formattedDate}</span><span class="timeline__dot-title">${ev.title}</span>`;
+        dot.addEventListener('click', () => openEventModal(ev));
+        timelineLine.appendChild(dot);
+
+        eventElements.push({
+          element: dot,
+          event: ev,
+          searchableText: `${ev.title} ${ev.text} ${formattedDate} ${ev.date}`.toLowerCase()
+        });
+      });
     }
 
-    sortedEvents.forEach(ev => {
-      const dot = document.createElement('button');
-      dot.className = 'timeline__dot';
-      dot.innerHTML = `<span class="timeline__dot-date">${formatDateShort(ev.date)}</span><span class="timeline__dot-title">${ev.title}</span>`;
-      dot.addEventListener('click', () => openEventModal(ev));
-      timelineLine.appendChild(dot);
-    });
+    renderTimeline();
+
+    /* --- Suchfunktion für den Zeitstrahl --- */
+    function filterTimeline(){
+      const query = timelineSearch.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      eventElements.forEach(item => {
+        const isMatch = item.searchableText.includes(query);
+        item.element.style.display = isMatch ? 'flex' : 'none';
+        if(isMatch) visibleCount++;
+      });
+
+      timelineNoResults.style.display = visibleCount === 0 ? 'block' : 'none';
+
+      if(query !== ''){
+        document.getElementById('timelineStartLabel').textContent = `${visibleCount} Event${visibleCount !== 1 ? 's' : ''} gefunden`;
+        document.getElementById('timelineEndLabel').textContent = '';
+      } else {
+        if(sortedEvents.length > 0){
+          document.getElementById('timelineStartLabel').textContent = formatDateShort(sortedEvents[0].date);
+          document.getElementById('timelineEndLabel').textContent = formatDateShort(sortedEvents[sortedEvents.length - 1].date);
+        }
+      }
+    }
+
+    timelineSearch.addEventListener('input', filterTimeline);
 
     /* --- Süße Texte: Zufalls-Generator ohne Wiederholung --- */
     function createShuffleBag(items){
@@ -1373,14 +1966,140 @@
       el.textContent = text;
     }
 
+    function launchConfetti(){
+      const count = 80;
+      for(let i = 0; i < count; i++){
+        const piece = document.createElement('span');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.top = Math.random() * 100 + 'vh';
+        piece.style.setProperty('--dx', ((Math.random() - .5) * 120) + 'vw');
+        piece.style.setProperty('--dy', ((Math.random() - .5) * 120) + 'vh');
+        piece.style.setProperty('--rot', ((Math.random() - .5) * 1500) + 'deg');
+        piece.style.background = ['#FF6F5E','#F4A93B','#2C8C82','#E8768A','#7B68EE'][Math.floor(Math.random()*5)];
+        piece.style.animationDelay = (Math.random() * .2) + 's';
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 1700);
+      }
+    }
+
+    function showPoesieScratchCard(text){
+      const el = document.getElementById('suesseTextContent');
+      el.style.animation = 'none';
+      void el.offsetHeight;
+      el.style.animation = 'pageIn 0.3s ease';
+      el.innerHTML = `
+        <div class="scratch-card" aria-label="Rubbelkarte">
+          <div class="scratch-card__message">${escapeHtml(text)}</div>
+          <span class="scratch-card__hint">✨ Hier rubbeln ✨</span>
+          <canvas aria-hidden="true"></canvas>
+        </div>`;
+
+      const card = el.querySelector('.scratch-card');
+      const canvas = card.querySelector('canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently:true });
+      const rect = card.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      ctx.scale(dpr, dpr);
+
+      // Metallische Rubbeloberfläche
+      const w = rect.width, h = rect.height;
+      const grad = ctx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, '#b7b7b7');
+      grad.addColorStop(.25, '#e7e7e7');
+      grad.addColorStop(.5, '#a8a8a8');
+      grad.addColorStop(.72, '#dedede');
+      grad.addColorStop(1, '#9d9d9d');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0,0,w,h);
+      ctx.globalAlpha = .18;
+      for(let i=0;i<260;i++){
+        ctx.fillStyle = Math.random() > .5 ? '#fff' : '#666';
+        ctx.fillRect(Math.random()*w, Math.random()*h, 1.5, 1.5);
+      }
+      ctx.globalAlpha = 1;
+
+      let scratching = false;
+      let revealed = false;
+      let lastX = 0, lastY = 0;
+      const threshold = .70;
+
+      function scratch(x,y){
+        if(revealed) return;
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x,y,22,0,Math.PI*2);
+        ctx.fill();
+        if(lastX || lastY){
+          ctx.lineWidth = 44;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.beginPath();
+          ctx.moveTo(lastX,lastY);
+          ctx.lineTo(x,y);
+          ctx.stroke();
+        }
+        ctx.restore();
+        lastX=x; lastY=y;
+        checkScratchProgress();
+      }
+
+      function checkScratchProgress(){
+        const pixels = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+        let transparent = 0;
+        let total = 0;
+        // Stichprobe reicht für die Prozentanzeige und spart Leistung auf Handys.
+        for(let i=3;i<pixels.length;i+=32){
+          total++;
+          if(pixels[i] < 35) transparent++;
+        }
+        if(total && transparent / total >= threshold){
+          revealed = true;
+          card.classList.add('is-revealed');
+          launchConfetti();
+          setTimeout(() => { ctx.clearRect(0,0,canvas.width,canvas.height); }, 350);
+        }
+      }
+
+      function pointFromEvent(e){
+        const r = canvas.getBoundingClientRect();
+        return {x:e.clientX-r.left, y:e.clientY-r.top};
+      }
+      canvas.addEventListener('pointerdown', e => {
+        scratching=true;
+        const p=pointFromEvent(e);
+        lastX=p.x; lastY=p.y;
+        scratch(p.x,p.y);
+        canvas.setPointerCapture?.(e.pointerId);
+      });
+      canvas.addEventListener('pointermove', e => {
+        if(!scratching) return;
+        const p=pointFromEvent(e);
+        scratch(p.x,p.y);
+      });
+      const stop=()=>{scratching=false; lastX=0; lastY=0;};
+      canvas.addEventListener('pointerup',stop);
+      canvas.addEventListener('pointercancel',stop);
+      canvas.addEventListener('pointerleave',()=>{ if(scratching) stop(); });
+    }
+
+    function escapeHtml(value){
+      const div = document.createElement('div');
+      div.textContent = value;
+      return div.innerHTML;
+    }
+
     document.querySelectorAll('.subtab').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.subtab').forEach(b => b.classList.remove('is-active'));
         btn.classList.add('is-active');
         const cat = btn.dataset.category;
-        if(cat === 'zufaellig') showSuesserText(zufallBag());
-        if(cat === 'nachrichten') showSuesserText(nachrichtenBag());
-        if(cat === 'poesie') showSuesserText(poesieBag());
+        if(cat === 'zufaellig') showPoesieScratchCard(zufallBag());
+        if(cat === 'nachrichten') showPoesieScratchCard(nachrichtenBag());
+        if(cat === 'poesie') showPoesieScratchCard(poesieBag());
       });
     });
 
@@ -1390,7 +2109,6 @@
       const btn = document.createElement('button');
       btn.className = 'tile';
       btn.innerHTML = `<span class="tile__icon" aria-hidden="true">💌</span><span class="tile__label">Öffne mich, wenn ${letter.condition}</span>`;
-      btn.addEventListener('click', () => openEventModal({ title: `Wenn ${letter.condition}`, text: letter.text, image: null }, '💌'));
       lettersGrid.appendChild(btn);
     });
 
@@ -1411,11 +2129,38 @@
       items.forEach(item => { item.style.transition = ''; });
       letterStackReady = true;
     }
+    
+    function createLetterRainOverlay(){
+      const overlay = document.createElement('div');
+      overlay.className = 'letter-rain-overlay';
+      const positions = [8, 25, 42, 58, 75, 92];
+      positions.forEach((pos, i) => {
+        const letterContainer = document.createElement('div');
+        letterContainer.className = 'falling-letter';
+        letterContainer.innerHTML = '<div class="falling-letter-shape"></div>';
+        letterContainer.style.left = pos + '%';
+        letterContainer.style.top = '-150px';
+        letterContainer.style.setProperty('--letter-rot', (Math.random() * 40 - 20) + 'deg');
+        letterContainer.style.animationDelay = (i * 180) + 'ms';
+        overlay.appendChild(letterContainer);
+      });
+      document.body.appendChild(overlay);
+      return overlay;
+    }
+    
     lettersGrid.addEventListener('click', e => {
       if(lettersGrid.classList.contains('is-stacked')){
         e.stopPropagation();
-        lettersGrid.classList.remove('is-stacked');
-        lettersGrid.classList.add('is-expanded');
+        const overlay = createLetterRainOverlay();
+        setTimeout(() => {
+          lettersGrid.innerHTML = `<div class="letters-empty-view">
+            <span class="letters-empty-view__icon">💌</span>
+            <h3 class="letters-empty-view__title">Noch keine neuen Briefe</h3>
+            <p class="letters-empty-view__text">Aber bald wird hier etwas Schönes auf dich warten. Schau regelmäßig vorbei! ✨</p>
+          </div>`;
+          lettersGrid.classList.remove('is-stacked');
+        }, 750);
+        setTimeout(() => overlay.remove(), 1600);
       }
     }, true);
 
@@ -1425,6 +2170,25 @@
       const utcDate = new Date(reference.toLocaleString('en-US', { timeZone: 'UTC' }));
       return (tzDate - utcDate) / 60000;
     }
+    function initAustralienMap(){
+      if(window.australienMapInitialized) return;
+      window.australienMapInitialized = true;
+      const mapEl = document.getElementById('australienMap');
+      if(!mapEl || mapEl._leaflet_map) return;
+      const map = L.map('australienMap').setView([20, 90], 3);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '© OpenStreetMap', maxZoom: 19}).addTo(map);
+      const tennantCreek = L.latLng(-19.6333, 134.1833);
+      const ney = L.latLng(49.2993, 7.3882);
+      L.circleMarker(tennantCreek, {radius: 8, fillColor: '#FF6F5E', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.8}).bindPopup('<b>Tennant Creek 🦘</b><br>Australien').addTo(map);
+      L.circleMarker(ney, {radius: 8, fillColor: '#2C8C82', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.8}).bindPopup('<b>Ney 🇩🇪</b><br>Rheinland-Pfalz').addTo(map);
+      const group = new L.featureGroup([tennantCreek, ney]);
+      map.fitBounds(group.getBounds().pad(0.15));
+    }
+    const australienObserver = new MutationObserver(() => {
+      if(document.getElementById('australien').classList.contains('active') && !window.australienMapInitialized) initAustralienMap();
+    });
+    australienObserver.observe(document.getElementById('australien'), {attributes: true});
+
     function updateAustralienInfo(){
       const now = new Date();
       const austOffset = getOffsetMinutes('Australia/Darwin', now);
@@ -1432,19 +2196,8 @@
       const diffH = (austOffset - homeOffset) / 60;
       const h = Math.floor(Math.abs(diffH));
       const m = Math.round((Math.abs(diffH) - h) * 60);
-      document.getElementById('timeDiffValue').textContent =
-        `${h}${m ? ' Std. ' + m + ' Min.' : ' Std.'} ${diffH >= 0 ? 'voraus' : 'zurück'}`;
-      document.getElementById('localTimeValue').textContent =
-        now.toLocaleTimeString('de-DE', { timeZone: CONFIG.homeTimezone, hour: '2-digit', minute: '2-digit' }) + ' Uhr';
-
-      const wiedersehen = CONFIG.events.find(e => e.title === 'Wiedersehen');
-      if(wiedersehen){
-        const target = new Date(wiedersehen.date); target.setHours(0,0,0,0);
-        const today = new Date(); today.setHours(0,0,0,0);
-        const days = Math.round((target - today) / 86400000);
-        document.getElementById('daysUntilValue').textContent =
-          days > 0 ? `noch ${days} Tage` : days === 0 ? 'heute! 🎉' : `vor ${Math.abs(days)} Tagen`;
-      }
+      const timeDiffEl = document.getElementById('timeDiffValue');
+      if(timeDiffEl) timeDiffEl.textContent = `${h}${m ? ' Std. ' + m + ' Min.' : ' Std.'} ${diffH >= 0 ? 'voraus' : 'zurück'}`;
     }
     updateAustralienInfo();
     setInterval(updateAustralienInfo, 60000);
