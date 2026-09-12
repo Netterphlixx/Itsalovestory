@@ -363,26 +363,28 @@
     justify-content: space-between;
     font-size: 0.8rem;
     color: var(--ink-soft);
-    margin: 18px 0 14px;
+    margin: 24px 0 20px 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed rgba(43,33,64,0.12);
   }
 
   .timeline__line{
     position: relative;
     border-left: 3px solid var(--paper-dark);
-    margin-left: 10px;
-    padding-left: 26px;
+    margin-left: 14px;
+    padding-left: 22px;
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 16px;
   }
 
   .timeline__dot{
     position: relative;
     text-align: left;
-    background: linear-gradient(160deg, #ffffff, var(--paper) 130%);
+    background: #ffffff;
     border: 1px solid rgba(43,33,64,0.08);
     border-radius: var(--radius);
-    box-shadow: var(--shadow-soft);
+    box-shadow: 0 2px 6px rgba(43,33,64,0.04);
     padding: 12px 16px;
     cursor: pointer;
     font-family: var(--font-body);
@@ -396,7 +398,7 @@
   .timeline__dot::before{
     content: '';
     position: absolute;
-    left: -33px; top: 50%;
+    left: -29px; top: 50%;
     transform: translateY(-50%);
     width: 12px; height: 12px;
     border-radius: 50%;
@@ -406,37 +408,6 @@
   .timeline__dot:hover{ transform: translateX(3px); }
   .timeline__dot-date{ font-size: 0.75rem; color: var(--ink-soft); }
   .timeline__dot-title{ font-weight: 600; }
-
-  .more-toggle{
-    display: block;
-    margin: 26px auto 0;
-    background: none;
-    border: none;
-    color: var(--coral);
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-  }
-
-  .events-list{ margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
-  .events-list[hidden]{ display: none; }
-  .events-list__heading{
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    margin: 0 0 4px;
-  }
-  .events-list__link{
-    width: 100%;
-    text-align: left;
-    background: var(--paper);
-    border: 1px dashed var(--paper-dark);
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    font-family: var(--font-body);
-    cursor: pointer;
-    color: var(--ink);
-  }
 
   .event-modal{
     position: fixed;
@@ -771,6 +742,128 @@
   .voucher__title{ font-family: var(--font-display); font-size: 1.3rem; margin: 0 0 10px; }
   .voucher__text{ color: var(--ink-soft); margin: 0; }
 
+  .photobook{ margin-top: 24px; }
+  .photobook__book{
+    background: linear-gradient(160deg, #ffffff, var(--paper) 130%);
+    border: 1px solid rgba(43,33,64,0.08);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 20px;
+    position: relative;
+  }
+  .photobook__book::before{
+    content: '';
+    position: absolute;
+    left: 50%; top: 16px; bottom: 16px;
+    width: 2px;
+    background: rgba(43,33,64,0.08);
+    transform: translateX(-50%);
+  }
+  .photobook__grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    transform-origin: center;
+  }
+  .photobook__grid.is-flip-out{ animation: pageFlipOut 0.28s ease forwards; }
+  .photobook__grid.is-flip-in{ animation: pageFlipIn 0.28s ease forwards; }
+  @keyframes pageFlipOut{
+    0%{ transform: scaleX(1) skewY(0deg); opacity: 1; }
+    100%{ transform: scaleX(0) skewY(4deg); opacity: 0.3; }
+  }
+  @keyframes pageFlipIn{
+    0%{ transform: scaleX(0) skewY(-4deg); opacity: 0.3; }
+    100%{ transform: scaleX(1) skewY(0deg); opacity: 1; }
+  }
+  .photobook__photo-img{
+    aspect-ratio: 4 / 3;
+    border-radius: calc(var(--radius) - 4px);
+    background: linear-gradient(135deg, var(--mustard), var(--coral));
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+  .photobook__photo-caption{ font-size: 0.75rem; color: var(--ink-soft); margin: 0; text-align: center; }
+  .photobook__controls{ display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 16px; }
+  .photobook__page-label{ font-size: 0.85rem; color: var(--ink-soft); min-width: 100px; text-align: center; }
+  .photobook__nav{
+    background: white;
+    border: 1px solid rgba(43,33,64,0.08);
+    border-radius: 50%;
+    width: 44px; height: 44px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-soft);
+    touch-action: manipulation;
+  }
+
+  .sonstiges-grid{ display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
+  .playlist-card{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    background: linear-gradient(135deg, #1DB954, #169c46);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 18px 20px;
+    font-family: var(--font-body);
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .playlist-card--press{ background: linear-gradient(135deg, var(--coral), var(--rose)); }
+  .playlist-card__art{ font-size: 2.4rem; }
+  .playlist-card__info{ flex: 1; }
+  .playlist-card__label{ font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.85; margin: 0; }
+  .playlist-card__title{ font-family: var(--font-display); font-size: 1.1rem; margin: 2px 0 0; color: white; }
+  .playlist-card__arrow{ font-size: 1.3rem; opacity: 0.85; }
+
+  .playlist-top-link{
+    display: inline-block;
+    font-size: 0.8rem;
+    color: var(--coral);
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .playlist-top-link:hover{ text-decoration: underline; }
+
+  .fake-spotify{
+    background: #121212;
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow-soft);
+  }
+  .fake-spotify__header{ display: flex; gap: 16px; align-items: center; margin-bottom: 18px; }
+  .fake-spotify__cover{
+    width: 80px; height: 80px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #1DB954, #169c46);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.1rem; flex-shrink: 0;
+  }
+  .fake-spotify__kicker{ font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: #b3b3b3; margin: 0; }
+  .fake-spotify__title{ font-family: var(--font-display); font-size: 1.4rem; margin: 2px 0; color: #fff; }
+  .fake-spotify__meta{ font-size: 0.85rem; color: #b3b3b3; margin: 0; }
+  .fake-spotify__tracks{ list-style: none; margin: 0; padding: 0; }
+  .track-row{ display: flex; align-items: center; gap: 14px; padding: 10px 8px; border-radius: 6px; }
+  .track-row:hover{ background: rgba(255,255,255,0.08); }
+  .track-row__num{ width: 20px; color: #b3b3b3; font-size: 0.9rem; text-align: center; }
+  .track-row__info{ flex: 1; display: flex; flex-direction: column; }
+  .track-row__title{ font-size: 0.95rem; color: #fff; }
+  .track-row__artist{ font-size: 0.8rem; color: #b3b3b3; }
+  .track-row__duration{ font-size: 0.85rem; color: #b3b3b3; }
+
   /* ===================================================
      FOOTER
      =================================================== */
@@ -852,6 +945,10 @@
           <span class="tile__icon" aria-hidden="true">💌</span>
           <span class="tile__label">Briefe</span>
         </button>
+        <button class="tile" data-target="fotobuch">
+          <span class="tile__icon" aria-hidden="true">📸</span>
+          <span class="tile__label">Fotobuch</span>
+        </button>
         <button class="tile" data-target="australien">
           <span class="tile__icon" aria-hidden="true">🦘</span>
           <span class="tile__label">Australien</span>
@@ -868,18 +965,12 @@
     <section class="page page--fullscreen" id="zeitstrahl">
       <button class="back-link" data-target="startseite">← Zur Startseite</button>
       <h2 class="page__title">Zeitstrahl</h2>
-      <p class="page__intro">Vom 13. Juni 2024 bis zum 12. September 2026.</p>
-
+      
       <div class="timeline__bounds">
-        <span>13. Juni 2024</span>
-        <span>12. Sep 2026</span>
+        <span id="timelineStartLabel">13. Juni 2024</span>
+        <span id="timelineEndLabel">12. Sep 2026</span>
       </div>
       <div class="timeline__line" id="timelineLine"></div>
-
-      <button class="more-toggle" id="eventsToggle" aria-expanded="false">Alle Events anzeigen ▾</button>
-      <div class="events-list" id="eventsList" hidden>
-        <h3 class="events-list__heading">Events im Überblick</h3>
-      </div>
     </section>
 
     <section class="page page--fullscreen" id="suessetexte">
@@ -903,6 +994,23 @@
       <h2 class="page__title">Briefe</h2>
       <p class="page__intro">Öffne einen Brief, wenn der Moment passt.</p>
       <div class="tile-grid" id="lettersGrid"></div>
+    </section>
+
+    <section class="page page--fullscreen" id="fotobuch">
+      <button class="back-link" data-target="startseite">← Zur Startseite</button>
+      <h2 class="page__title">Fotobuch</h2>
+      <p class="page__intro">Blättere durch eure Erinnerungen.</p>
+
+      <div class="photobook">
+        <div class="photobook__book">
+          <div class="photobook__grid" id="photobookGrid"></div>
+        </div>
+        <div class="photobook__controls">
+          <button class="photobook__nav" id="photoPrev" aria-label="Vorherige Seite">‹</button>
+          <span class="photobook__page-label" id="photobookPageLabel"></span>
+          <button class="photobook__nav" id="photoNext" aria-label="Nächste Seite">›</button>
+        </div>
+      </div>
     </section>
 
     <section class="page page--fullscreen" id="australien">
@@ -942,7 +1050,25 @@
       <h2 class="page__title">Sonstiges</h2>
       <p class="page__intro">Kleine Spielereien für zwischendurch.</p>
 
-      <button class="press-heart-btn" id="pressHeartBtn" aria-label="Gedrückt halten für Herzen">💗 Drück mich</button>
+      <div class="sonstiges-grid">
+        <button class="playlist-card playlist-card--press" data-target="drueckmich">
+          <div class="playlist-card__art">💗</div>
+          <div class="playlist-card__info">
+            <p class="playlist-card__label">Spielerei</p>
+            <p class="playlist-card__title">Drück mich</p>
+          </div>
+          <span class="playlist-card__arrow">→</span>
+        </button>
+
+        <button class="playlist-card" data-target="playlist">
+          <div class="playlist-card__art">🎵</div>
+          <div class="playlist-card__info">
+            <p class="playlist-card__label">Spotify-Playlist</p>
+            <p class="playlist-card__title">Unsere Playlist</p>
+          </div>
+          <span class="playlist-card__arrow">→</span>
+        </button>
+      </div>
 
       <div class="codepad">
         <p class="codepad__info">Überall auf der Website sind Codes versteckt (alle 2 bis 4 Stellen lang). Gib sie der Größe nach sortiert ein — jeder richtige Code schaltet ein Stück der Überraschung frei.</p>
@@ -951,6 +1077,42 @@
           <button type="submit" class="codepad__submit">Einlösen</button>
         </form>
         <p class="codepad__feedback" id="codepadFeedback"></p>
+      </div>
+    </section>
+
+    <section class="page page--fullscreen" id="drueckmich">
+      <button class="back-link" data-target="sonstiges">← Zu Sonstiges</button>
+      <h2 class="page__title">Drück mich</h2>
+      <p class="page__intro">Halt gedrückt und schau, was passiert.</p>
+      <button class="press-heart-btn" id="pressHeartBtn" aria-label="Gedrückt halten für Herzen">💗 Drück mich</button>
+    </section>
+
+    <section class="page page--fullscreen" id="playlist">
+      <button class="back-link" data-target="sonstiges">← Zu Sonstiges</button>
+      <!-- TODO: echten Playlist-Link eintragen -->
+      <a class="playlist-top-link" href="https://open.spotify.com/playlist/PLAYLIST_ID" target="_blank" rel="noopener">Zur Playlist ↗</a>
+
+      <div class="fake-spotify">
+        <div class="fake-spotify__header">
+          <div class="fake-spotify__cover">🎵</div>
+          <div>
+            <p class="fake-spotify__kicker">Playlist</p>
+            <h2 class="fake-spotify__title">Unsere Playlist</h2>
+            <p class="fake-spotify__meta">10 Songs</p>
+          </div>
+        </div>
+        <ol class="fake-spotify__tracks">
+          <li class="track-row"><span class="track-row__num">1</span><span class="track-row__info"><span class="track-row__title">Songtitel 1</span><span class="track-row__artist">Interpret 1</span></span><span class="track-row__duration">3:12</span></li>
+          <li class="track-row"><span class="track-row__num">2</span><span class="track-row__info"><span class="track-row__title">Songtitel 2</span><span class="track-row__artist">Interpret 2</span></span><span class="track-row__duration">2:58</span></li>
+          <li class="track-row"><span class="track-row__num">3</span><span class="track-row__info"><span class="track-row__title">Songtitel 3</span><span class="track-row__artist">Interpret 3</span></span><span class="track-row__duration">3:41</span></li>
+          <li class="track-row"><span class="track-row__num">4</span><span class="track-row__info"><span class="track-row__title">Songtitel 4</span><span class="track-row__artist">Interpret 4</span></span><span class="track-row__duration">4:05</span></li>
+          <li class="track-row"><span class="track-row__num">5</span><span class="track-row__info"><span class="track-row__title">Songtitel 5</span><span class="track-row__artist">Interpret 5</span></span><span class="track-row__duration">3:27</span></li>
+          <li class="track-row"><span class="track-row__num">6</span><span class="track-row__info"><span class="track-row__title">Songtitel 6</span><span class="track-row__artist">Interpret 6</span></span><span class="track-row__duration">2:49</span></li>
+          <li class="track-row"><span class="track-row__num">7</span><span class="track-row__info"><span class="track-row__title">Songtitel 7</span><span class="track-row__artist">Interpret 7</span></span><span class="track-row__duration">3:33</span></li>
+          <li class="track-row"><span class="track-row__num">8</span><span class="track-row__info"><span class="track-row__title">Songtitel 8</span><span class="track-row__artist">Interpret 8</span></span><span class="track-row__duration">3:16</span></li>
+          <li class="track-row"><span class="track-row__num">9</span><span class="track-row__info"><span class="track-row__title">Songtitel 9</span><span class="track-row__artist">Interpret 9</span></span><span class="track-row__duration">4:22</span></li>
+          <li class="track-row"><span class="track-row__num">10</span><span class="track-row__info"><span class="track-row__title">Songtitel 10</span><span class="track-row__artist">Interpret 10</span></span><span class="track-row__duration">3:05</span></li>
+        </ol>
       </div>
     </section>
 
@@ -998,26 +1160,58 @@
   <script>
 
     /* =================================================
-       KONFIGURATION — hier später eure echten Daten eintragen
+       KONFIGURATION — hier sind deine echten Events eingetragen
        ================================================= */
     const CONFIG = {
       partner1: "Dein Name",
       partner2: "Tabea",
-      zeitungsname: "Die Fernliebe-Chronik",   // Name eurer "Zeitung"
+      zeitungsname: "♥ Jubiläumsgeschenk für mein Bärchen ♥",
       relationshipStart: "2024-09-12",         // Datum: 12. September 2024
       ausgabeNummer: 1,
       timelineStart: "2024-06-13",
       timelineEnd: "2026-09-12",
       homeTimezone: "Europe/Berlin",
       events: [
-        // TODO: echte Events, Bilder (image: 'pfad/zu/bild.jpg') und Texte eintragen
-        { date: "2024-06-13", title: "Wie alles begann", text: "Kurzer Text zu diesem Moment.", image: null },
-        { date: "2024-12-24", title: "Erstes gemeinsames Weihnachten", text: "Kurzer Text zu diesem Moment.", image: null },
-        { date: "2025-09-12", title: "Ein Jahr zusammen", text: "Kurzer Text zu diesem Moment.", image: null },
-        { date: "2026-09-12", title: "Wiedersehen", text: "Kurzer Text zu diesem Moment.", image: null }
+        { date: "2024-06-13", title: "Wie alles begann", text: "Am 13. Juni 2024 geschah es. Abends fuhrst du zusammen mit Dirk in unsere Straße ein. Ihr solltet einen weiteren Fahrschüler abholen. Das Drehen im Wendekreis war wohl ein Horror. Kurze Zeit später stieg ich auch schon ein. Das war unsere erste richtige Begegnung. Ich fuhr dich heim. Unwissend, was danach noch auf uns zukommt.", image: null },
+        { date: "2024-06-14", title: "Ein erneutes Wiedersehen", text: "Am 14. Juni 2024 sahen wir uns direkt wieder. Es waren die Bundesjugendspiele. Heimlich machte ich ein Foto von dir. In einem Gespräch regtest du dich darüber auf, dass Dirk mir so schnell neue Stunden gibt, du hingegen musstest warten.", image: null },
+        { date: "2024-06-20", title: "Das erste Treffen", text: "Am 20. Juni 2024 organisierte Helena ein großes Treffen. Wir waren im Park und spielten Volleyball. Nachdem alle heimgefahren sind, warteten wir auf deinen Bus. Dabei redeten wir viel zusammen auf der Schaukel. Zum Glück verpasstest du deinen Bus. Ich lud dich zu mir nach Hause ein. Wir beobachteten Babykatzen, darunter auch Bounty. Abends fuhr mein Vater dich dann schließlich noch heim.", image: null },
+        { date: "2024-07-11", title: "Stufenfeier", text: "Ein Tag, den du am liebsten vergessen würdest. Am 11. Juli 2024 sagte Helena dir ab. Du konntest nun doch nicht mehr mit auf unsere Stufenfeier. Zum Glück war bei Jenni noch ein Platz im Auto frei. Vor Ort redetest du viel mit Tim, über mich und die Welt. Leider wurde dir der Alkohol ein bisschen zu viel. Nachdem Tims Hose als Erstes dran war, gingst du auf die Toilette. Am Ende ließest du dich abholen.", image: null },
+        { date: "2024-07-28", title: "Summerbreak", text: "Unser Kontakt ließ nach, bis zum 28. Juli 2024. Es war Summerbreak und Celina schrieb mich an. Ab da kam alles wieder ins Rollen. Wir vereinbarten ein Treffen direkt am nächsten Tag.", image: null },
+        { date: "2024-08-14", title: "Ein Missgeschick", text: "Am 14. August 2024 feierte Tamara bei ihrem Vater zu Hause. Währenddessen schrieben wir auch. Ich empfahl dir Cyberpunk. Nach ein bisschen Skepsis zu Beginn hast du das Werk aber liebgewonnen. An demselben Tag entschied sich eine sehr schnelle Schnecke dazu, genau unter meinen Fuß zu kriechen.", image: null },
+        { date: "2024-08-15", title: "Urlaub", text: "Es war der 15. August 2024. Für mich begann mein Urlaub am Bodensee. Zu der Zeit fingen wir an, richtige Texte miteinander zu schreiben. Meine Snapchat-Zeit schoss in die Höhe, mein Urlaub war durch dich geprägt. Zudem stellten wir fest, dass unsere Väter damals in die gleiche Klasse gingen.", image: null },
+        { date: "2024-08-31", title: "Erste Übernachtung", text: "31. August 2024. Nachdem der Japaner wieder ausgezogen war, trafen wir uns bei mir. Wir machten nicht viel. Lagen auf dem Boden und warfen mit einem Gummi. Abends gingen wir raus in den Wald. Wir sahen die schönste Sternschnuppe, die ich jemals gesehen hatte. Ich dachte daran, dich zu küssen.", image: null },
+        { date: "2024-09-08", title: "Das erste Mal bei dir", text: "Am 8. September 2024 beschlossen wir ganz spontan, dass ich zu dir komme. Wir gingen uns abends noch entgegen. Bei dir machten wir auch nicht viel. Wir lagen auf der Couch und kuschelten. Bis 06:00 Uhr nachts blieben wir wach. Wir gingen schlafen. Nachdem wir wieder aufwachten, küssten wir uns zum ersten Mal.", image: null },
+        { date: "2024-09-12", title: "Wir kamen zusammen", text: "Am 12. September 2024 war es so weit. Einen Tag nach 9/11, einen Tag vor Freitag, dem 13., genau ein halbes Jahr nach dem Geburtstag deines Vaters. Nachdem ich abends nach der Schule zu dir gekommen war, stellte ich dir die Frage: „Willst du meine Freundin sein?“", image: null },
+        { date: "2024-09-20", title: "Eine neue Katze", text: "Am 20. September 2024 war der Tag gekommen. Du kamst mit deiner Mutter zu uns und gemeinsam holtet ihr euch Bounty ab. Katze 1 von 3 war rekrutiert.", image: null },
+        { date: "2024-10-01", title: "ONE PIECE", text: "Am 1. Oktober 2024 gegen 16 Uhr schauten wir gemeinsam die erste Folge von One Piece. Mal schauen, wie lange die Reise noch gehen wird?", image: null },
+        { date: "2024-10-20", title: "Rehabilitationsphase", text: "Es war der 20. Oktober 2024. Du kamst von deiner Mandel-OP zurück aus dem Krankenhaus und durftest nichts richtig machen. Also schenkte ich dir ein Lego-Orchideen-Set, welches wir gemeinsam aufbauten.", image: null },
+        { date: "2024-12-01", title: "Weihnachtsbeginn", text: "Am 1. Dezember 2024 schauten Moritz und ich zusammen den Solo Leveling Film im Kino. Auf dem Rückweg durch den Koblenzer Weihnachtsmarkt kaufte ich dir ein Lebkuchenherz, welches ich dir am darauffolgenden Morgen gab.", image: null },
+        { date: "2024-12-13", title: "Winterball", text: "Am 13. Dezember 2024 war Winterball an unserer Schule. Wir gingen beide in wunderschönen Outfits dorthin. Nachdem Herr Siegel im Karaoke performte, machte Tim ein paar Bilder von uns. Seine Methoden waren zwar skurril, aber dabei entstand unser erstes schönes Bild zusammen.", image: null },
+        { date: "2024-12-24", title: "Weihnachten", text: "Es war der 24. Dezember 2024, unser erstes Weihnachten zusammen. Als Geschenk gab es für dich mein kleines Bärchen, und für mich ein immer noch absolut cooles Katana.", image: null },
+        { date: "2024-12-30", title: "Erster gemeinsamer Urlaub", text: "Am 30. Dezember 2024 fuhren wir mit meiner Familie nach Bad Kissingen. Dort verberachten wir gemeinsam die Silvesterzeit. Das Wasserbett war umwerfend.", image: null },
+        { date: "2025-02-14", title: "Valentinstag", text: "Der 14. Februar 2025 war gekommen. Ich kam an dem Tag aus Berlin heim. Abends besuchte ich dich noch. Dabei überreichte ich dir einen neuen Throne-of-Glass-Teil. Nur leider wollte deine Mutter dir diesen zum Geburtstag schenken.", image: null },
+        { date: "2025-02-16", title: "Erstes Mal Karneval", text: "Am 16. Februar 2025 sah ich dich das erste Mal live tanzen. Zusammen mit deiner Gruppe rocktest du die Bühne. Gleich zweimal hatte ich die Ehre. Du bist super, ich bin stolz auf dich.", image: null },
+        { date: "2025-02-18", title: "Geburtstag", text: "Der 18. Februar 2025, endlich 18! Als Geschenk bekamst du von mir ein Lego-Set von uns beiden. Schade nur, dass es sehr viel Verspätung hatte.", image: null },
+        { date: "2025-05-12", title: "Endlich auch 18", text: "Es war der 12. Mai 2025. Direkt nachdem ich 18 wurde, fuhren wir mit dem BMW meines Vaters Richtung Boppard. An dem Aussichtspunkt genossen wir die Aussicht. Abends tranken wir noch einen Sekt mit meiner Familie. Es war ein sehr schöner Tag.", image: null },
+        { date: "2025-05-30", title: "Geburtstagsfeier", text: "Am 30. Mai 2025 feierte ich dann meinen Geburtstag. Sowohl im Vorhinein als auch währenddessen halfst du ordentlich mit. Obwohl der Tag für dich Höhen und Tiefen hatte, schienst du am Ende ganz zufrieden. Erst als Émile sich dazu entschied, bei mir zu schlafen mit den Worten: „Ich mache jetzt durch“, drehte sich die Stimmung wieder bei dir.", image: null },
+        { date: "2025-07-03", title: "Letzte Stufenfeier", text: "3. Juli 2025. Ich nahm mir vor, es diesmal richtig krachen zu lassen. Das hatte aber nur so bedingt funktioniert. Am Ende lagen wir auf dem Parkplatz auf dem Boden. Mein Vater holte uns ab. Zumindest für dich war es eine Steigerung zum letzten Mal.", image: null },
+        { date: "2025-07-20", title: "Paris", text: "Am 20. Juli 2025 startete unsere Reise nach Paris. Mit dem frisch bekommenen Seat Leon machten wir uns auf. Sechs Stunden sollte unsere Reise gehen. Die darauffolgenden Tage bestanden aus viel Laufen und Sehen. Wir waren auf dem Arc de Triomphe, sahen den Eiffelturm, besichtigten den Louvre und noch vieles mehr. Es war ein gelungener Urlaub, nur einmal wurde der Handyakku bei uns etwas knapp. Nach dem Urlaub stritten wir. Das war uns eine Lehre für unsere Beziehung.", image: null },
+        { date: "2025-09-12", title: "Jahrestag!", text: "Am 12. September 2025 war es dann endlich so weit. Ein Jahr waren wir nun schon zusammen. Zusammen gingen wir in Emmelshausen essen.", image: null },
+        { date: "2025-10-24", title: "Chainsaw Man", text: "Der 24. Oktober 2025 war gekommen. In schwarzer Hose und weißem Hemd gingen wir zusammen mit Jenni, Tim und Moritz ins Kino. Zusammen schauten wir den besten Film des Jahres. Davor gab es aber noch leckere Ramen.", image: null },
+        { date: "2025-12-12", title: "Unser Winterball", text: "Am 12. Dezember 2025 stand der Winterball meiner Stufe an. Wir beide kamen wieder sehr schick gekleidet. Es war ein schöner Abend. Leider gab es von drei gemachten Fotos nur eines, welches wirklich punkten konnte. Das erste wurde von Émile gestört, während beim zweiten Nelli den Flitzer spielte.", image: null },
+        { date: "2025-12-31", title: "Silvester", text: "Am 31. Dezember 2025 trafen wir uns bei mir. Zusammen mit meiner Familie feierten wir bei mir zu Hause. Danach gab es Feuerwerk bei uns in der Straße.", image: null },
+        { date: "2026-01-06", title: "Körperwelten", text: "Am 6. Januar 2026 lösten wir das Geschenk meiner Mutter ein und fuhren mit ihr nach Heidelberg zu der Körperwelten-Ausstellung. Ein Wunsch von uns beiden wurde wahr. Das Zu-Sehende war sehr faszinierend.", image: null },
+        { date: "2026-01-18", title: "FKK", text: "Der 18. Januar 2026 war gekommen. Wir besuchten den FKK in Emmelshausen. Du als Ellis und ich als Osterhase. Wir trafen sehr unterhaltsame Typen.", image: null },
+        { date: "2026-02-01", title: "Oberweseler Karneval", text: "Julia lud uns auf ihre Sitzung ein. Zusammen mit Tim und Lara fuhren wir dorthin. Nachdem der Wein mir und Tim etwas zu viel wurde, hast du uns alle wieder sicher hochgebracht.", image: null },
+        { date: "2026-03-26", title: "Abiball", text: "26. März 2026. Eine frohe und zugleich sehr traurige Veranstaltung. Dennoch war der Abend gelungen. Meine Oma hatte riesigen Spaß. Mit dem Männerballett zeigte ich, dass ich dir in nichts nachstehe.", image: null },
+        { date: "2026-05-02", title: "Senckenberg Museum", text: "Ein spontanes Geschenk von mir. Am 2. Mai 2026 fuhren wir nach Frankfurt ins Senckenberg Naturmuseum. Wir lernten viel über Dinosaurier und andere Tiere dieser Welt. Es war ein sehr schöner Tag.", image: null },
+        { date: "2026-05-17", title: "24h-Rennen", text: "Am 17. Mai 2026 fand das 24-Stunden-Rennen auf dem Nürburgring statt. Zusammen besuchten wir dieses. Wir beide hatten Spaß, uns das alles gemeinsam anzuschauen. Schade nur, dass das Verstappen-Team aufgrund eines technischen Problems ausschied.", image: null },
+        { date: "2026-06-30", title: "Amsterdam", text: "Am 30. Juni 2026 fuhren wir zusammen in die Nähe von Amsterdam. Wir machten dort Urlaub, um uns gemeinsam das Bruno-Mars-Konzert anschauen zu können. Es war eine sehr schöne Stadt und ein noch schöneres Konzert. Durch einen Umweg auf dem Heimweg schafften wir es noch, Kühe zu sehen. Nach unserem Ausflug haben wir das Auto bei vollem Tank auf 1000 km Restreichweite hochgefahren.", image: null },
+        { date: "2026-07-11", title: "Mallorca", text: "Am 11. Juli 2026 ging es für uns auf nach Mallorca. Für dich war es das erste Mal. Die Hitze war sehr drückend, machte das Schwimmen im Meer aber umso angenehmer. Leider war der Urlaub dort viel zu kurz.", image: null },
+        { date: "2026-08-09", title: "Ein trauriger Abschied", text: "Der 9. August 2026 war gekommen. Um 04:00 Uhr war die Zeit für uns gekommen. Es ging auf zum Flughafen. Wir umarmten uns und küssten uns. Allerdings nicht für das letzte Mal. Eine lange Reise sollte für uns beide beginnen. Der Anfang einer Probe. Wir schaffen das, Tabea. Ich liebe dich.", image: null },
+        { date: "2026-09-12", title: "Jubiläum", text: "Es ist der 12. September 2026. Vor genau zwei Jahren kamen wir zusammen. Wir haben seitdem viel durchgemacht und sind zusammengewachsen. Es ist der Beginn einer langen Reise, allerdings der Grundaufbau unseres ganzen Lebens. Ich liebe dich, Tabea. Darauf, dass noch viele, viele weitere Jahre folgen!", image: null }
       ],
       suesseTexte: {
-        // TODO: Liste beliebig erweitern — wiederholt sich nicht, bis alle einmal dran waren
         nachrichten: [
           "Ich hab gerade an dich gedacht.",
           "Du fehlst mir gerade besonders.",
@@ -1034,18 +1228,48 @@
         ]
       },
       letters: [
-        // TODO: echte Brieftexte ergänzen/ersetzen
         { condition: "du traurig bist", text: "Platzhaltertext — hier später den echten Brief einfügen." },
         { condition: "du mich vermisst", text: "Platzhaltertext — hier später den echten Brief einfügen." },
         { condition: "du einen schlechten Tag hattest", text: "Platzhaltertext — hier später den echten Brief einfügen." },
         { condition: "du an uns zweifelst", text: "Platzhaltertext — hier später den echten Brief einfügen." },
         { condition: "du dich einsam fühlst", text: "Platzhaltertext — hier später den echten Brief einfügen." },
-        { condition: "du diese Nachricht am meisten brauchst", text: "Platzhaltertext — hier später den echten Brief einfügen." }
+        { condition: "du diese Nachricht am meistem brauchst", text: "Platzhaltertext — hier später den echten Brief einfügen." }
       ],
-      // TODO: weitere Codes ergänzen — Reihenfolge im Array = aufsteigende Größe
       secretCodes: [
         { code: "67", reveal: "Teil 1 der Überraschung: Platzhaltertext." },
         { code: "1209", reveal: "Teil 2 der Überraschung: Platzhaltertext." }
+      ],
+      photobook: [
+        [
+          { image: null, caption: "Erinnerung 1" },
+          { image: null, caption: "Erinnerung 2" },
+          { image: null, caption: "Erinnerung 3" },
+          { image: null, caption: "Erinnerung 4" }
+        ],
+        [
+          { image: null, caption: "Erinnerung 5" },
+          { image: null, caption: "Erinnerung 6" },
+          { image: null, caption: "Erinnerung 7" },
+          { image: null, caption: "Erinnerung 8" }
+        ],
+        [
+          { image: null, caption: "Erinnerung 9" },
+          { image: null, caption: "Erinnerung 10" },
+          { image: null, caption: "Erinnerung 11" },
+          { image: null, caption: "Erinnerung 12" }
+        ],
+        [
+          { image: null, caption: "Erinnerung 13" },
+          { image: null, caption: "Erinnerung 14" },
+          { image: null, caption: "Erinnerung 15" },
+          { image: null, caption: "Erinnerung 16" }
+        ],
+        [
+          { image: null, caption: "Erinnerung 17" },
+          { image: null, caption: "Erinnerung 18" },
+          { image: null, caption: "Erinnerung 19" },
+          { image: null, caption: "Erinnerung 20" }
+        ]
       ]
     };
 
@@ -1058,8 +1282,7 @@
 
     document.getElementById('togetherSince').textContent =
       `zusammen seit dem ${formatDateShort(CONFIG.relationshipStart)}`;
-    document.getElementById('footerText').textContent =
-      `${CONFIG.zeitungsname} · handgemacht mit ♥`;
+    document.getElementById('footerText').textContent = CONFIG.zeitungsname;
     document.getElementById('envelopeAddress').textContent = `Für ${CONFIG.partner2}`;
 
     /* --- Seiten-Navigation (Kacheln & Zurück-Links) --- */
@@ -1078,7 +1301,6 @@
 
     /* --- Zeitstrahl & Event-Fenster --- */
     const timelineLine = document.getElementById('timelineLine');
-    const eventsList = document.getElementById('eventsList');
     const eventModal = document.getElementById('eventModal');
     const eventModalImage = document.getElementById('eventModalImage');
     const eventModalTitle = document.getElementById('eventModalTitle');
@@ -1102,26 +1324,19 @@
       if(e.key === 'Escape' && !eventModal.hidden) closeEventModal();
     });
 
-    [...CONFIG.events].sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(ev => {
+    const sortedEvents = [...CONFIG.events].sort((a,b) => new Date(a.date) - new Date(b.date));
+    
+    if(sortedEvents.length > 0){
+      document.getElementById('timelineStartLabel').textContent = formatDateShort(sortedEvents[0].date);
+      document.getElementById('timelineEndLabel').textContent = formatDateShort(sortedEvents[sortedEvents.length - 1].date);
+    }
+
+    sortedEvents.forEach(ev => {
       const dot = document.createElement('button');
       dot.className = 'timeline__dot';
       dot.innerHTML = `<span class="timeline__dot-date">${formatDateShort(ev.date)}</span><span class="timeline__dot-title">${ev.title}</span>`;
       dot.addEventListener('click', () => openEventModal(ev));
       timelineLine.appendChild(dot);
-
-      const link = document.createElement('button');
-      link.className = 'events-list__link';
-      link.textContent = `${formatDateShort(ev.date)} — ${ev.title}`;
-      link.addEventListener('click', () => openEventModal(ev));
-      eventsList.appendChild(link);
-    });
-
-    const eventsToggle = document.getElementById('eventsToggle');
-    eventsToggle.addEventListener('click', () => {
-      const expanded = eventsToggle.getAttribute('aria-expanded') === 'true';
-      eventsToggle.setAttribute('aria-expanded', String(!expanded));
-      eventsList.hidden = expanded;
-      eventsToggle.textContent = expanded ? 'Alle Events anzeigen ▾' : 'Events ausblenden ▴';
     });
 
     /* --- Süße Texte: Zufalls-Generator ohne Wiederholung --- */
@@ -1233,6 +1448,49 @@
     }
     updateAustralienInfo();
     setInterval(updateAustralienInfo, 60000);
+
+    /* --- Fotobuch: 5 Seiten à 4 Bilder, mit Blätter-Animation --- */
+    let pageIndex = 0;
+    const photobookGrid = document.getElementById('photobookGrid');
+    const photobookPageLabel = document.getElementById('photobookPageLabel');
+
+    function renderPhotobookPage(){
+      const page = CONFIG.photobook[pageIndex];
+      photobookGrid.innerHTML = '';
+      page.forEach(photo => {
+        const item = document.createElement('div');
+        item.className = 'photobook__photo';
+        const imgStyle = photo.image ? ` style="background-image:url('${photo.image}')"` : '';
+        item.innerHTML = `<div class="photobook__photo-img"${imgStyle}>${photo.image ? '' : '🖼️'}</div><p class="photobook__photo-caption">${photo.caption}</p>`;
+        photobookGrid.appendChild(item);
+      });
+      photobookPageLabel.textContent = `Seite ${pageIndex + 1} von ${CONFIG.photobook.length}`;
+      photobookGrid.querySelectorAll('.photobook__photo-img').forEach((imgEl, i) => {
+        imgEl.addEventListener('click', () => openEventModal({ title: page[i].caption, text: '', image: page[i].image }, '🖼️'));
+      });
+    }
+    function flipToPage(newIndex, direction){
+      photobookGrid.style.transformOrigin = direction === 'next' ? 'right center' : 'left center';
+      photobookGrid.classList.add('is-flip-out');
+      photobookGrid.addEventListener('animationend', function outHandler(){
+        photobookGrid.removeEventListener('animationend', outHandler);
+        photobookGrid.classList.remove('is-flip-out');
+        pageIndex = newIndex;
+        renderPhotobookPage();
+        photobookGrid.classList.add('is-flip-in');
+        photobookGrid.addEventListener('animationend', function inHandler(){
+          photobookGrid.removeEventListener('animationend', inHandler);
+          photobookGrid.classList.remove('is-flip-in');
+        });
+      });
+    }
+    document.getElementById('photoPrev').addEventListener('click', () => {
+      flipToPage((pageIndex - 1 + CONFIG.photobook.length) % CONFIG.photobook.length, 'prev');
+    });
+    document.getElementById('photoNext').addEventListener('click', () => {
+      flipToPage((pageIndex + 1) % CONFIG.photobook.length, 'next');
+    });
+    renderPhotobookPage();
 
     /* --- Drück-mich-Button: Herzen fliegen, solange gedrückt --- */
     const pressHeartBtn = document.getElementById('pressHeartBtn');
@@ -1400,14 +1658,6 @@
 
     heartBtn.addEventListener('click', openLetter);
     envelope.addEventListener('click', openLetter);
-
-    /* =================================================
-       NÄCHSTE SCHRITTE (Platzhalter im Code):
-       - Fotoarchiv: Timeline-Komponente mit Bildern
-       - Liebesbriefe: klickbare Umschläge + Modal
-       - Zukunftspläne: abhakbare Liste
-       - Ostereier & Rätsel: über die ganze Seite verteilt (Ziel: 10+)
-       ================================================= */
 
   </script>
 
