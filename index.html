@@ -498,6 +498,39 @@
   }
 
   /* ===================================================
+     GEHEIME CODES — Popup & Übersicht
+     =================================================== */
+  .secret-modal{ position: fixed; inset: 0; z-index: 900; display: flex; align-items: center; justify-content: center; }
+  .secret-modal[hidden]{ display: none; }
+  .secret-modal__backdrop{ position: absolute; inset: 0; background: rgba(43,33,64,0.55); opacity: 0; transition: opacity 0.25s ease; }
+  .secret-modal__card{
+    position: relative;
+    background: linear-gradient(160deg, #fffdf6, var(--paper) 130%);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    max-width: 380px; width: 88%;
+    padding: 32px 26px;
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.75) rotate(-2deg);
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .secret-modal.is-open .secret-modal__backdrop{ opacity: 1; }
+  .secret-modal.is-open .secret-modal__card{ opacity: 1; transform: scale(1) rotate(0deg); }
+  .secret-modal__sparkle{ font-size: 2.4rem; margin-bottom: 6px; animation: sparklePop 0.6s ease; }
+  @keyframes sparklePop{ 0%{ transform: scale(0); } 60%{ transform: scale(1.3); } 100%{ transform: scale(1); } }
+  .secret-modal__label{ font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; margin: 0 0 10px; color: var(--ink); }
+  .secret-modal__code{ font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--coral); margin: 0 0 10px; letter-spacing: 0.04em; }
+  .secret-modal__hint{ color: var(--ink-soft); font-size: 0.88rem; margin: 0; }
+  .secret-modal__close{ position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--ink-soft); }
+
+  .overview-modal__card{ max-width: 480px; text-align: left; max-height: 80vh; overflow-y: auto; }
+  .overview-modal__list{ list-style: none; margin: 0 0 16px; padding: 0; }
+  .overview-modal__list li{ display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--paper-dark); font-size: 0.9rem; }
+  .overview-modal__list b{ color: var(--coral); }
+  .overview-modal__final{ background: var(--paper); border-radius: 10px; padding: 12px 14px; text-align: center; font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+
+  /* ===================================================
      SÜSSE TEXTE — Unterreiter & Textanzeige
      =================================================== */
   .subtab-grid{
@@ -758,18 +791,40 @@
   .chest-hint{ font-family: var(--font-body); font-weight: 600; color: var(--ink-soft); }
 
   .voucher{
-    margin: 10px auto 0;
-    background: linear-gradient(160deg, #ffffff, var(--paper) 130%);
-    border: 2px dashed var(--coral);
-    border-radius: var(--radius);
+    position: relative;
+    margin: 20px auto 0;
+    background: linear-gradient(160deg, #2B2140, #3B2E56);
+    border: 1px solid rgba(212,175,55,0.5);
+    border-radius: 6px;
     box-shadow: var(--shadow-soft);
-    padding: 28px 24px;
-    max-width: 380px;
-    animation: pageIn 0.5s ease;
+    padding: 40px 30px;
+    max-width: 400px;
+    animation: pageIn 0.6s ease;
+    overflow: hidden;
   }
-  .voucher__label{ text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; color: var(--coral); font-weight: 700; margin: 0 0 8px; }
-  .voucher__title{ font-family: var(--font-display); font-size: 1.3rem; margin: 0 0 10px; }
-  .voucher__text{ color: var(--ink-soft); margin: 0; }
+  .voucher::before{
+    content: '';
+    position: absolute;
+    inset: 9px;
+    border: 1px solid rgba(212,175,55,0.35);
+    border-radius: 3px;
+    pointer-events: none;
+  }
+  .voucher__seal{
+    position: relative;
+    width: 56px; height: 56px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #F4D675, #C9A227 75%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  .voucher__label{ position: relative; text-transform: uppercase; letter-spacing: 0.25em; font-size: 0.68rem; color: #D4AF37; font-weight: 600; margin: 0 0 14px; text-align: center; }
+  .voucher__title{ position: relative; font-family: var(--font-display); font-style: italic; font-weight: 600; font-size: 1.5rem; margin: 0 0 16px; text-align: center; color: #FBF1E4; line-height: 1.4; }
+  .voucher__divider{ position: relative; width: 56px; height: 1px; background: #D4AF37; margin: 0 auto 18px; }
+  .voucher__text{ position: relative; color: #E4DAF0; margin: 0 0 18px; text-align: center; line-height: 1.75; font-size: 0.98rem; }
+  .voucher__signature{ position: relative; text-align: center; font-family: var(--font-display); font-style: italic; color: #D4AF37; font-size: 1rem; }
 
   .photobook{ margin-top: 24px; }
   .photobook__book{
@@ -883,6 +938,13 @@
     color: var(--ink-soft);
     margin: 0;
     line-height: 1.5;
+  }
+  .date-idea__sublist{
+    margin: 0;
+    padding-left: 18px;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    line-height: 1.7;
   }
   .playlist-card{
     display: flex;
@@ -1233,7 +1295,7 @@
 
         <div class="info-item">
           <span class="info-item__label">💗 Wie sehr ich dich vermisse</span>
-          <span class="info-item__value">unendlich sehr</span>
+          <span class="info-item__value" id="missYouValue">unendlich sehr</span>
         </div>
       </div>
       <div id="australienMap" style="width: 100%; height: 400px; border-radius: 14px; margin-top: 24px; box-shadow: 0 2px 6px rgba(43, 33, 64, 0.06), 0 16px 32px rgba(43, 33, 64, 0.14);"></div>
@@ -1245,73 +1307,14 @@
       <p class="page__intro">Kleine Inspirationen für gemeinsame Momente.</p>
       <div class="date-ideas-list">
         <div class="date-idea">
-          <span class="date-idea__emoji">🌅</span>
+          <span class="date-idea__emoji">🌿</span>
           <div class="date-idea__content">
-            <h3>Gemeinsamer Sonnenaufgang</h3>
-            <p>Früh aufstehen und zusammen den Tag begrüßen (auch über Videocall)</p>
-          </div>
-        </div>
-        <div class="date-idea">
-          <span class="date-idea__emoji">🍿</span>
-          <div class="date-idea__content">
-            <h3>Filme schauen zusammen</h3>
-            <p>Synchron einen Film ansehen und live darüber schreiben</p>
-          </div>
-        </div>
-        <div class="date-idea">
-          <span class="date-idea__emoji">🎮</span>
-          <div class="date-idea__content">
-            <h3>Spiele spielen</h3>
-            <p>Online-Spiele zocken oder Würfelspiele über Video</p>
-          </div>
-        </div>
-        <div class="date-idea">
-          <span class="date-idea__emoji">📚</span>
-          <div class="date-idea__content">
-            <h3>Buch-Klub</h3>
-            <p>Das gleiche Buch lesen und sich darüber austauschen</p>
-          </div>
-        </div>
-        <div class="date-idea">
-          <span class="date-idea__emoji">🍕</span>
-          <div class="date-idea__content">
-            <h3>Gemeinsames Dinner</h3>
-            <p>Das gleiche Rezept kochen und zusammen essen (per Videocall)</p>
-          </div>
-        </div>
-        <div class="date-idea">
-          <span class="date-idea__emoji">🎨</span>
-          <div class="date-idea__content">
-            <h3>Kreativ-Challenge</h3>
-            <p>Zusammen zeichnen, malen oder handwerk-Projekte machen</p>
-          </div>
-        </div>
-        <div class="date-idea">
-          <span class="date-idea__emoji">🎵</span>
-          <div class="date-idea__content">
-            <h3>Musik-Session</h3>
-            <p>Gemeinsam Musik hören oder Lieblingssongs vorstellen</p>
-          </div>
-        </div>
-        <div class="date-idea">
-          <span class="date-idea__emoji">🌙</span>
-          <div class="date-idea__content">
-            <h3>Sternenhimmel-Chat</h3>
-            <p>Unter dem Sternenhimmel sitzen und quatschen</p>
-          </div>
-        </div>
-        <div class="date-idea">
-          <span class="date-idea__emoji">💌</span>
-          <div class="date-idea__content">
-            <h3>Brief schreiben</h3>
-            <p>Liebevolle Briefe zu bestimmten Anlässen verschicken</p>
-          </div>
-        </div>
-        <div class="date-idea">
-          <span class="date-idea__emoji">🎁</span>
-          <div class="date-idea__content">
-            <h3>Überraschungs-Paket</h3>
-            <p>Kleine Geschenke verschicken zum Auspacken zusammen</p>
+            <h3>Einen botanischen Garten besuchen</h3>
+            <ul class="date-idea__sublist">
+              <li>Spazieren</li>
+              <li>Picknicken</li>
+              <li>Lesen</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -1352,9 +1355,9 @@
       </div>
 
       <div class="codepad">
-        <p class="codepad__info">Überall auf der Website sind Codes versteckt (alle 2 bis 4 Stellen lang). Gib sie der Größe nach sortiert ein — jeder richtige Code schaltet ein Stück der Überraschung frei.</p>
+        <p class="codepad__info">Überall auf der Website sind Codes versteckt. Findest du einen, verrät er dir eine Stelle des finalen Passworts. Trag ihn hier ein!</p>
         <form class="codepad__form" id="codepadForm">
-          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="codepad__input" id="codepadInput" placeholder="Code eingeben" aria-label="Geheimcode eingeben">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" class="codepad__input" id="codepadInput" placeholder="Code eingeben" aria-label="Geheimcode eingeben">
           <button type="submit" class="codepad__submit">Einlösen</button>
         </form>
         <p class="codepad__feedback" id="codepadFeedback"></p>
@@ -1370,8 +1373,7 @@
 
     <section class="page page--fullscreen" id="playlist">
       <button class="back-link" data-target="sonstiges">← Zu Sonstiges</button>
-      <!-- TODO: echten Playlist-Link eintragen -->
-      <a class="playlist-top-link" href="https://open.spotify.com/playlist/4YFFudPKjsVxeB1MYIWnrV?si=RX2MrmrlRUicQSHGNVPX8w&utm_source=copy-link&pt=ae3cb9ee77841843dedacaff141ddafe&pi=AMmiugJTSdKYA" target="_blank" rel="noopener">Zur Playlist ↗</a>
+      <a class="playlist-top-link" href="https://open.spotify.com/playlist/4YFFudPKjsVxeB1MYIWnrV?si=qifAr8XQRo-lQYlf9ch-Ow&utm_source=copy-link&pt=ae3cb9ee77841843dedacaff141ddafe&pi=gQ1KI5X_Q8e0b" target="_blank" rel="noopener">Zur Playlist ↗</a>
 
       <div class="fake-spotify">
         <div class="fake-spotify__header">
@@ -1391,7 +1393,7 @@
           <li class="track-row"><span class="track-row__num">6</span><span class="track-row__info"><span class="track-row__title">pov</span><span class="track-row__artist">Ariana Grande</span></span><span class="track-row__duration">2:49</span></li>
           <li class="track-row"><span class="track-row__num">7</span><span class="track-row__info"><span class="track-row__title">u + me = <3</span><span class="track-row__artist">Olivia Rodrigo</span></span><span class="track-row__duration">3:33</span></li>
           <li class="track-row"><span class="track-row__num">8</span><span class="track-row__info"><span class="track-row__title">Until I Found You</span><span class="track-row__artist">Stephen Sanchez, Em Beihold</span></span><span class="track-row__duration">3:16</span></li>
-          <li class="track-row"><span class="track-row__num">9</span><span class="track-row__info"><span class="track-row__title">Yellow</span><span class="track-row__artist">Coldplay</span></span><span class="track-row__duration">4:22</span></li>
+          <li class="track-row" id="trackYellow"><span class="track-row__num">9</span><span class="track-row__info"><span class="track-row__title">Yellow</span><span class="track-row__artist">Coldplay</span></span><span class="track-row__duration">4:22</span></li>
         </ol>
       </div>
     </section>
@@ -1411,9 +1413,12 @@
         <p class="chest-hint" id="chestHint">Noch 4x drücken</p>
 
         <div class="voucher" id="voucherCard" hidden>
-          <p class="voucher__label">Dein Gutschein</p>
-          <p class="voucher__title">Ein Essen, ganz auf dich zugeschnitten 🍽️</p>
-          <p class="voucher__text"><!-- TODO: echten Gutschein-Text eintragen -->Platzhaltertext — hier später den echten Gutschein-Text einfügen.</p>
+          <div class="voucher__seal">🍽️</div>
+          <p class="voucher__label">Gutschein</p>
+          <h3 class="voucher__title">Ein Abend nur für uns beide</h3>
+          <div class="voucher__divider"></div>
+          <p class="voucher__text">Ich lade dich zu einem wunderschönen Essen ein — ganz gleich wohin es dich zieht. Lass uns einen Abend genießen, der nur uns gehört.</p>
+          <p class="voucher__signature">Mit ganzer Liebe ♥</p>
         </div>
 
         <button class="back-link" data-target="startseite">← Zur Startseite</button>
@@ -1432,6 +1437,27 @@
       <div class="event-modal__image" id="eventModalImage"></div>
       <h3 class="event-modal__title" id="eventModalTitle"></h3>
       <p class="event-modal__text" id="eventModalText"></p>
+    </div>
+  </div>
+
+  <div class="secret-modal" id="secretModal" hidden>
+    <div class="secret-modal__backdrop" id="secretModalBackdrop"></div>
+    <div class="secret-modal__card" role="dialog" aria-modal="true">
+      <button class="secret-modal__close" id="secretModalClose" aria-label="Schließen">✕</button>
+      <div class="secret-modal__sparkle">✨</div>
+      <p class="secret-modal__label" id="secretModalLabel"></p>
+      <p class="secret-modal__code" id="secretModalCode"></p>
+      <p class="secret-modal__hint" id="secretModalHint"></p>
+    </div>
+  </div>
+
+  <div class="secret-modal" id="overviewModal" hidden>
+    <div class="secret-modal__backdrop" id="overviewModalBackdrop"></div>
+    <div class="secret-modal__card overview-modal__card" role="dialog" aria-modal="true">
+      <button class="secret-modal__close" id="overviewModalClose" aria-label="Schließen">✕</button>
+      <p class="secret-modal__label">Alle Hinweise 🕵️</p>
+      <ul class="overview-modal__list" id="overviewModalList"></ul>
+      <p class="overview-modal__final" id="overviewModalFinal"></p>
     </div>
   </div>
 
@@ -1910,10 +1936,19 @@
         { condition: "du dich einsam fühlst" },
         { condition: "du diese Nachricht am meistem brauchst" }
       ],
+      /* Sortiert nach Zahlenwert aufsteigend — Reihenfolge bestimmt die "Stelle" im finalen Passwort */
       secretCodes: [
-        { code: "67", reveal: "Teil 1 der Überraschung: Platzhaltertext." },
-        { code: "1209", reveal: "Teil 2 der Überraschung: Platzhaltertext." }
+        { code: "20",   location: "Fotobuch – Bild 20" },
+        { code: "67",   location: "Süße Texte – Poesie (zufällig)" },
+        { code: "110",  location: "Sonstiges – Drück mich (10 Sek. halten)" },
+        { code: "422",  location: "Playlist – Songlänge 4:22" },
+        { code: "888",  location: "Australien – „unendlich sehr“" },
+        { code: "0908", location: "Zeitstrahl – 9. Aug 2026" },
+        { code: "1209", location: "Startseite – Unterüberschrift (zusammen seit ...)" },
+        { code: "8345", location: "Startseite – „Jubiläumsgeschenk für mein Bärchen“" }
       ],
+      finalPassword: "15146004",
+      masterCode: "6382",
       photobook: [
         [
           { image: null, caption: "Erinnerung 1" },
@@ -2022,7 +2057,10 @@
         const dot = document.createElement('button');
         dot.className = 'timeline__dot';
         dot.innerHTML = `<span class="timeline__dot-date">${formattedDate}</span><span class="timeline__dot-title">${ev.title}</span>`;
-        dot.addEventListener('click', () => openEventModal(ev));
+        dot.addEventListener('click', () => {
+          openEventModal(ev);
+          if(ev.date === '2026-08-09') setTimeout(() => showSecretCode('0908'), 500);
+        });
         timelineLine.appendChild(dot);
 
         eventElements.push({
@@ -2224,7 +2262,10 @@
         const cat = btn.dataset.category;
         if(cat === 'zufaellig') showPoesieScratchCard(zufallBag());
         if(cat === 'nachrichten') showPoesieScratchCard(nachrichtenBag());
-        if(cat === 'poesie') showPoesieScratchCard(poesieBag());
+        if(cat === 'poesie'){
+          showPoesieScratchCard(poesieBag());
+          if(Math.random() < 0.2) setTimeout(() => showSecretCode('67'), 900);
+        }
       });
     });
 
@@ -2369,7 +2410,10 @@
       });
       photobookPageLabel.textContent = `Seite ${pageIndex + 1} von ${CONFIG.photobook.length}`;
       photobookGrid.querySelectorAll('.photobook__photo-img').forEach((imgEl, i) => {
-        imgEl.addEventListener('click', () => openEventModal({ title: page[i].caption, text: '', image: page[i].image }, '🖼️'));
+        imgEl.addEventListener('click', () => {
+          if(page[i].caption === 'Erinnerung 20'){ showSecretCode('20'); return; }
+          openEventModal({ title: page[i].caption, text: '', image: page[i].image }, '🖼️');
+        });
       });
     }
     function flipToPage(newIndex){
@@ -2410,7 +2454,11 @@
       heart.addEventListener('animationend', () => heart.remove());
       heartBurstLayer.appendChild(heart);
     }
+    let pressStartTime = 0;
+    let pressCodeGiven = false;
     function startHearts(){
+      pressStartTime = Date.now();
+      pressCodeGiven = false;
       if(heartInterval) return;
       spawnHeart();
       heartInterval = setInterval(spawnHeart, 120);
@@ -2418,14 +2466,69 @@
     function stopHearts(){
       clearInterval(heartInterval);
       heartInterval = null;
+      if(!pressCodeGiven && Date.now() - pressStartTime >= 10000){
+        pressCodeGiven = true;
+        showSecretCode('110');
+      }
     }
     pressHeartBtn.addEventListener('pointerdown', startHearts);
     pressHeartBtn.addEventListener('pointerup', stopHearts);
     pressHeartBtn.addEventListener('pointerleave', stopHearts);
     pressHeartBtn.addEventListener('pointercancel', stopHearts);
 
-    /* --- Code-Pad: Codes der Größe nach freischalten --- */
-    let codeProgress = 0;
+    /* --- Geheime Codes: Popup-Fenster --- */
+    const secretModal = document.getElementById('secretModal');
+    const secretModalLabel = document.getElementById('secretModalLabel');
+    const secretModalCode = document.getElementById('secretModalCode');
+    const secretModalHint = document.getElementById('secretModalHint');
+
+    function openSecretModal(label, code, hint){
+      secretModalLabel.textContent = label;
+      secretModalCode.textContent = code;
+      secretModalHint.textContent = hint;
+      secretModal.hidden = false;
+      requestAnimationFrame(() => secretModal.classList.add('is-open'));
+      for(let i = 0; i < 10; i++) spawnParticle();
+    }
+    function closeSecretModal(){
+      secretModal.classList.remove('is-open');
+      setTimeout(() => { secretModal.hidden = true; }, 250);
+    }
+    document.getElementById('secretModalClose').addEventListener('click', closeSecretModal);
+    document.getElementById('secretModalBackdrop').addEventListener('click', closeSecretModal);
+
+    // Zeigt einen versteckt gefundenen Code an (Klick auf eine geheime Stelle)
+    function showSecretCode(code){
+      openSecretModal('Geheimer Code gefunden! 🎉', code, 'Trag ihn unter „Sonstiges“ ins Codefeld ein.');
+    }
+
+    // Übersichts-Fenster für den Master-Code
+    const overviewModal = document.getElementById('overviewModal');
+    const overviewModalList = document.getElementById('overviewModalList');
+    const overviewModalFinal = document.getElementById('overviewModalFinal');
+
+    function showOverview(){
+      overviewModalList.innerHTML = CONFIG.secretCodes.map((c, i) =>
+        `<li><span>${i + 1}. ${c.location}</span><b>${c.code}</b></li>`
+      ).join('');
+      overviewModalFinal.textContent = `Finales Passwort: ${CONFIG.finalPassword}`;
+      overviewModal.hidden = false;
+      requestAnimationFrame(() => overviewModal.classList.add('is-open'));
+    }
+    function closeOverviewModal(){
+      overviewModal.classList.remove('is-open');
+      setTimeout(() => { overviewModal.hidden = true; }, 250);
+    }
+    document.getElementById('overviewModalClose').addEventListener('click', closeOverviewModal);
+    document.getElementById('overviewModalBackdrop').addEventListener('click', closeOverviewModal);
+
+    /* --- Weitere Trigger-Stellen --- */
+    document.getElementById('missYouValue').addEventListener('click', () => showSecretCode('888'));
+    document.getElementById('togetherSince').addEventListener('click', () => showSecretCode('1209'));
+    document.getElementById('trackYellow').addEventListener('click', () => showSecretCode('422'));
+    document.getElementById('footerText').addEventListener('click', () => showSecretCode('8345'));
+
+    /* --- Code-Pad: einzelne Codes verraten eine Stelle des finalen Passworts --- */
     const codepadForm = document.getElementById('codepadForm');
     const codepadInput = document.getElementById('codepadInput');
     const codepadFeedback = document.getElementById('codepadFeedback');
@@ -2433,28 +2536,28 @@
     codepadForm.addEventListener('submit', e => {
       e.preventDefault();
       const value = codepadInput.value.trim();
+      codepadInput.value = '';
 
-      if(value === '123456'){
+      if(value === CONFIG.finalPassword){
         resetChest();
         showPage('gewinner');
-        codepadInput.value = '';
         return;
       }
 
-      const nextCode = CONFIG.secretCodes[codeProgress];
+      if(value === CONFIG.masterCode){
+        showOverview();
+        return;
+      }
 
-      if(!nextCode){
-        codepadFeedback.textContent = 'Alle Teile sind schon freigeschaltet! 🎉';
-      } else if(value === nextCode.code){
-        codeProgress++;
-        codepadFeedback.textContent = codeProgress === CONFIG.secretCodes.length
-          ? `${nextCode.reveal} — das war der letzte Code, die Überraschung ist komplett! 🎉`
-          : nextCode.reveal;
+      const idx = CONFIG.secretCodes.findIndex(c => c.code === value);
+      if(idx !== -1){
+        const position = idx + 1;
+        const digit = CONFIG.finalPassword[idx];
+        openSecretModal('Richtig! 🎉', `An der ${position}. Stelle: ${digit}`, 'Sammle alle Stellen für das finale Passwort.');
       } else {
         codepadFeedback.textContent = 'Das ist noch nicht der richtige Code.';
+        codepadInput.focus();
       }
-      codepadInput.value = '';
-      codepadInput.focus();
     });
 
     /* --- Gewinner-Seite: Truhe mit steigender Spannung --- */
