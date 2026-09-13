@@ -9,8 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 
   /* ===================================================
@@ -833,97 +831,21 @@
     box-shadow: var(--shadow-soft);
     touch-action: manipulation;
   }
-  .photobook__capture-btn{
-    display: block;
-    margin: 18px auto 0;
-    padding: 12px 22px;
-    border: none;
-    border-radius: 999px;
-    background: linear-gradient(135deg, var(--coral), var(--mustard));
-    color: white;
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    box-shadow: var(--shadow-soft);
-    transition: transform 0.15s ease, opacity 0.15s ease;
-  }
-  .photobook__capture-btn:active{ transform: scale(0.96); }
-  .photobook__capture-btn[disabled]{ opacity: 0.6; cursor: default; }
-  .photobook__photo-img.is-live{ position: relative; }
-  .photobook__photo-img.is-live::after{
-    content: '👥';
-    position: absolute;
-    top: 6px; right: 6px;
-    font-size: 0.85rem;
-    background: rgba(255,255,255,0.85);
-    border-radius: 50%;
-    width: 22px; height: 22px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .photobook__live-empty{
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 30px 16px;
-    color: var(--ink-soft);
-    font-size: 0.9rem;
-  }
-
-  .live-photo-modal{
-    position: fixed; inset: 0; z-index: 1000;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .live-photo-modal__backdrop{
-    position: absolute; inset: 0;
-    background: rgba(43,33,64,0.55);
-  }
-  .live-photo-modal__content{
-    position: relative;
-    background: var(--paper);
-    border-radius: var(--radius);
-    padding: 20px;
-    width: min(420px, 88vw);
-    box-shadow: var(--shadow-soft);
-    text-align: center;
-  }
-  .live-photo-modal__img{
-    width: 100%;
-    aspect-ratio: 4/3;
-    background-size: cover;
-    background-position: center;
-    border-radius: calc(var(--radius) - 6px);
-    margin-bottom: 16px;
-  }
-  .live-photo-modal__delete{
-    border: none;
-    background: #E8546B;
-    color: white;
-    font-family: var(--font-body);
-    font-weight: 600;
-    padding: 12px 20px;
-    border-radius: 999px;
-    cursor: pointer;
-    width: 100%;
-  }
-  .live-photo-modal__close{
-    position: absolute;
-    top: -12px; right: -12px;
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    border: none;
-    background: white;
-    box-shadow: var(--shadow-soft);
-    cursor: pointer;
-    font-size: 1rem;
-  }
 
   .sonstiges-grid{ 
     display: flex; 
     flex-direction: column; 
-    gap: 16px; 
+    gap: 28px; 
     margin-top: 24px; 
   }
-  .date-ideas-list{
+  .playlist-card[data-target="dateIdeen"]{
+    background: linear-gradient(135deg, rgba(52,168,224,0.25), rgba(33,150,243,0.18));
+    border-color: rgba(52,168,224,0.35);
+  }
+  .playlist-card[data-target="dateIdeen"] .playlist-card__art{
+    background: linear-gradient(135deg, #34A8E0, #2196F3);
+    color: white;
+  }
     display: grid;
     gap: 16px;
     margin-top: 24px;
@@ -979,9 +901,6 @@
     touch-action: manipulation;
   }
   .playlist-card--press{ background: linear-gradient(135deg, var(--coral), var(--rose)); }
-  .playlist-card[data-target="dateIdeen"]{
-    background: linear-gradient(135deg, #34A8E0, #2196F3);
-  }
   .playlist-card__art{ font-size: 2.4rem; }
   .playlist-card__info{ flex: 1; }
   .playlist-card__label{ font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.85; margin: 0; }
@@ -1051,6 +970,8 @@
       animation-iteration-count: 1 !important;
     }
   }
+
+
 
   /* --- Rubbelkarte für Poesie --- */
   .scratch-card{
@@ -1263,7 +1184,7 @@
         <button class="subtab" data-category="poesie">🖋️ Poesie</button>
       </div>
 
-      <div class="text-display" id="textDisplayBox">
+      <div class="text-display">
         <p id="suesseTextContent">Wähle eine Kategorie …</p>
       </div>
     </section>
@@ -1289,19 +1210,8 @@
           <span class="photobook__page-label" id="photobookPageLabel"></span>
           <button class="photobook__nav" id="photoNext" aria-label="Nächste Seite">›</button>
         </div>
-        <button class="photobook__capture-btn" id="photoCaptureBtn">📷 Foto aufnehmen</button>
-        <input type="file" accept="image/*" capture="environment" id="photoCaptureInput" style="display:none">
       </div>
     </section>
-
-    <div class="live-photo-modal" id="livePhotoModal" hidden>
-      <div class="live-photo-modal__backdrop" id="livePhotoModalBackdrop"></div>
-      <div class="live-photo-modal__content">
-        <button class="live-photo-modal__close" id="livePhotoModalClose" aria-label="Schließen">✕</button>
-        <div class="live-photo-modal__img" id="livePhotoModalImg"></div>
-        <button class="live-photo-modal__delete" id="livePhotoModalDelete">🗑️ Für alle löschen</button>
-      </div>
-    </div>
 
     <section class="page page--fullscreen" id="australien">
       <button class="back-link" data-target="startseite">← Zur Startseite</button>
@@ -1460,7 +1370,8 @@
 
     <section class="page page--fullscreen" id="playlist">
       <button class="back-link" data-target="sonstiges">← Zu Sonstiges</button>
-      <a class="playlist-top-link" href="https://open.spotify.com/playlist/PLAYLIST_ID" target="_blank" rel="noopener">Zur Playlist ↗</a>
+      <!-- TODO: echten Playlist-Link eintragen -->
+      <a class="playlist-top-link" href="https://open.spotify.com/playlist/4YFFudPKjsVxeB1MYIWnrV?si=RX2MrmrlRUicQSHGNVPX8w&utm_source=copy-link&pt=ae3cb9ee77841843dedacaff141ddafe&pi=AMmiugJTSdKYA" target="_blank" rel="noopener">Zur Playlist ↗</a>
 
       <div class="fake-spotify">
         <div class="fake-spotify__header">
@@ -1468,20 +1379,19 @@
           <div>
             <p class="fake-spotify__kicker">Playlist</p>
             <h2 class="fake-spotify__title">Unsere Playlist</h2>
-            <p class="fake-spotify__meta">10 Songs</p>
+            <p class="fake-spotify__meta">9 Songs</p>
           </div>
         </div>
         <ol class="fake-spotify__tracks">
-          <li class="track-row"><span class="track-row__num">1</span><span class="track-row__info"><span class="track-row__title">Songtitel 1</span><span class="track-row__artist">Interpret 1</span></span><span class="track-row__duration">3:12</span></li>
-          <li class="track-row"><span class="track-row__num">2</span><span class="track-row__info"><span class="track-row__title">Songtitel 2</span><span class="track-row__artist">Interpret 2</span></span><span class="track-row__duration">2:58</span></li>
-          <li class="track-row"><span class="track-row__num">3</span><span class="track-row__info"><span class="track-row__title">Songtitel 3</span><span class="track-row__artist">Interpret 3</span></span><span class="track-row__duration">3:41</span></li>
-          <li class="track-row"><span class="track-row__num">4</span><span class="track-row__info"><span class="track-row__title">Songtitel 4</span><span class="track-row__artist">Interpret 4</span></span><span class="track-row__duration">4:05</span></li>
-          <li class="track-row"><span class="track-row__num">5</span><span class="track-row__info"><span class="track-row__title">Songtitel 5</span><span class="track-row__artist">Interpret 5</span></span><span class="track-row__duration">3:27</span></li>
-          <li class="track-row"><span class="track-row__num">6</span><span class="track-row__info"><span class="track-row__title">Songtitel 6</span><span class="track-row__artist">Interpret 6</span></span><span class="track-row__duration">2:49</span></li>
-          <li class="track-row"><span class="track-row__num">7</span><span class="track-row__info"><span class="track-row__title">Songtitel 7</span><span class="track-row__artist">Interpret 7</span></span><span class="track-row__duration">3:33</span></li>
-          <li class="track-row"><span class="track-row__num">8</span><span class="track-row__info"><span class="track-row__title">Songtitel 8</span><span class="track-row__artist">Interpret 8</span></span><span class="track-row__duration">3:16</span></li>
-          <li class="track-row"><span class="track-row__num">9</span><span class="track-row__info"><span class="track-row__title">Songtitel 9</span><span class="track-row__artist">Interpret 9</span></span><span class="track-row__duration">4:22</span></li>
-          <li class="track-row"><span class="track-row__num">10</span><span class="track-row__info"><span class="track-row__title">Songtitel 10</span><span class="track-row__artist">Interpret 10</span></span><span class="track-row__duration">3:05</span></li>
+          <li class="track-row"><span class="track-row__num">1</span><span class="track-row__info"><span class="track-row__title">Accidentally In Love</span><span class="track-row__artist">Counting Crows</span></span><span class="track-row__duration">3:12</span></li>
+          <li class="track-row"><span class="track-row__num">2</span><span class="track-row__info"><span class="track-row__title">Car's Outside</span><span class="track-row__artist">James Arthur</span></span><span class="track-row__duration">2:58</span></li>
+          <li class="track-row"><span class="track-row__num">3</span><span class="track-row__info"><span class="track-row__title">invisible string</span><span class="track-row__artist">Taylor Swift</span></span><span class="track-row__duration">3:41</span></li>
+          <li class="track-row"><span class="track-row__num">4</span><span class="track-row__info"><span class="track-row__title">Just The Way You Are</span><span class="track-row__artist">Bruno Mars</span></span><span class="track-row__duration">4:05</span></li>
+          <li class="track-row"><span class="track-row__num">5</span><span class="track-row__info"><span class="track-row__title">Marry You</span><span class="track-row__artist">Bruno Mars</span></span><span class="track-row__duration">3:27</span></li>
+          <li class="track-row"><span class="track-row__num">6</span><span class="track-row__info"><span class="track-row__title">pov</span><span class="track-row__artist">Ariana Grande</span></span><span class="track-row__duration">2:49</span></li>
+          <li class="track-row"><span class="track-row__num">7</span><span class="track-row__info"><span class="track-row__title">u + me = <3</span><span class="track-row__artist">Olivia Rodrigo</span></span><span class="track-row__duration">3:33</span></li>
+          <li class="track-row"><span class="track-row__num">8</span><span class="track-row__info"><span class="track-row__title">Until I Found You</span><span class="track-row__artist">Stephen Sanchez, Em Beihold</span></span><span class="track-row__duration">3:16</span></li>
+          <li class="track-row"><span class="track-row__num">9</span><span class="track-row__info"><span class="track-row__title">Yellow</span><span class="track-row__artist">Coldplay</span></span><span class="track-row__duration">4:22</span></li>
         </ol>
       </div>
     </section>
@@ -1503,7 +1413,7 @@
         <div class="voucher" id="voucherCard" hidden>
           <p class="voucher__label">Dein Gutschein</p>
           <p class="voucher__title">Ein Essen, ganz auf dich zugeschnitten 🍽️</p>
-          <p class="voucher__text">Platzhaltertext — hier später den echten Gutschein-Text einfügen.</p>
+          <p class="voucher__text"><!-- TODO: echten Gutschein-Text eintragen -->Platzhaltertext — hier später den echten Gutschein-Text einfügen.</p>
         </div>
 
         <button class="back-link" data-target="startseite">← Zur Startseite</button>
@@ -1525,37 +1435,18 @@
     </div>
   </div>
 
-  <footer id="footerText"></footer>
+  <footer id="footerText"><!-- wird per JS gefüllt --></footer>
 
   <script>
 
     /* =================================================
-       FIREBASE — geteilte Fotos
-       ================================================= */
-    const firebaseConfig = {
-      apiKey: "DEIN_API_KEY",
-      authDomain: "DEIN_PROJEKT.firebaseapp.com",
-      projectId: "DEIN_PROJEKT",
-      storageBucket: "DEIN_PROJEKT.appspot.com",
-      messagingSenderId: "DEINE_SENDER_ID",
-      appId: "DEINE_APP_ID"
-    };
-    let db = null;
-    try {
-      firebase.initializeApp(firebaseConfig);
-      db = firebase.firestore();
-    } catch(err){
-      console.warn('Firebase nicht konfiguriert — geteilte Fotos sind deaktiviert.', err);
-    }
-
-    /* =================================================
-       KONFIGURATION
+       KONFIGURATION — hier sind deine echten Events eingetragen
        ================================================= */
     const CONFIG = {
       partner1: "Dein Name",
       partner2: "Tabea",
       zeitungsname: "♥ Jubiläumsgeschenk für mein Bärchen ♥",
-      relationshipStart: "2024-09-12",
+      relationshipStart: "2024-09-12",         // Datum: 12. September 2024
       ausgabeNummer: 1,
       timelineStart: "2024-06-13",
       timelineEnd: "2026-09-12",
@@ -1621,7 +1512,187 @@
           "Du bringst mich immer wieder zum Strahlen.",
           "Ich liebe die Art, wie du mich ansiehst.",
           "Danke, dass du genau so bist, wie du bist.",
-          "Du bist das Beste an meinem Tag."
+          "Du bist das Beste an meinem Tag.",
+          "Ein kleiner Gruß von jemandem, der dich über alles liebt.",
+          "Wenn ich an dich denke, geht die Sonne auf.",
+          "Du bist mein persönliches Highlight.",
+          "Einfach so: Ich liebe dich.",
+          "Du bist mein Ruhepol im Chaos.",
+          "Guten Morgen! Der Tag ist schön, weil du da bist.",
+          "Wach werden und wissen, dass es dich gibt = perfekter Morgen.",
+          "Start deinen Tag mit dem Wissen, wie sehr du geliebt wirst.",
+          "Ich wünsche dir den schönsten Tag, mein Schatz.",
+          "Mein erster Gedanke heute Morgen? Du.",
+          "Guten Morgen, Lieblingsmensch!",
+          "Möge dein Tag genauso strahlen wie dein Lächeln.",
+          "Mit dir im Kopf schläft es sich am besten.",
+          "Schlaf gut, träum von uns!",
+          "Gute Nacht, mein Herz.",
+          "Ich nehme dich gedanklich mit in den Schlaf.",
+          "Bis morgen in meinen Träumen.",
+          "Gute Nacht, du bedeutest mir die Welt.",
+          "Schliesse die Augen und spür meine Umarmung.",
+          "Schlaf schön, mein Lieblingsgedanke.",
+          "In deinen Armen fühle ich mich zu Hause.",
+          "Du bist mein sicherer Hafen.",
+          "Mit dir möchte ich alt werden.",
+          "Du machst mich zu einem besseren Menschen.",
+          "In deinen Augen habe ich mein Glück gefunden.",
+          "Du bist das beste Kapitel in meiner Geschichte.",
+          "Ich würde dich jedes Mal wieder wählen.",
+          "Meine Liebe zu dir wächst jeden Tag ein bisschen mehr.",
+          "Du bist das Puzzleteil, das mir immer gefehlt hat.",
+          "Egal was kommt, gemeinsam schaffen wir alles.",
+          "Mit dir vergeht die Zeit wie im Flug.",
+          "Du bist mein Zuhause, egal wo wir sind.",
+          "Ich liebe dich mehr als Worte sagen können.",
+          "Du bist der Ort, an den ich immer zurückkehren möchte.",
+          "An deiner Seite bin ich genau da, wo ich hingehöre.",
+          "Meine Welt ist viel farbenfroher, seit du da bist.",
+          "Du bist die schönste Überraschung meines Lebens.",
+          "Ich liebe dich nicht nur für das, was du bist, sondern wer ich mit dir bin.",
+          "Deine Liebe ist mein größtes Geschenk.",
+          "Du hast mein Herz im Sturm erobert.",
+          "Du bist süßer als jede Schokolade.",
+          "Ich habe eine Schwäche für dich... und sie wird täglich größer!",
+          "Wenn du ein Gemüsegarten wärst, wärst du meine Lieblingsbohne.",
+          "Du bist der Grund, warum ich dauernd auf mein Handy lächele.",
+          "Mein Herz macht Sprünge, sobald du den Raum betrittst.",
+          "Du bist die Kirsche auf meiner Torte.",
+          "Ich liebe dich mehr als meinen ersten Kaffee am Morgen.",
+          "Du bist schuld daran, dass ich unkonzentriert bin.",
+          "Meine Lieblingsbeschäftigung? Zeit mit dir verbringen.",
+          "Ich würde sogar Pommes mit dir teilen.",
+          "Du bist mein Lieblingsmensch zum Nichtstun.",
+          "Bitte bleib genau so bezaubernd, wie du bist.",
+          "Achtung: Diese Nachricht enthält eine Portion Liebe!",
+          "Bei dir bekomme ich nie genug.",
+          "Du bist wie mein Lieblingssong: Ich kann nie genug von dir hören.",
+          "Danke, dass du immer an mich glaubst.",
+          "Ich schätze alles, was du für uns tust.",
+          "Danke für deine Geduld und deine Wärme.",
+          "Bei dir kann ich einfach ich selbst sein.",
+          "Danke, dass du mein Leben so viel schöner machst.",
+          "Deine Nähe tut meiner Seele gut.",
+          "Danke für jedes Lächeln, das du mir schenkst.",
+          "Ich bin so stolz auf dich.",
+          "Danke für die vielen kleinen Glücksmomente mit dir.",
+          "Du bist mein bester Freund und meine große Liebe zugleich.",
+          "Mit dir an meiner Seite fühle ich mich stark.",
+          "Danke, dass du immer meine Hand hältst.",
+          "Ich liebe es, wie wir zusammen lachen.",
+          "Du machst mein Leben vollkommen.",
+          "Danke für dein offenes Ohr und dein warmes Herz.",
+          "Für immer du.",
+          "Mein Herz!",
+          "Ewig dein.",
+          "Einzigartig.",
+          "Mein Glück.",
+          "Vermisse dich.",
+          "Unendlich geliebt.",
+          "Nur du.",
+          "Mein Zuhause.",
+          "Unendlich dankbar.",
+          "Die Kilometer ändern nichts daran, dass mein Herz bei dir ist.",
+          "Ich vermisse deine Nähe.",
+          "Ein Tag ohne dich ist ein Tag zu lang.",
+          "Wenn ich die Augen schließe, bist du ganz nah bei mir.",
+          "Ich würde jetzt alles geben für eine Umarmung von dir.",
+          "Du fehlst mir hier an meiner Seite.",
+          "Mein Kissen riecht noch nach dir – ich vermisse dich so.",
+          "Die Entfernung ist hart, aber du bist es absolut wert.",
+          "Ich wünschte, du wärst genau jetzt hier.",
+          "Mein Herz reist jeden Tag zu dir.",
+          "Ein Stück von mir ist immer dort, wo du bist.",
+          "Ich zähle die Stunden, bis ich dich wieder im Arm halte.",
+          "Die Distanz zeigt mir nur, wie tief meine Gefühle sind.",
+          "Ohne dich ist alles nur halb so schön.",
+          "Ich schicke dir eine riesige Umarmung durch die Luft!",
+          "Kein Kilometer der Welt kann verhindern, dass ich an dich denke.",
+          "Du fehlst mir bei jedem Schritt.",
+          "Dein Platz in meinem Bett ist viel zu leer.",
+          "Ich wünschte, ich könnte mich zu dir beamen.",
+          "Vermisse dein Lächeln aus der Nähe.",
+          "Nur noch X Tage, bis ich dich wieder küssen darf!",
+          "Das beste Gefühl? Wenn der Countdown abläuft.",
+          "Ich kann das nächste Wiedersehen kaum erwarten!",
+          "Bald habe ich dich wieder ganz für mich.",
+          "Jeder vergangene Tag bringt mich dir einen Schritt näher.",
+          "Wenn wir uns wiedersehen, lasse ich dich so schnell nicht los.",
+          "Ich plane gedanklich schon unser nächstes Date.",
+          "Der Moment am Bahnhof/Flughafen wird der beste des Monats.",
+          "Vorfreude ist die schönste Freude – besonders auf dich!",
+          "Bald ist die Zeit des Vermissens wieder vorbei.",
+          "Ich mache schon eine Liste von allen Dingen, die wir tun werden!",
+          "Noch ein paar Mal schlafen, dann bist du da.",
+          "Das Wiedersehen wird jede Sekunde des Wartens wert sein.",
+          "Das Schönste am Warten ist zu wissen, auf wen man wartet.",
+          "Bald kann ich deine Hand endlich wieder richtig halten.",
+          "Mein Koffer packt sich im Kopf schon von alleine.",
+          "Bald tauschen wir das Display gegen die Realität!",
+          "Die Vorfreude lässt mein Herz heute schon hüpfen.",
+          "Nur noch wenige Sonnenuntergänge ohne dich.",
+          "Ich zähle nicht die Kilometer, sondern die Tage bis zu dir.",
+          "Guten Morgen! Ich schicke dir einen Kuss über alle Kilometer hinweg.",
+          "Der erste Gedanke beim Aufwachen fliegt direkt zu dir.",
+          "Trotz der Distanz wünsche ich dir den schönsten Morgen!",
+          "Ich wache auf und vermisse dich, liebe dich aber umso mehr.",
+          "Möge dein Tag voller schöner Momente sein – ich denke an dich!",
+          "Guten Morgen, mein Stern in der Ferne.",
+          "Schade, dass wir nicht zusammen aufwachen können, aber bald wieder!",
+          "Gute Nacht! Schau in die Sterne, wir sehen dieselben an.",
+          "Träum süß von mir, so wie ich von dir träume.",
+          "Gute Nacht – die Entfernung schrumpft in unseren Träumen.",
+          "Ich schicke dir einen Gute-Nacht-Kuss durch die Luft.",
+          "Schlaf gut, auch wenn du Kilometer entfernt bist.",
+          "In meinen Träumen gibt es keine Distanz.",
+          "Gute Nacht, mein Schatz. Bald wachen wir wieder nebeneinander auf.",
+          "Schließe die Augen und stell dir vor, ich liege neben dir.",
+          "Wir schaffen das, egal wie groß die Entfernung ist!",
+          "Unsere Liebe ist starker als jeder Kilometer.",
+          "Entfernung kann Körper trennen, aber niemals unsere Herzen.",
+          "Die Distanz ist nur vorübergehend, unsere Liebe bleibt.",
+          "Egal wie weit weg du bist: Du bist mein Zuhause.",
+          "Die schwersten Wege führen zu den schönsten gemeinsamen Zeiten.",
+          "Zusammen schaffst du und ich jede Hürde.",
+          "Warten lohnt sich, wenn es auf die richtige Person ist.",
+          "Die Entfernung prüft uns nur, um zu zeigen, wie stark wir sind.",
+          "Wir schreiben gerade die schönste Geschichte, auch mit Abstand.",
+          "Gib nicht auf – das nächste Kapitel gehört ganz uns.",
+          "Lass dich von den Kilometern nicht entmutigen, ich bin immer bei dir.",
+          "Unsere Verbindung braucht keine Nähe, um echt zu sein.",
+          "Wir sind ein Team, egal wie viele Länder dazwischen liegen.",
+          "Jeder Tag geschaffte Distanz ist ein Sieg für uns.",
+          "Du bist der schönste Anblick auf meinem Handydisplay!",
+          "Ich liebe dich mehr als mein stabiles WLAN-Signal.",
+          "Danke, dass du mein Datenvolumen jeden Monat aufbrauchst!",
+          "Mein Akku stirbt, aber meine Liebe zu dir nie.",
+          "Du bist mein liebster Videocall des Tages!",
+          "Schlechter Empfang, aber perfekte Gefühle.",
+          "Ich würde sogar den langweiligsten Flug buchen, nur um dich zu sehen.",
+          "Digital verbunden, im Herzen vereint.",
+          "Ich schicke dir 1.000 virtuelle Umarmungen.",
+          "Das Beste an Videoanrufen? Dein Gesicht zu sehen!",
+          "Wegen dir schaue ich 50 Mal am Tag auf mein Handy.",
+          "Wenn Küsse Pixel wären, würde ich dir ein ganzes 4K-Bild schicken.",
+          "Du bist der einzige Grund, warum ich Zeitverschiebungen verzeihe.",
+          "Danke, dass du trotz schlechter Verbindung immer für mich da bist.",
+          "Mein Handy ist warm, weil wir so lange telefoniert haben – genau wie mein Herz.",
+          "Nähe ist keine Frage der Distanz, sondern des Herzens.",
+          "Ich trage dich in jedem Moment bei mir.",
+          "Du bist das Erste, woran ich denke, und das Letzte vor dem Schlafen.",
+          "Keine Landkarte kann messen, wie viel du mir bedeutest.",
+          "Wo auch immer du bist, da ist auch mein Herz.",
+          "Entfernung zeigt, wie wertvoll gemeinsame Momente wirklich sind.",
+          "Du bist mein Anker, egal wie weit ich entfernt bin.",
+          "In einer Welt voller Distanz bist du mein fixer Punkt.",
+          "Die Sehnsucht ist der Beweis für unsere tiefe Liebe.",
+          "Kein Ozean ist zu groß für das, was wir fühlen.",
+          "Du machst die Ferne erträglich und die Nähe unbezahlbar.",
+          "Ich liebe dich von hier bis zu dir und noch viel weiter.",
+          "Deine Nachrichten machen den Abstand ein Stückchen kleiner.",
+          "Egal wie weit weg: Du bist und bleibst meine Wichtigste/mein Wichtigster.",
+          "Ein Tag näher an unserem endgültigen Zusammenkommen"
         ],
         poesie: [
           "Die Ferne schrumpft, wenn ich an dich denke.",
@@ -1631,8 +1702,205 @@
           "Du bist die Zeile, die mein Tag noch braucht.",
           "Du bist das leise Licht, das meine Dunkelheit vertreibt.",
           "In deinen Augen spiegelt sich das Universum meiner Sehnsucht.",
-          "Jeder Augenblick mit dir ist ein Vers in meinem Lebensgedicht."
-        ]
+          "Jeder Augenblick mit dir ist ein Vers in meinem Lebensgedicht. Magische Karten",
+          "Du machst aus gewöhnlichen Sekunden goldene Momente.",
+          "Dein Lachen klingt wie der schönste Akkord eines vergessenen Liedes.",
+          "Wo du bist, breitet sich Stille wie ein sanfter Mantel aus.",
+          "Du bist die Sonne, die selbst meine Schatten zum Blühen bringt.",
+          "Dein Blick fängt mich auf, ohne dass ich je zu fallen drohte.",
+          "Wie Tau auf den Blüten des Morgens erfrischt mich deine Nähe.",
+          "In deinem Schweigen finde ich die Antworten auf alle meine Fragen.",
+          "Du bist der Lichtstrahl, der durch das Dickicht meiner Gedanken bricht.",
+          "Deine Küsse schreiben Gedichte auf meine Haut.",
+          "Ein Tag an deiner Seite ist ein Geschenk der Ewigkeit.",
+          "Du tanzt durch mein Herz wie ein Sonnenstrahl auf dem Wasser.",
+          "Bei dir klingt das Leben wie eine sanfte, ruhige Symphonie.",
+          "Du verzauberst die Welt, einfach nur indem du atmest.",
+          "In deiner Gegenwart verblasst das Graue der Welt zu purem Gold.",
+          "Dein Herzschlag ist der schönste Rhythmus meines Tages.",
+          "Du bist der Moment, in dem die Zeit leise den Atem anhält.",
+          "Mit dir im selben Raum fühlt sich die Welt vollkommen an. **Geborgenheit & Tiefgang**",
+          "Deine Hände halten nicht nur meinen Körper, sondern meine Seele.",
+          "In deinen Armen bin ich angekommen – mein Herz ist gelandet.",
+          "Du bist mein Anker im stürmischen Meer des Lebens.",
+          "An deiner Seite schweigen die Ängste der Welt.",
+          "Du bist mein Zuhause, gebaut aus Wärme und Verständnis.",
+          "In deiner Tiefe verliere ich mich nur zu gern.",
+          "Du schützt mich vor den Winden des Lebens wie eine ruhige Bucht.",
+          "Deine Liebe füllt Räume in mir, von denen ich nicht wusste, dass sie leer waren.",
+          "Bei dir darf ich ganz ich sein – ungeschminkt und unverstellt.",
+          "Du legst deine Hand auf meine Seele und glättest die Wogen.",
+          "Wir sprechen eine Sprache, die nur unsere Herzen verstehen.",
+          "In dir habe ich den Spiegel meiner wahren Sehnsucht gefunden.",
+          "Wenn du mich hältst, fühl ich mich vor der Welt beschützt.",
+          "Deine Zärtlichkeit ist der sanfteste Zufluchtsort der Erde.",
+          "Mit dir ist jeder Raum von Geborgenheit erfüllt.",
+          "Du bist das stetige Band, das mein Herz im Gleichgewicht hält.",
+          "Bei dir wird das Chaos der Welt zu einer sanften Ordnung.",
+          "In deiner Hand liegt meine Zukunft geborgen.",
+          "Du bist die Ruhe im Zentrum meines eigenen Sturms.",
+          "Deine Liebe hebt mich hoch, ohne mich zu verlieren. weddingstyle+ 4 **Seele & Magie**",
+          "Zwei Seelen, die sich fanden, ohne lange zu suchen.",
+          "Du bist der Schimmer der Magie in meiner Wirklichkeit.",
+          "Meine Seele hat dich wiedererkannt, noch bevor mein Verstand es begriff.",
+          "Wenn du mich berührst, erwacht ein schlafendes Universum.",
+          "Unsere Liebe webt Fäden aus Sternenlicht.",
+          "Du bist das leise Wunder, das mein Leben verändert hat.",
+          "In deinen Spuren wachsen Blumen in meiner Welt.",
+          "Wir tanzen im gleichen Takt, auch wenn die Welt schweigt.",
+          "Du bist die Melodie, die meine Seele schon immer singen wollte.",
+          "Die Magie deiner Gegenwart reicht bis in meine tiefsten Träume.",
+          "Mit dir wird das Alltägliche zu einem unendlichen Gedicht.",
+          "Du hast Türen in meinem Herzen geöffnet, die nie zuvor existierten.",
+          "Unser Band webt sich aus Worten, Blicken und reinem Licht.",
+          "Du bist das Echo, auf das meine Seele ewig gewartet hat.",
+          "In deinem Wesen wohnt die Eleganz eines Sommermorgens.",
+          "Deine Stimme legt sich wie Seide um mein Herz.",
+          "Wir ziehen Kreise im Strom des Lebens, immer aufeinander zu.",
+          "Deine Liebe ist das schönste Geheimnis meiner Seele.",
+          "Bei dir fühlt sich die Ewigkeit wie ein einziger Herzschlag an.",
+          "Du bist der Raum, in dem all meine Wünsche Erfüllung finden. Magische Karten+ 2 **Zukunft & Unendlichkeit**",
+          "Lass uns der Welt trotzen und eigene Welten bauen.",
+          "Ich möchte jeden Morgen an deiner Seite der Sonne entgegen blicken.",
+          "Mit dir vergeht die Zeit nicht – sie entfaltet sich.",
+          "An deiner Hand gehe ich ohne Furcht bis ans Ende aller Wege.",
+          "Du bist mein Gestern, mein Heute und all meine Morgen.",
+          "Auf den Wogen deiner Liebe möchte ich für immer segeln.",
+          "Wir schreiben unser Buch Seite für Seite mit purem Glück.",
+          "Lass uns gemeinsam wachsen wie zwei Bäume, deren Wurzeln verwoben sind.",
+          "Jeder Schritt mit dir lehrt mich, was Leben wirklich bedeutet.",
+          "Du bist das Fundament, auf dem all meine Träume ruhen.",
+          "Die Zukunft schreckt mich nicht, solange dein Licht mich führt.",
+          "An deiner Seite verliert die Ewigkeit ihre Schrecken.",
+          "Ich will mit dir die Jahre sammeln wie kostbare Edelsteine.",
+          "Wir weben aus Momenten Teppiche für die Ewigkeit.",
+          "Mit dir möchte ich lernen, wie man unendlich liebt.",
+          "In deiner Zukunft sehe ich mein schönstes Zuhause.",
+          "Du bist die Reise und das Ziel zugleich.",
+          "Wir pflanzen Hoffnungen und ernten gemeinsame Träume.",
+          "Ich verspreche dir mein Herz, heute und in allen Gezeiten.",
+          "Mit jedem Tag wächst ein neuer Stern an unserem Himmel. QuillBot+ 3 **Kurze Verdichtungen (Mini-Verse)**",
+          "Du bist mein Lichtblick.",
+          "Mein Herz tanzt mit dir.",
+          "Du bist mein stiller Frieden.",
+          "In deinen Augen liegt die Welt.",
+          "Zwei Herzen, ein Takt.",
+          "Dein Lächeln heilt meine Welt.",
+          "Du bist mein schönster Traum.",
+          "An deiner Hand blüht mein Herz.",
+          "Für immer dein Schatten und dein Licht.",
+          "Du bist die Poesie meines Tages.",
+          "Wo du bist, ist mein Herz.",
+          "Deine Hand in meiner.",
+          "Ewig mit dir verwoben.",
+          "Mein Anker in den Wogen.",
+          "Du bist mein stilles Glück.",
+          "Deine Liebe trägt mich.",
+          "Ein Blick, eine Ewigkeit.",
+          "Du bist mein halbes Leben.",
+          "In dir angekommen.",
+          "Mein Herz ruht in deinem. QuillBot+ 7 **Teil 2: Poetische Fernbeziehung (100 Nachrichten)** **Entfernung & Sterne**",
+          "Die Meere zwischen uns tränken nur die Sehnsucht unserer Seelen.",
+          "Wir schauen in denselben Himmel und berühren dieselben Sterne.",
+          "Kein Kilometer kann das Band schwächen, das uns im Innersten hält.",
+          "Die Entfernung misst nur den Raum, niemals unsere Liebe.",
+          "Der Wind, der dich streift, bringt mir den Duft deiner Nähe.",
+          "Unter demselben Mond schlafen wir, von der gleichen Liebe getragen.",
+          "Die Landkarte zeigt Grenzen, aber mein Herz kennt keine.",
+          "Wenn der Abendschatten fällt, wandern meine Gedanken lautlos zu dir.",
+          "Wie zwei Planeten ziehen wir unsere Bahnen – voneinander angezogen.",
+          "Die Nacht legt ihr Tuch über uns beide und macht den Abstand klein.",
+          "Ein Horizont trennt uns, doch am Ende schaut derselbe Himmel zu.",
+          "Meine Gedanken fliegen schneller als das Licht zu deinen Händen.",
+          "Auch aus der Ferne strahlt deine Wärme bis tief in meine Brust.",
+          "Die Distanz ist nur ein Kleid aus Wolken um unsere feste Liebe.",
+          "Jeder Kilometer ist ein stummes Denkmal unserer Stärke.",
+          "Wo du auch stehst, blickt meine Seele in deine Richtung.",
+          "Die Sterne weben ein Netz, das deine Nacht mit meiner verbindet.",
+          "Der Himmel schrumpft, wenn ich dein Bild vor Augen habe.",
+          "Entfernung beugt nicht die Liebe, sie schleift sie wie einen Diamanten.",
+          "Du bist der Stern, nach dem mein Kompass sich immer ausrichtet. Magische Karten+ 1 **Sehnsucht & Gedanken fliegen lassen**",
+          "Ich schicke einen Kuss mit dem Wind, möge er sanft auf deinen Lippen landen.",
+          "Meine Sehnsucht breitet ihre Flügel aus und fliegt über die Welten.",
+          "Jede Stunde ohne dich webt ein Kleid aus sanfter Wehmut.",
+          "In der Stille des Abends lausche ich auf das Echo deiner Stimme.",
+          "Ich vermisse deine Hand in meiner, wie die Erde den ersten Regen.",
+          "Meine Gedanken streicheln dich leise, während du schläfst.",
+          "Die Sehnsucht lehrt mich, wie tief du in meinem Herzen verwurzelt bist.",
+          "Ich hülle mich in die Erinnerung deiner letzten Umarmung.",
+          "Ein Hauch von dir weht durch meinen Tag und hinterlässt ein Leuchten.",
+          "Wenn die Welt schweigt, bist du das lauteste Flüstern in mir.",
+          "Ich fange die Sonnenstrahlen ein, um sie dir gedanklich zu senden.",
+          "Die Distanz mag schmerzen, doch sie beweist, wie echt wir sind.",
+          "Ein Hauch von deinen Worten vertreibt die Kälte in meinem Raum.",
+          "Meine Liebe reist ohne Gepäck, nur mit dem Wunsch nach dir.",
+          "Wenn meine Augen sich schließen, schrumpft die Welt auf deine Nähe.",
+          "Die Weite lehrt mich, welchen unschätzbaren Wert dein Lächeln hat.",
+          "Ich schicke dir mein Herz als Boten durch die Dunkelheit.",
+          "Sehnsucht ist der Preis, den wir für ein großes Wunder zahlen.",
+          "Mein Geist weilt in deinem Raum, während mein Körper hier wartet.",
+          "Wenn ich an dich denke, zittert das Schweigen der Ferne vor Liebe. **Warten & Vorfreude**",
+          "Jeder Tag, der vergeht, ist ein Sieg über den Abstand.",
+          "Wir zählen die Tage wie Perlen an einer goldenen Schnur.",
+          "Das Warten ist die Vorbereitung auf die schönste aller Explosionen.",
+          "Bald wird der Raum zwischen uns wieder in deinen Armen schmelzen.",
+          "Die Vorfreude schreibt bereits Gedichte über unseren nächsten Blick.",
+          "Jeder Sonnenuntergang bringt uns dem Tag des Wiedersehens näher.",
+          "Ich bereite mein Herz darauf vor, dich bald wieder festzuhalten.",
+          "Wir messen die Zeit nicht in Stunden, sondern in Schritten zueinander.",
+          "Bald wird aus dem Stummschalten der Ferne das Brausen deiner Nähe.",
+          "Wenn wir uns wiedersehen, wird die Zeit vor Ehrfurcht stillstehen.",
+          "Die Tage des Trennens sind nur der dunkle Rahmen für unser Bild.",
+          "Ich sammle alle Küsse, um sie dir auf einmal zurückzugeben.",
+          "Das Wiedersehen wird die Narben der Sehnsucht heilen.",
+          "Jeder Schritt des Coundowns ist ein Schritt hinein ins Glück.",
+          "Das Warten verliert seinen Schrecken, wenn das Ziel du bist.",
+          "Wir wandern durch die Zeit, bis sich unsere Wege wieder kreuzen.",
+          "Bald streicht nicht mehr der Wind durch mein Haar, sondern deine Hand.",
+          "Die Vorfreude bringt meine Seele schon heute zum Tanzen.",
+          "Bald tauschen wir das Warten gegen das Fallen in deine Umarmung.",
+          "Ein Hauch von Geduld noch, dann liegt die Welt uns zu Füßen. **Unvergängliche Verbindung**",
+          "Unendlich weit weg und doch so tief in mir verankert.",
+          "Kein Ozean trennt Herzen, die auf derselben Frequenz schlagen.",
+          "Unser Band spannt sich über Länder, ohne je zu reißen.",
+          "Wo zwei Seelen eins sind, hat die Mathematik der Kilometer verloren.",
+          "Wir sind wie zwei Ufer desselben Flusses, verbunden durch die Strömung.",
+          "Die Welt versucht uns zu trennen, doch unsere Liebe hält dagegen.",
+          "Deine Liebe schützt mich aus der Ferne wie ein Schild aus Licht.",
+          "Man kann nicht trennen, was das Schicksal zusammengefügt hat.",
+          "Unsere Herzen schlagen in einem Rhythmus, den kein Abstand bricht.",
+          "Selbst im dunkelsten Schatten der Trennung kenne ich deinen Weg.",
+          "Wir besitzen eine Festung aus Vertrauen, gebaut über Grenzen hinweg.",
+          "Die Distanz macht kleine Gefühle klein, aber große Gefühle riesig.",
+          "Du bist mein Anker im Nirgendwo der Welt.",
+          "Durch alle Welten hindurch spüre ich deine unsichtbare Hand.",
+          "Unsere Liebe widersteht den Gesetzen der Geografie.",
+          "Egal wie viele Städte dazwischen liegen: Du bleibst meine Heimat.",
+          "Ein Faden aus Seide verbindet meine Brust mit deiner.",
+          "Die Entfernung brennt heiß, aber sie kann uns nicht verbrennen.",
+          "Wir sind das Versprechen, das allen Kilometern zum Trotz hält.",
+          "In meiner Seele trägst du das Siegel meiner ewigen Liebe. QuillBot **Poetische Gutenacht- & Morgen-Grüße aus der Ferne**",
+          "Möge der Wind dir meine Gutenacht-Küsse bringen.",
+          "Die Sonne geht auf und mein erster Gedanke sucht dein Licht.",
+          "Schlaf gut unter demselben Sternenhimmel, der mich beschützt.",
+          "Ein neuer Morgen erwacht und bringt mich dir ein Stück näher.",
+          "Ich hülle dich gedanklich in eine Decke aus Sternenstaub.",
+          "Mögen deine Träume dich heute Nacht direkt in meine Arme führen.",
+          "Der Morgen dämmert und schreibt deinen Namen in den Himmel.",
+          "Gute Nacht, mein weit entfernter Schatz – mein Herz schläft bei dir.",
+          "Wach auf mit dem Wissen, dass jemand aus der Ferne für dich schlägt.",
+          "Träum süß, bis die Realität uns wieder vereint. Magische Karten **Flüchtige Verdichtungen für die Ferne**",
+          "Weit weg, nah im Herzen.",
+          "Unter demselben Himmel.",
+          "Die Sehnsucht webt uns zusammen.",
+          "Kilometer vergehen, Liebe bleibt.",
+          "Ein Herzschlag über Grenzen hinweg.",
+          "Bald in deinen Armen.",
+          "Mein Kompass zeigt zu dir.",
+          "Getrennt im Raum, vereint im Traum.",
+          "Du bist meine Ferne und mein Zuhause.",
+          "Ewig dein, egal wie weit."
+        ],
       },
       letters: [
         { condition: "du traurig bist" },
@@ -1640,7 +1908,7 @@
         { condition: "du einen schlechten Tag hattest" },
         { condition: "du an uns zweifelst" },
         { condition: "du dich einsam fühlst" },
-        { condition: "du diese Nachricht am meisten brauchst" }
+        { condition: "du diese Nachricht am meistem brauchst" }
       ],
       secretCodes: [
         { code: "67", reveal: "Teil 1 der Überraschung: Platzhaltertext." },
@@ -1658,6 +1926,24 @@
           { image: null, caption: "Erinnerung 6" },
           { image: null, caption: "Erinnerung 7" },
           { image: null, caption: "Erinnerung 8" }
+        ],
+        [
+          { image: null, caption: "Erinnerung 9" },
+          { image: null, caption: "Erinnerung 10" },
+          { image: null, caption: "Erinnerung 11" },
+          { image: null, caption: "Erinnerung 12" }
+        ],
+        [
+          { image: null, caption: "Erinnerung 13" },
+          { image: null, caption: "Erinnerung 14" },
+          { image: null, caption: "Erinnerung 15" },
+          { image: null, caption: "Erinnerung 16" }
+        ],
+        [
+          { image: null, caption: "Erinnerung 17" },
+          { image: null, caption: "Erinnerung 18" },
+          { image: null, caption: "Erinnerung 19" },
+          { image: null, caption: "Erinnerung 20" }
         ]
       ]
     };
@@ -1669,28 +1955,12 @@
       return `${d.getDate()}. ${monthNamesShort[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    document.getElementById('togetherSince').textContent = `zusammen seit dem ${formatDateShort(CONFIG.relationshipStart)}`;
+    document.getElementById('togetherSince').textContent =
+      `zusammen seit dem ${formatDateShort(CONFIG.relationshipStart)}`;
     document.getElementById('footerText').textContent = CONFIG.zeitungsname;
     document.getElementById('envelopeAddress').textContent = `Für ${CONFIG.partner2}`;
 
-    /* --- Brief-Animation Intro --- */
-    const heartBtn = document.getElementById('heartBtn');
-    const envelope = document.getElementById('envelope');
-    const introOverlay = document.getElementById('introOverlay');
-    let letterOpened = false;
-
-    heartBtn.addEventListener('click', () => {
-      if(letterOpened) return;
-      letterOpened = true;
-      heartBtn.classList.add('is-clicked');
-      envelope.classList.add('is-opening');
-      introOverlay.classList.add('is-closing');
-      setTimeout(() => {
-        document.body.classList.remove('intro-active');
-      }, 1750);
-    });
-
-    /* --- Navigation --- */
+    /* --- Seiten-Navigation (Kacheln & Zurück-Links) --- */
     const pages = document.querySelectorAll('.page');
 
     function showPage(targetId){
@@ -1699,7 +1969,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
       if(targetId === 'startseite') letterOpened = false;
       if(targetId === 'briefe' && !letterStackReady) setupLetterStack();
-      if(targetId === 'australien') initAustraliaMap();
     }
 
     document.querySelectorAll('[data-target]').forEach(btn => {
@@ -1721,251 +1990,576 @@
     function openEventModal(ev, fallbackIcon = '🖼️'){
       eventModalTitle.textContent = ev.title;
       eventModalText.textContent = ev.text;
-      if(ev.image) {
-        eventModalImage.style.backgroundImage = `url(${ev.image})`;
-        eventModalImage.textContent = '';
-      } else {
-        eventModalImage.style.backgroundImage = 'none';
-        eventModalImage.textContent = fallbackIcon;
-      }
+      eventModalImage.style.backgroundImage = ev.image ? `url('${ev.image}')` : 'none';
+      eventModalImage.textContent = ev.image ? '' : fallbackIcon;
       eventModal.hidden = false;
-      setTimeout(() => eventModal.classList.add('is-open'), 10);
+      requestAnimationFrame(() => eventModal.classList.add('is-open'));
     }
-
     function closeEventModal(){
       eventModal.classList.remove('is-open');
       setTimeout(() => { eventModal.hidden = true; }, 250);
     }
-
     document.getElementById('eventModalClose').addEventListener('click', closeEventModal);
     document.getElementById('eventModalBackdrop').addEventListener('click', closeEventModal);
+    document.addEventListener('keydown', e => {
+      if(e.key === 'Escape' && !eventModal.hidden) closeEventModal();
+    });
 
-    function renderTimeline(filterText = ''){
+    const sortedEvents = [...CONFIG.events].sort((a,b) => new Date(a.date) - new Date(b.date));
+    let eventElements = [];
+
+    function renderTimeline(){
       timelineLine.innerHTML = '';
-      const filtered = CONFIG.events.filter(ev => 
-        ev.title.toLowerCase().includes(filterText.toLowerCase()) || 
-        ev.text.toLowerCase().includes(filterText.toLowerCase()) ||
-        ev.date.includes(filterText)
-      );
+      eventElements = [];
 
-      if(filtered.length === 0){
-        timelineNoResults.style.display = 'block';
-      } else {
-        timelineNoResults.style.display = 'none';
-        filtered.forEach(ev => {
-          const dot = document.createElement('button');
-          dot.className = 'timeline__dot';
-          dot.innerHTML = `
-            <span class="timeline__dot-date">${formatDateShort(ev.date)}</span>
-            <span class="timeline__dot-title">${ev.title}</span>
-          `;
-          dot.addEventListener('click', () => openEventModal(ev, '🕰️'));
-          timelineLine.appendChild(dot);
+      if(sortedEvents.length > 0){
+        document.getElementById('timelineStartLabel').textContent = formatDateShort(sortedEvents[0].date);
+        document.getElementById('timelineEndLabel').textContent = formatDateShort(sortedEvents[sortedEvents.length - 1].date);
+      }
+
+      sortedEvents.forEach(ev => {
+        const formattedDate = formatDateShort(ev.date);
+        const dot = document.createElement('button');
+        dot.className = 'timeline__dot';
+        dot.innerHTML = `<span class="timeline__dot-date">${formattedDate}</span><span class="timeline__dot-title">${ev.title}</span>`;
+        dot.addEventListener('click', () => openEventModal(ev));
+        timelineLine.appendChild(dot);
+
+        eventElements.push({
+          element: dot,
+          event: ev,
+          searchableText: `${ev.title} ${ev.text} ${formattedDate} ${ev.date}`.toLowerCase()
         });
+      });
+    }
+
+    renderTimeline();
+
+    /* --- Suchfunktion für den Zeitstrahl --- */
+    function filterTimeline(){
+      const query = timelineSearch.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      eventElements.forEach(item => {
+        const isMatch = item.searchableText.includes(query);
+        item.element.style.display = isMatch ? 'flex' : 'none';
+        if(isMatch) visibleCount++;
+      });
+
+      timelineNoResults.style.display = visibleCount === 0 ? 'block' : 'none';
+
+      if(query !== ''){
+        document.getElementById('timelineStartLabel').textContent = `${visibleCount} Event${visibleCount !== 1 ? 's' : ''} gefunden`;
+        document.getElementById('timelineEndLabel').textContent = '';
+      } else {
+        if(sortedEvents.length > 0){
+          document.getElementById('timelineStartLabel').textContent = formatDateShort(sortedEvents[0].date);
+          document.getElementById('timelineEndLabel').textContent = formatDateShort(sortedEvents[sortedEvents.length - 1].date);
+        }
       }
     }
 
-    timelineSearch.addEventListener('input', (e) => renderTimeline(e.target.value));
-    renderTimeline();
+    timelineSearch.addEventListener('input', filterTimeline);
 
-    /* --- Süße Texte & Rubbelkarte --- */
-    const textDisplayBox = document.getElementById('textDisplayBox');
-    
-    document.querySelectorAll('.subtab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.subtab').forEach(t => t.classList.remove('is-active'));
-        tab.classList.add('is-active');
-        const cat = tab.dataset.category;
-
-        if(cat === 'poesie'){
-          const poems = CONFIG.suesseTexte.poesie;
-          const randomPoem = poems[Math.floor(Math.random() * poems.length)];
-          setupScratchCard(randomPoem);
-        } else {
-          let list = [];
-          if(cat === 'zufaellig'){
-            list = [...CONFIG.suesseTexte.nachrichten, ...CONFIG.suesseTexte.poesie];
-          } else {
-            list = CONFIG.suesseTexte[cat] || [];
-          }
-          const randomTxt = list[Math.floor(Math.random() * list.length)];
-          textDisplayBox.innerHTML = `<p>${randomTxt}</p>`;
+    /* --- Süße Texte: Zufalls-Generator ohne Wiederholung --- */
+    function createShuffleBag(items){
+      let deck = [];
+      let lastDrawn = null;
+      function refill(){
+        deck = [...items];
+        for(let i = deck.length - 1; i > 0; i--){
+          const j = Math.floor(Math.random() * (i + 1));
+          [deck[i], deck[j]] = [deck[j], deck[i]];
         }
+        if(items.length > 1 && deck[deck.length - 1] === lastDrawn){
+          const swapIndex = Math.floor(Math.random() * (deck.length - 1));
+          [deck[deck.length - 1], deck[swapIndex]] = [deck[swapIndex], deck[deck.length - 1]];
+        }
+      }
+      return function next(){
+        if(deck.length === 0) refill();
+        lastDrawn = deck.pop();
+        return lastDrawn;
+      };
+    }
+
+    const nachrichtenBag = createShuffleBag(CONFIG.suesseTexte.nachrichten);
+    const poesieBag = createShuffleBag(CONFIG.suesseTexte.poesie);
+    const zufallBag = createShuffleBag([...CONFIG.suesseTexte.nachrichten, ...CONFIG.suesseTexte.poesie]);
+
+    function launchConfetti(){
+      const count = 120;
+      for(let i = 0; i < count; i++){
+        const piece = document.createElement('span');
+        piece.className = 'confetti-piece';
+        const angle = (i / count) * Math.PI * 2;
+        const velocity = 2 + Math.random() * 1.5;
+        const distance = (40 + Math.random() * 60);
+        piece.style.left = '50%';
+        piece.style.top = '50%';
+        piece.style.setProperty('--dx', (Math.cos(angle) * distance * velocity) + 'vw');
+        piece.style.setProperty('--dy', (Math.sin(angle) * distance * velocity - 80 - Math.random() * 40) + 'vh');
+        piece.style.setProperty('--rot', ((Math.random() - .5) * 1800) + 'deg');
+        const colors = ['#FF6F5E','#F4A93B','#2C8C82','#E8768A','#7B68EE','#FFD700','#FF69B4'];
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.borderRadius = Math.random() > 0.5 ? '0' : '50%';
+        piece.style.animationDelay = (Math.random() * .3) + 's';
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 2700);
+      }
+    }
+
+    function showPoesieScratchCard(text){
+      const el = document.getElementById('suesseTextContent');
+      el.style.animation = 'none';
+      void el.offsetHeight;
+      el.style.animation = 'pageIn 0.3s ease';
+      el.innerHTML = `
+        <div class="scratch-card" aria-label="Rubbelkarte">
+          <div class="scratch-card__message">${escapeHtml(text)}</div>
+          <canvas aria-hidden="true"></canvas>
+        </div>`;
+
+      const card = el.querySelector('.scratch-card');
+      const canvas = card.querySelector('canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently:true });
+      const rect = card.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      ctx.scale(dpr, dpr);
+
+      // Metallische Rubbeloberfläche
+      const w = rect.width, h = rect.height;
+      const grad = ctx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, '#b7b7b7');
+      grad.addColorStop(.25, '#e7e7e7');
+      grad.addColorStop(.5, '#a8a8a8');
+      grad.addColorStop(.72, '#dedede');
+      grad.addColorStop(1, '#9d9d9d');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0,0,w,h);
+      ctx.globalAlpha = .18;
+      for(let i=0;i<260;i++){
+        ctx.fillStyle = Math.random() > .5 ? '#fff' : '#666';
+        ctx.fillRect(Math.random()*w, Math.random()*h, 1.5, 1.5);
+      }
+      ctx.globalAlpha = 1;
+
+      let scratching = false;
+      let revealed = false;
+      let lastX = 0, lastY = 0;
+      const threshold = .70;
+
+      function scratch(x,y){
+        if(revealed) return;
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x,y,22,0,Math.PI*2);
+        ctx.fill();
+        if(lastX || lastY){
+          ctx.lineWidth = 44;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.beginPath();
+          ctx.moveTo(lastX,lastY);
+          ctx.lineTo(x,y);
+          ctx.stroke();
+        }
+        ctx.restore();
+        lastX=x; lastY=y;
+        checkScratchProgress();
+      }
+
+      function checkScratchProgress(){
+        const pixels = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+        let transparent = 0;
+        let total = 0;
+        // Stichprobe reicht für die Prozentanzeige und spart Leistung auf Handys.
+        for(let i=3;i<pixels.length;i+=32){
+          total++;
+          if(pixels[i] < 35) transparent++;
+        }
+        if(total && transparent / total >= threshold){
+          revealed = true;
+          card.classList.add('is-revealed');
+          launchConfetti();
+          setTimeout(() => { ctx.clearRect(0,0,canvas.width,canvas.height); }, 350);
+        }
+      }
+
+      function pointFromEvent(e){
+        const r = canvas.getBoundingClientRect();
+        return {x:e.clientX-r.left, y:e.clientY-r.top};
+      }
+      canvas.addEventListener('pointerdown', e => {
+        scratching=true;
+        const p=pointFromEvent(e);
+        lastX=p.x; lastY=p.y;
+        scratch(p.x,p.y);
+        canvas.setPointerCapture?.(e.pointerId);
+      });
+      canvas.addEventListener('pointermove', e => {
+        if(!scratching) return;
+        const p=pointFromEvent(e);
+        scratch(p.x,p.y);
+      });
+      const stop=()=>{scratching=false; lastX=0; lastY=0;};
+      canvas.addEventListener('pointerup',stop);
+      canvas.addEventListener('pointercancel',stop);
+      canvas.addEventListener('pointerleave',()=>{ if(scratching) stop(); });
+    }
+
+    function escapeHtml(value){
+      const div = document.createElement('div');
+      div.textContent = value;
+      return div.innerHTML;
+    }
+
+    document.querySelectorAll('.subtab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.subtab').forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        const cat = btn.dataset.category;
+        if(cat === 'zufaellig') showPoesieScratchCard(zufallBag());
+        if(cat === 'nachrichten') showPoesieScratchCard(nachrichtenBag());
+        if(cat === 'poesie') showPoesieScratchCard(poesieBag());
       });
     });
 
-    function setupScratchCard(text){
-      textDisplayBox.innerHTML = `
-        <div class="scratch-card" id="scratchCard">
-          <div class="scratch-card__message">${text}</div>
-          <canvas id="scratchCanvas"></canvas>
-        </div>
-      `;
-      const card = document.getElementById('scratchCard');
-      const canvas = document.getElementById('scratchCanvas');
-      const ctx = canvas.getContext('2d');
-      
-      canvas.width = card.offsetWidth;
-      canvas.height = card.offsetHeight;
-      
-      ctx.fillStyle = '#C69C6D';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#5A4F70';
-      ctx.font = '16px Space Grotesk';
-      ctx.textAlign = 'center';
-      ctx.fillText('✨ Rubbel mich frei ✨', canvas.width / 2, canvas.height / 2 + 5);
+    /* --- Briefe: "Öffne mich, wenn ..." --- */
+    const lettersGrid = document.getElementById('lettersGrid');
+    CONFIG.letters.forEach(letter => {
+      const btn = document.createElement('button');
+      btn.className = 'tile';
+      btn.innerHTML = `<span class="tile__icon" aria-hidden="true">💌</span><span class="tile__label">Öffne mich, wenn ${letter.condition}</span>`;
+      lettersGrid.appendChild(btn);
+    });
 
-      let isScratching = false;
-
-      function scratch(e){
-        if(!isScratching) return;
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-        const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.beginPath();
-        ctx.arc(x, y, 20, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      ['mousedown', 'touchstart'].forEach(evt => canvas.addEventListener(evt, (e) => { isScratching = true; scratch(e); }));
-      ['mousemove', 'touchmove'].forEach(evt => canvas.addEventListener(evt, scratch));
-      ['mouseup', 'touchend'].forEach(evt => canvas.addEventListener(evt, () => isScratching = false));
-    }
-
-    /* --- Briefe --- */
     let letterStackReady = false;
     function setupLetterStack(){
-      const grid = document.getElementById('lettersGrid');
-      grid.innerHTML = '';
-      CONFIG.letters.forEach((item, index) => {
-        const btn = document.createElement('button');
-        btn.className = 'tile';
-        btn.innerHTML = `<span class="tile__icon">💌</span><span class="tile__label">Öffne, wenn ${item.condition}</span>`;
-        btn.addEventListener('click', () => {
-          openEventModal({ title: `Öffne, wenn ${item.condition}`, text: "Hier steht ein persönlicher Brief für diesen Anlass." }, '💌');
-        });
-        grid.appendChild(btn);
+      const items = Array.from(lettersGrid.children);
+      if(items.length === 0) return;
+      const baseTop = items[0].offsetTop;
+      items.forEach((item, i) => {
+        const offset = item.offsetTop - baseTop;
+        item.style.setProperty('--stack-offset', `${-offset}px`);
+        item.style.setProperty('--stack-rotate', `${(i % 2 === 0 ? -1 : 1) * (3 + (i % 3))}deg`);
+        item.style.transitionDelay = `${(items.length - 1 - i) * 70}ms`;
+        item.style.transition = 'none';
       });
+      lettersGrid.classList.add('is-stacked');
+      void lettersGrid.offsetHeight;
+      items.forEach(item => { item.style.transition = ''; });
       letterStackReady = true;
     }
+    
+    function createLetterRainOverlay(){
+      const overlay = document.createElement('div');
+      overlay.className = 'letter-rain-overlay';
+      const positions = [8, 25, 42, 58, 75, 92];
+      positions.forEach((pos, i) => {
+        const letterContainer = document.createElement('div');
+        letterContainer.className = 'falling-letter';
+        letterContainer.innerHTML = '<div class="falling-letter-shape"></div>';
+        letterContainer.style.left = pos + '%';
+        letterContainer.style.top = '-150px';
+        letterContainer.style.setProperty('--letter-rot', (Math.random() * 40 - 20) + 'deg');
+        letterContainer.style.animationDelay = (i * 180) + 'ms';
+        overlay.appendChild(letterContainer);
+      });
+      document.body.appendChild(overlay);
+      return overlay;
+    }
+    
+    lettersGrid.addEventListener('click', e => {
+      if(lettersGrid.classList.contains('is-stacked')){
+        e.stopPropagation();
+        const overlay = createLetterRainOverlay();
+        setTimeout(() => {
+          lettersGrid.innerHTML = `<div class="letters-empty-view">
+            <span class="letters-empty-view__icon">💌</span>
+            <h3 class="letters-empty-view__title">Noch keine neuen Briefe</h3>
+            <p class="letters-empty-view__text">Aber bald wird hier etwas Schönes auf dich warten. Schau regelmäßig vorbei! ✨</p>
+          </div>`;
+          lettersGrid.classList.remove('is-stacked');
+        }, 750);
+        setTimeout(() => overlay.remove(), 1600);
+      }
+    }, true);
 
-    /* --- Fotobuch --- */
-    let currentPhotoPage = 0;
+    /* --- Australien: Zeitzone & Countdown --- */
+    function getOffsetMinutes(timeZone, reference){
+      const tzDate = new Date(reference.toLocaleString('en-US', { timeZone }));
+      const utcDate = new Date(reference.toLocaleString('en-US', { timeZone: 'UTC' }));
+      return (tzDate - utcDate) / 60000;
+    }
+    function initAustralienMap(){
+      if(window.australienMapInitialized) return;
+      window.australienMapInitialized = true;
+      const mapEl = document.getElementById('australienMap');
+      if(!mapEl || mapEl._leaflet_map) return;
+      const map = L.map('australienMap').setView([20, 90], 3);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '© OpenStreetMap', maxZoom: 19}).addTo(map);
+      const tennantCreek = L.latLng(-19.6333, 134.1833);
+      const ney = L.latLng(49.2993, 7.3882);
+      L.circleMarker(tennantCreek, {radius: 8, fillColor: '#FF6F5E', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.8}).bindPopup('<b>Tennant Creek 🦘</b><br>Australien').addTo(map);
+      L.circleMarker(ney, {radius: 8, fillColor: '#2C8C82', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.8}).bindPopup('<b>Ney 🇩🇪</b><br>Rheinland-Pfalz').addTo(map);
+      
+      // Linie zwischen Punkten
+      const line = L.polyline([tennantCreek, ney], {color: 'rgba(255,111,94,0.4)', weight: 3, dashArray: '5,5'}).addTo(map);
+      
+      // Entfernung berechnen (Haversine)
+      const toRad = deg => deg * Math.PI / 180;
+      const R = 6371; // Erdradius in km
+      const lat1 = toRad(tennantCreek.lat);
+      const lat2 = toRad(ney.lat);
+      const dLat = toRad(ney.lat - tennantCreek.lat);
+      const dLng = toRad(ney.lng - tennantCreek.lng);
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng/2) * Math.sin(dLng/2);
+      const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      
+      // Label auf der Linie
+      const midLat = (tennantCreek.lat + ney.lat) / 2;
+      const midLng = (tennantCreek.lng + ney.lng) / 2;
+      const labelMarker = L.marker([midLat, midLng], {
+        icon: L.divIcon({
+          html: `<div style="background: white; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: #2B2140; box-shadow: 0 2px 8px rgba(43,33,64,0.15); white-space: nowrap;">${Math.round(distance)} km</div>`,
+          iconSize: [120, 30],
+          className: 'distance-label'
+        })
+      }).addTo(map);
+      
+      const group = new L.featureGroup([tennantCreek, ney]);
+      map.fitBounds(group.getBounds().pad(0.15));
+    }
+    const australienObserver = new MutationObserver(() => {
+      if(document.getElementById('australien').classList.contains('active') && !window.australienMapInitialized) initAustralienMap();
+    });
+    australienObserver.observe(document.getElementById('australien'), {attributes: true});
+
+    function updateAustralienInfo(){
+      const now = new Date();
+      const austOffset = getOffsetMinutes('Australia/Darwin', now);
+      const homeOffset = getOffsetMinutes(CONFIG.homeTimezone, now);
+      const diffH = (austOffset - homeOffset) / 60;
+      const h = Math.floor(Math.abs(diffH));
+      const m = Math.round((Math.abs(diffH) - h) * 60);
+      const timeDiffEl = document.getElementById('timeDiffValue');
+      if(timeDiffEl) timeDiffEl.textContent = `${h}${m ? ' Std. ' + m + ' Min.' : ' Std.'} ${diffH >= 0 ? 'voraus' : 'zurück'}`;
+    }
+    updateAustralienInfo();
+    setInterval(updateAustralienInfo, 60000);
+
+    /* --- Fotobuch: 5 Seiten à 4 Bilder, mit Blätter-Animation --- */
+    let pageIndex = 0;
     const photobookGrid = document.getElementById('photobookGrid');
     const photobookPageLabel = document.getElementById('photobookPageLabel');
 
-    function renderPhotobookPage(pageIndex){
+    function renderPhotobookPage(){
+      const page = CONFIG.photobook[pageIndex];
       photobookGrid.innerHTML = '';
-      const pageData = CONFIG.photobook[pageIndex] || [];
-      pageData.forEach(item => {
-        const wrap = document.createElement('div');
-        wrap.innerHTML = `
-          <div class="photobook__photo-img">${item.image ? '' : '📷'}</div>
-          <p class="photobook__photo-caption">${item.caption}</p>
-        `;
-        const imgDiv = wrap.querySelector('.photobook__photo-img');
-        if(item.image) imgDiv.style.backgroundImage = `url(${item.image})`;
-        photobookGrid.appendChild(wrap);
+      page.forEach(photo => {
+        const item = document.createElement('div');
+        item.className = 'photobook__photo';
+        const imgStyle = photo.image ? ` style="background-image:url('${photo.image}')"` : '';
+        item.innerHTML = `<div class="photobook__photo-img"${imgStyle}>${photo.image ? '' : '🖼️'}</div><p class="photobook__photo-caption">${photo.caption}</p>`;
+        photobookGrid.appendChild(item);
       });
       photobookPageLabel.textContent = `Seite ${pageIndex + 1} von ${CONFIG.photobook.length}`;
+      photobookGrid.querySelectorAll('.photobook__photo-img').forEach((imgEl, i) => {
+        imgEl.addEventListener('click', () => openEventModal({ title: page[i].caption, text: '', image: page[i].image }, '🖼️'));
+      });
     }
-
+    function flipToPage(newIndex){
+      photobookGrid.classList.add('is-flip-out');
+      photobookGrid.addEventListener('animationend', function outHandler(){
+        photobookGrid.removeEventListener('animationend', outHandler);
+        photobookGrid.classList.remove('is-flip-out');
+        pageIndex = newIndex;
+        renderPhotobookPage();
+        photobookGrid.classList.add('is-flip-in');
+        photobookGrid.addEventListener('animationend', function inHandler(){
+          photobookGrid.removeEventListener('animationend', inHandler);
+          photobookGrid.classList.remove('is-flip-in');
+        });
+      });
+    }
     document.getElementById('photoPrev').addEventListener('click', () => {
-      if(currentPhotoPage > 0){
-        currentPhotoPage--;
-        renderPhotobookPage(currentPhotoPage);
-      }
+      flipToPage((pageIndex - 1 + CONFIG.photobook.length) % CONFIG.photobook.length);
     });
-
     document.getElementById('photoNext').addEventListener('click', () => {
-      if(currentPhotoPage < CONFIG.photobook.length - 1){
-        currentPhotoPage++;
-        renderPhotobookPage(currentPhotoPage);
-      }
+      flipToPage((pageIndex + 1) % CONFIG.photobook.length);
     });
+    renderPhotobookPage();
 
-    renderPhotobookPage(0);
-
-    /* --- Australien Karte --- */
-    let mapInitialized = false;
-    function initAustraliaMap(){
-      if(mapInitialized) return;
-      mapInitialized = true;
-      const map = L.map('australienMap').setView([-19.6486, 134.1911], 5);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
-      L.marker([-19.6486, 134.1911]).addTo(map)
-        .bindPopup('Tennant Creek 🦘')
-        .openPopup();
-    }
-
-    /* --- Spielerei "Drück mich" --- */
+    /* --- Drück-mich-Button: Herzen fliegen, solange gedrückt --- */
     const pressHeartBtn = document.getElementById('pressHeartBtn');
     const heartBurstLayer = document.getElementById('heartBurstLayer');
     let heartInterval = null;
 
-    function createHeart(){
-      const heart = document.createElement('div');
+    function spawnHeart(){
+      const heart = document.createElement('span');
       heart.className = 'flying-heart';
-      heart.textContent = ['💗','💖','💞','💕'][Math.floor(Math.random()*4)];
-      heart.style.left = Math.random() * 90 + 5 + 'vw';
-      heart.style.setProperty('--drift', (Math.random() * 100 - 50) + 'px');
-      heart.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+      heart.textContent = ['💗','💕','💖','❤️'][Math.floor(Math.random() * 4)];
+      heart.style.left = `${Math.random() * 100}vw`;
+      heart.style.setProperty('--drift', `${Math.random() * 60 - 30}px`);
+      heart.style.fontSize = `${1.2 + Math.random() * 1.4}rem`;
+      heart.style.animationDuration = `${2.3 + Math.random() * 1.4}s`;
+      heart.addEventListener('animationend', () => heart.remove());
       heartBurstLayer.appendChild(heart);
-      setTimeout(() => heart.remove(), 3000);
     }
+    function startHearts(){
+      if(heartInterval) return;
+      spawnHeart();
+      heartInterval = setInterval(spawnHeart, 120);
+    }
+    function stopHearts(){
+      clearInterval(heartInterval);
+      heartInterval = null;
+    }
+    pressHeartBtn.addEventListener('pointerdown', startHearts);
+    pressHeartBtn.addEventListener('pointerup', stopHearts);
+    pressHeartBtn.addEventListener('pointerleave', stopHearts);
+    pressHeartBtn.addEventListener('pointercancel', stopHearts);
 
-    pressHeartBtn.addEventListener('pointerdown', () => {
-      heartInterval = setInterval(createHeart, 150);
-    });
-    ['pointerup', 'pointerleave', 'pointercancel'].forEach(evt => {
-      pressHeartBtn.addEventListener(evt, () => clearInterval(heartInterval));
-    });
-
-    /* --- Codepad & Gewinner-Screen --- */
+    /* --- Code-Pad: Codes der Größe nach freischalten --- */
+    let codeProgress = 0;
     const codepadForm = document.getElementById('codepadForm');
     const codepadInput = document.getElementById('codepadInput');
     const codepadFeedback = document.getElementById('codepadFeedback');
 
-    codepadForm.addEventListener('submit', (e) => {
+    codepadForm.addEventListener('submit', e => {
       e.preventDefault();
-      const val = codepadInput.value.trim();
-      const match = CONFIG.secretCodes.find(c => c.code === val);
-      if(match){
-        codepadFeedback.textContent = match.reveal;
-        codepadInput.value = '';
-      } else if(val === "123456") {
+      const value = codepadInput.value.trim();
+
+      if(value === '123456'){
+        resetChest();
         showPage('gewinner');
+        codepadInput.value = '';
+        return;
+      }
+
+      const nextCode = CONFIG.secretCodes[codeProgress];
+
+      if(!nextCode){
+        codepadFeedback.textContent = 'Alle Teile sind schon freigeschaltet! 🎉';
+      } else if(value === nextCode.code){
+        codeProgress++;
+        codepadFeedback.textContent = codeProgress === CONFIG.secretCodes.length
+          ? `${nextCode.reveal} — das war der letzte Code, die Überraschung ist komplett! 🎉`
+          : nextCode.reveal;
       } else {
-        codepadFeedback.textContent = "Falscher Code. Versuche es erneut!";
+        codepadFeedback.textContent = 'Das ist noch nicht der richtige Code.';
+      }
+      codepadInput.value = '';
+      codepadInput.focus();
+    });
+
+    /* --- Gewinner-Seite: Truhe mit steigender Spannung --- */
+    const chestEl = document.getElementById('chestEl');
+    const chestStars = document.getElementById('chestStars');
+    const chestHint = document.getElementById('chestHint');
+    const voucherCard = document.getElementById('voucherCard');
+    let chestTaps = 0;
+
+    function resetChest(){
+      chestTaps = 0;
+      chestEl.className = 'chest';
+      chestEl.hidden = false;
+      chestStars.innerHTML = '';
+      chestHint.hidden = false;
+      chestHint.textContent = 'Noch 4x drücken';
+      voucherCard.hidden = true;
+    }
+
+    const winnerFlash = document.getElementById('winnerFlash');
+
+    function flashScreen(){
+      winnerFlash.classList.remove('is-active');
+      void winnerFlash.offsetWidth;
+      winnerFlash.classList.add('is-active');
+    }
+    function spawnParticle(){
+      const p = document.createElement('span');
+      p.className = 'chest-particle';
+      p.textContent = ['⭐', '✨', '🎉'][Math.floor(Math.random() * 3)];
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 60 + Math.random() * 70;
+      p.style.setProperty('--px', `${Math.cos(angle) * dist}px`);
+      p.style.setProperty('--py', `${Math.sin(angle) * dist}px`);
+      document.body.appendChild(p);
+      p.addEventListener('animationend', () => p.remove());
+    }
+
+    chestEl.addEventListener('click', () => {
+      if(chestTaps >= 4) return;
+      chestTaps++;
+      const star = document.createElement('span');
+      star.textContent = '⭐';
+      chestStars.appendChild(star);
+      chestEl.className = `chest level-${chestTaps}`;
+
+      flashScreen();
+      for(let i = 0; i < 6; i++) spawnParticle();
+      const pop = document.createElement('span');
+      pop.className = 'level-pop';
+      pop.textContent = `⭐ ${chestTaps}/4!`;
+      chestEl.appendChild(pop);
+      pop.addEventListener('animationend', () => pop.remove());
+
+      if(chestTaps < 4){
+        chestHint.textContent = `Noch ${4 - chestTaps}x drücken`;
+      } else {
+        chestHint.textContent = 'Sie öffnet sich …';
+        setTimeout(() => {
+          chestEl.classList.add('is-opening');
+          flashScreen();
+          for(let i = 0; i < 18; i++) spawnParticle();
+          setTimeout(() => {
+            chestEl.hidden = true;
+            chestHint.hidden = true;
+            voucherCard.hidden = false;
+          }, 600);
+        }, 400);
       }
     });
 
-    /* --- Gewinner Schatzkiste --- */
-    let chestClicks = 0;
-    const chestEl = document.getElementById('chestEl');
-    const chestHint = document.getElementById('chestHint');
-    const voucherCard = document.getElementById('voucherCard');
+    /* --- Intro-Umschlag öffnen --- */
+    const heartBtn = document.getElementById('heartBtn');
+    const envelope = document.getElementById('envelope');
+    const introOverlay = document.getElementById('introOverlay');
+    let letterOpened = false;
 
-    chestEl.addEventListener('click', () => {
-      if(chestClicks >= 4) return;
-      chestClicks++;
-      chestEl.className = `chest level-${chestClicks}`;
-      if(chestClicks < 4){
-        chestHint.textContent = `Noch ${4 - chestClicks}x drücken`;
-      } else {
-        chestEl.classList.add('is-opening');
-        chestHint.style.display = 'none';
-        setTimeout(() => {
-          chestEl.style.display = 'none';
-          voucherCard.hidden = false;
-        }, 600);
-      }
+    function openLetter(){
+      if(letterOpened) return;
+      letterOpened = true;
+
+      heartBtn.classList.add('is-clicked');
+      envelope.classList.add('is-opening');
+      introOverlay.classList.add('is-closing');
+      
+      introOverlay.style.pointerEvents = 'none';
+      document.body.classList.remove('intro-active');
+      introOverlay.setAttribute('aria-hidden', 'true');
+      
+      setTimeout(() => {
+        introOverlay.style.display = 'none';
+        document.getElementById('lovestoryTitle').focus();
+      }, 1750);
+    }
+
+    heartBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openLetter();
+    });
+    envelope.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openLetter();
     });
 
   </script>
+
 </body>
 </html>
