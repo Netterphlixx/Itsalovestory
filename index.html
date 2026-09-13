@@ -9,6 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 
   /* ===================================================
@@ -552,10 +554,6 @@
   #lettersGrid.is-stacked > .tile{
     transform: translateY(var(--stack-offset, 0)) rotate(var(--stack-rotate, 0deg));
   }
-  #lettersGrid.is-expanded > .tile{
-    transform: translateY(0) rotate(0deg);
-    transition: transform 0.6s ease;
-  }
 
   .info-list{ display: flex; flex-direction: column; gap: 14px; margin-top: 22px; }
   .info-item{
@@ -798,15 +796,15 @@
     gap: 16px;
     transform-origin: center;
   }
-  .photobook__grid.is-flip-out{ animation: pageFlipOut 0.28s ease forwards; }
-  .photobook__grid.is-flip-in{ animation: pageFlipIn 0.28s ease forwards; }
-  @keyframes pageFlipOut{
-    0%{ transform: scaleX(1) skewY(0deg); opacity: 1; }
-    100%{ transform: scaleX(0) skewY(4deg); opacity: 0.3; }
+  .photobook__grid.is-flip-out{ animation: pageSlideOut 0.22s ease forwards; }
+  .photobook__grid.is-flip-in{ animation: pageSlideIn 0.22s ease forwards; }
+  @keyframes pageSlideOut{
+    0%{ transform: translateX(0) scale(1); opacity: 1; }
+    100%{ transform: translateX(-24px) scale(0.97); opacity: 0; }
   }
-  @keyframes pageFlipIn{
-    0%{ transform: scaleX(0) skewY(-4deg); opacity: 0.3; }
-    100%{ transform: scaleX(1) skewY(0deg); opacity: 1; }
+  @keyframes pageSlideIn{
+    0%{ transform: translateX(24px) scale(0.97); opacity: 0; }
+    100%{ transform: translateX(0) scale(1); opacity: 1; }
   }
   .photobook__photo-img{
     aspect-ratio: 4 / 3;
@@ -835,8 +833,142 @@
     box-shadow: var(--shadow-soft);
     touch-action: manipulation;
   }
+  .photobook__capture-btn{
+    display: block;
+    margin: 18px auto 0;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--coral), var(--mustard));
+    color: white;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .photobook__capture-btn:active{ transform: scale(0.96); }
+  .photobook__capture-btn[disabled]{ opacity: 0.6; cursor: default; }
+  .photobook__photo-img.is-live{ position: relative; }
+  .photobook__photo-img.is-live::after{
+    content: '👥';
+    position: absolute;
+    top: 6px; right: 6px;
+    font-size: 0.85rem;
+    background: rgba(255,255,255,0.85);
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .photobook__live-empty{
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px 16px;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
 
-  .sonstiges-grid{ display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
+  .live-photo-modal{
+    position: fixed; inset: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .live-photo-modal__backdrop{
+    position: absolute; inset: 0;
+    background: rgba(43,33,64,0.55);
+  }
+  .live-photo-modal__content{
+    position: relative;
+    background: var(--paper);
+    border-radius: var(--radius);
+    padding: 20px;
+    width: min(420px, 88vw);
+    box-shadow: var(--shadow-soft);
+    text-align: center;
+  }
+  .live-photo-modal__img{
+    width: 100%;
+    aspect-ratio: 4/3;
+    background-size: cover;
+    background-position: center;
+    border-radius: calc(var(--radius) - 6px);
+    margin-bottom: 16px;
+  }
+  .live-photo-modal__delete{
+    border: none;
+    background: #E8546B;
+    color: white;
+    font-family: var(--font-body);
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    width: 100%;
+  }
+  .live-photo-modal__close{
+    position: absolute;
+    top: -12px; right: -12px;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .sonstiges-grid{ 
+    display: flex; 
+    flex-direction: column; 
+    gap: 28px; 
+    margin-top: 24px; 
+  }
+  .playlist-card[data-target="dateIdeen"]{
+    background: linear-gradient(135deg, rgba(52,168,224,0.25), rgba(33,150,243,0.18));
+    border-color: rgba(52,168,224,0.35);
+  }
+  .playlist-card[data-target="dateIdeen"] .playlist-card__art{
+    background: linear-gradient(135deg, #34A8E0, #2196F3);
+    color: white;
+  }
+    display: grid;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .date-idea{
+    display: flex;
+    gap: 16px;
+    padding: 18px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(251,241,228,0.4));
+    border: 1px solid rgba(43,33,64,0.08);
+    border-radius: 14px;
+    animation: fadeInUp 0.5s ease both;
+  }
+  .date-idea:nth-child(1){ animation-delay: 0.1s; }
+  .date-idea:nth-child(2){ animation-delay: 0.15s; }
+  .date-idea:nth-child(3){ animation-delay: 0.2s; }
+  .date-idea:nth-child(4){ animation-delay: 0.25s; }
+  .date-idea:nth-child(5){ animation-delay: 0.3s; }
+  .date-idea:nth-child(n+6){ animation-delay: calc(0.3s + (var(--index, 0) * 0.05s)); }
+  .date-idea__emoji{
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+  .date-idea__content{
+    flex: 1;
+  }
+  .date-idea__content h3{
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    margin: 0 0 6px 0;
+    color: var(--ink);
+  }
+  .date-idea__content p{
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.5;
+  }
   .playlist-card{
     display: flex;
     align-items: center;
@@ -924,12 +1056,6 @@
     }
   }
 
-  @media (max-width: 480px){
-    .masthead__tape{ display: none; }
-    .counter__card{ padding: 18px 26px; transform: none; }
-    .tab{ padding: 12px 16px; }
-  }
-
 
 
   /* --- Rubbelkarte für Poesie --- */
@@ -957,21 +1083,6 @@
     line-height:1.45;
     color:var(--ink);
   }
-  .scratch-card__hint{
-    position:absolute;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    z-index:2;
-    pointer-events:none;
-    color:#fff;
-    font-family:var(--font-body);
-    font-weight:700;
-    font-size:.95rem;
-    letter-spacing:.03em;
-    text-shadow:0 1px 3px rgba(0,0,0,.35);
-    transition:opacity .25s ease;
-  }
   .scratch-card canvas{
     position:absolute;
     inset:0;
@@ -986,14 +1097,27 @@
     opacity:0;
     transition:opacity .45s ease;
   }
-  .scratch-card.is-revealed .scratch-card__hint{ opacity:0; }
   .confetti-piece{
     position:fixed;
     z-index:9999;
-    width:8px;
-    height:13px;
+    width:14px;
+    height:18px;
     pointer-events:none;
-    animation:confettiFall 1.35s cubic-bezier(.2,.8,.3,1) forwards;
+    animation: confettiExplosion 2.4s cubic-bezier(0.15, 0.6, 0.35, 1) forwards;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  }
+  @keyframes confettiExplosion{
+    0%{ 
+      transform: translate(0, 0) scale(1.1) rotateZ(0deg); 
+      opacity: 1; 
+    }
+    60%{
+      opacity: 1;
+    }
+    100%{ 
+      transform: translate(var(--dx), var(--dy)) scale(0.1) rotateZ(var(--rot)); 
+      opacity: 0; 
+    }
   }
   
   .letter-rain-overlay{
@@ -1002,7 +1126,7 @@
     z-index: 9999;
     pointer-events: none;
     background: var(--paper);
-    animation: overlayFade 1.6s ease-in-out forwards;
+    animation: letterRainFade 1.6s ease-in-out forwards;
   }
   .falling-letter{
     position: absolute;
@@ -1035,7 +1159,7 @@
     85%{ opacity: 1; }
     100%{ transform: translateY(150vh) rotateZ(var(--letter-rot)) scaleY(1); opacity: 0; }
   }
-  @keyframes overlayFade{
+  @keyframes letterRainFade{
     0%{ opacity: 0; }
     20%{ opacity: 1; }
     80%{ opacity: 1; }
@@ -1171,8 +1295,19 @@
           <span class="photobook__page-label" id="photobookPageLabel"></span>
           <button class="photobook__nav" id="photoNext" aria-label="Nächste Seite">›</button>
         </div>
+        <button class="photobook__capture-btn" id="photoCaptureBtn">📷 Foto aufnehmen</button>
+        <input type="file" accept="image/*" capture="environment" id="photoCaptureInput" style="display:none">
       </div>
     </section>
+
+    <div class="live-photo-modal" id="livePhotoModal" hidden>
+      <div class="live-photo-modal__backdrop" id="livePhotoModalBackdrop"></div>
+      <div class="live-photo-modal__content">
+        <button class="live-photo-modal__close" id="livePhotoModalClose" aria-label="Schließen">✕</button>
+        <div class="live-photo-modal__img" id="livePhotoModalImg"></div>
+        <button class="live-photo-modal__delete" id="livePhotoModalDelete">🗑️ Für alle löschen</button>
+      </div>
+    </div>
 
     <section class="page page--fullscreen" id="australien">
       <button class="back-link" data-target="startseite">← Zur Startseite</button>
@@ -1200,6 +1335,84 @@
       <div id="australienMap" style="width: 100%; height: 400px; border-radius: 14px; margin-top: 24px; box-shadow: 0 2px 6px rgba(43, 33, 64, 0.06), 0 16px 32px rgba(43, 33, 64, 0.14);"></div>
     </section>
 
+    <section class="page page--fullscreen" id="dateIdeen">
+      <button class="back-link" data-target="sonstiges">← Zurück</button>
+      <h2 class="page__title">Date Ideen</h2>
+      <p class="page__intro">Kleine Inspirationen für gemeinsame Momente.</p>
+      <div class="date-ideas-list">
+        <div class="date-idea">
+          <span class="date-idea__emoji">🌅</span>
+          <div class="date-idea__content">
+            <h3>Gemeinsamer Sonnenaufgang</h3>
+            <p>Früh aufstehen und zusammen den Tag begrüßen (auch über Videocall)</p>
+          </div>
+        </div>
+        <div class="date-idea">
+          <span class="date-idea__emoji">🍿</span>
+          <div class="date-idea__content">
+            <h3>Filme schauen zusammen</h3>
+            <p>Synchron einen Film ansehen und live darüber schreiben</p>
+          </div>
+        </div>
+        <div class="date-idea">
+          <span class="date-idea__emoji">🎮</span>
+          <div class="date-idea__content">
+            <h3>Spiele spielen</h3>
+            <p>Online-Spiele zocken oder Würfelspiele über Video</p>
+          </div>
+        </div>
+        <div class="date-idea">
+          <span class="date-idea__emoji">📚</span>
+          <div class="date-idea__content">
+            <h3>Buch-Klub</h3>
+            <p>Das gleiche Buch lesen und sich darüber austauschen</p>
+          </div>
+        </div>
+        <div class="date-idea">
+          <span class="date-idea__emoji">🍕</span>
+          <div class="date-idea__content">
+            <h3>Gemeinsames Dinner</h3>
+            <p>Das gleiche Rezept kochen und zusammen essen (per Videocall)</p>
+          </div>
+        </div>
+        <div class="date-idea">
+          <span class="date-idea__emoji">🎨</span>
+          <div class="date-idea__content">
+            <h3>Kreativ-Challenge</h3>
+            <p>Zusammen zeichnen, malen oder handwerk-Projekte machen</p>
+          </div>
+        </div>
+        <div class="date-idea">
+          <span class="date-idea__emoji">🎵</span>
+          <div class="date-idea__content">
+            <h3>Musik-Session</h3>
+            <p>Gemeinsam Musik hören oder Lieblingssongs vorstellen</p>
+          </div>
+        </div>
+        <div class="date-idea">
+          <span class="date-idea__emoji">🌙</span>
+          <div class="date-idea__content">
+            <h3>Sternenhimmel-Chat</h3>
+            <p>Unter dem Sternenhimmel sitzen und quatschen</p>
+          </div>
+        </div>
+        <div class="date-idea">
+          <span class="date-idea__emoji">💌</span>
+          <div class="date-idea__content">
+            <h3>Brief schreiben</h3>
+            <p>Liebevolle Briefe zu bestimmten Anlässen verschicken</p>
+          </div>
+        </div>
+        <div class="date-idea">
+          <span class="date-idea__emoji">🎁</span>
+          <div class="date-idea__content">
+            <h3>Überraschungs-Paket</h3>
+            <p>Kleine Geschenke verschicken zum Auspacken zusammen</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="page page--fullscreen" id="sonstiges">
       <button class="back-link" data-target="startseite">← Zur Startseite</button>
       <h2 class="page__title">Sonstiges</h2>
@@ -1211,6 +1424,15 @@
           <div class="playlist-card__info">
             <p class="playlist-card__label">Spielerei</p>
             <p class="playlist-card__title">Drück mich</p>
+          </div>
+          <span class="playlist-card__arrow">→</span>
+        </button>
+
+        <button class="playlist-card" data-target="dateIdeen">
+          <div class="playlist-card__art">💑</div>
+          <div class="playlist-card__info">
+            <p class="playlist-card__label">Inspiration</p>
+            <p class="playlist-card__title">Date Ideen</p>
           </div>
           <span class="playlist-card__arrow">→</span>
         </button>
@@ -1313,6 +1535,29 @@
   <footer id="footerText"><!-- wird per JS gefüllt --></footer>
 
   <script>
+
+    /* =================================================
+       FIREBASE — für geteilte Fotos (für alle sichtbar & dauerhaft)
+       Trage hier deine eigenen (kostenlosen) Firebase-Zugangsdaten ein:
+       1. Auf https://console.firebase.google.com ein Projekt anlegen
+       2. Dort "Firestore Database" erstellen (im Testmodus starten)
+       3. Unter Projekteinstellungen → "Web-App hinzufügen" → Config kopieren
+       ================================================= */
+    const firebaseConfig = {
+      apiKey: "DEIN_API_KEY",
+      authDomain: "DEIN_PROJEKT.firebaseapp.com",
+      projectId: "DEIN_PROJEKT",
+      storageBucket: "DEIN_PROJEKT.appspot.com",
+      messagingSenderId: "DEINE_SENDER_ID",
+      appId: "DEINE_APP_ID"
+    };
+    let db = null;
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+    } catch(err){
+      console.warn('Firebase nicht konfiguriert — geteilte Fotos sind deaktiviert.', err);
+    }
 
     /* =================================================
        KONFIGURATION — hier sind deine echten Events eingetragen
@@ -1778,12 +2023,12 @@
         ],
       },
       letters: [
-        { condition: "du traurig bist", text: "" },
-        { condition: "du mich vermisst", text: "" },
-        { condition: "du einen schlechten Tag hattest", text: "" },
-        { condition: "du an uns zweifelst", text: "" },
-        { condition: "du dich einsam fühlst", text: "" },
-        { condition: "du diese Nachricht am meistem brauchst", text: "" }
+        { condition: "du traurig bist" },
+        { condition: "du mich vermisst" },
+        { condition: "du einen schlechten Tag hattest" },
+        { condition: "du an uns zweifelst" },
+        { condition: "du dich einsam fühlst" },
+        { condition: "du diese Nachricht am meistem brauchst" }
       ],
       secretCodes: [
         { code: "67", reveal: "Teil 1 der Überraschung: Platzhaltertext." },
@@ -1842,11 +2087,15 @@
       pages.forEach(page => page.classList.toggle('active', page.id === targetId));
       document.body.classList.toggle('sub-active', targetId !== 'startseite');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      if(targetId === 'startseite') letterOpened = false;
       if(targetId === 'briefe' && !letterStackReady) setupLetterStack();
     }
 
     document.querySelectorAll('[data-target]').forEach(btn => {
-      btn.addEventListener('click', () => showPage(btn.dataset.target));
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showPage(btn.dataset.target);
+      });
     });
 
     /* --- Zeitstrahl, Suche & Event-Fenster --- */
@@ -1958,28 +2207,25 @@
     const poesieBag = createShuffleBag(CONFIG.suesseTexte.poesie);
     const zufallBag = createShuffleBag([...CONFIG.suesseTexte.nachrichten, ...CONFIG.suesseTexte.poesie]);
 
-    function showSuesserText(text){
-      const el = document.getElementById('suesseTextContent');
-      el.style.animation = 'none';
-      void el.offsetHeight;
-      el.style.animation = 'pageIn 0.3s ease';
-      el.textContent = text;
-    }
-
     function launchConfetti(){
-      const count = 80;
+      const count = 120;
       for(let i = 0; i < count; i++){
         const piece = document.createElement('span');
         piece.className = 'confetti-piece';
-        piece.style.left = Math.random() * 100 + 'vw';
-        piece.style.top = Math.random() * 100 + 'vh';
-        piece.style.setProperty('--dx', ((Math.random() - .5) * 120) + 'vw');
-        piece.style.setProperty('--dy', ((Math.random() - .5) * 120) + 'vh');
-        piece.style.setProperty('--rot', ((Math.random() - .5) * 1500) + 'deg');
-        piece.style.background = ['#FF6F5E','#F4A93B','#2C8C82','#E8768A','#7B68EE'][Math.floor(Math.random()*5)];
-        piece.style.animationDelay = (Math.random() * .2) + 's';
+        const angle = (i / count) * Math.PI * 2;
+        const velocity = 2 + Math.random() * 1.5;
+        const distance = (40 + Math.random() * 60);
+        piece.style.left = '50%';
+        piece.style.top = '50%';
+        piece.style.setProperty('--dx', (Math.cos(angle) * distance * velocity) + 'vw');
+        piece.style.setProperty('--dy', (Math.sin(angle) * distance * velocity - 80 - Math.random() * 40) + 'vh');
+        piece.style.setProperty('--rot', ((Math.random() - .5) * 1800) + 'deg');
+        const colors = ['#FF6F5E','#F4A93B','#2C8C82','#E8768A','#7B68EE','#FFD700','#FF69B4'];
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.borderRadius = Math.random() > 0.5 ? '0' : '50%';
+        piece.style.animationDelay = (Math.random() * .3) + 's';
         document.body.appendChild(piece);
-        setTimeout(() => piece.remove(), 1700);
+        setTimeout(() => piece.remove(), 2700);
       }
     }
 
@@ -1991,7 +2237,6 @@
       el.innerHTML = `
         <div class="scratch-card" aria-label="Rubbelkarte">
           <div class="scratch-card__message">${escapeHtml(text)}</div>
-          <span class="scratch-card__hint">✨ Hier rubbeln ✨</span>
           <canvas aria-hidden="true"></canvas>
         </div>`;
 
@@ -2181,6 +2426,31 @@
       const ney = L.latLng(49.2993, 7.3882);
       L.circleMarker(tennantCreek, {radius: 8, fillColor: '#FF6F5E', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.8}).bindPopup('<b>Tennant Creek 🦘</b><br>Australien').addTo(map);
       L.circleMarker(ney, {radius: 8, fillColor: '#2C8C82', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.8}).bindPopup('<b>Ney 🇩🇪</b><br>Rheinland-Pfalz').addTo(map);
+      
+      // Linie zwischen Punkten
+      const line = L.polyline([tennantCreek, ney], {color: 'rgba(255,111,94,0.4)', weight: 3, dashArray: '5,5'}).addTo(map);
+      
+      // Entfernung berechnen (Haversine)
+      const toRad = deg => deg * Math.PI / 180;
+      const R = 6371; // Erdradius in km
+      const lat1 = toRad(tennantCreek.lat);
+      const lat2 = toRad(ney.lat);
+      const dLat = toRad(ney.lat - tennantCreek.lat);
+      const dLng = toRad(ney.lng - tennantCreek.lng);
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng/2) * Math.sin(dLng/2);
+      const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      
+      // Label auf der Linie
+      const midLat = (tennantCreek.lat + ney.lat) / 2;
+      const midLng = (tennantCreek.lng + ney.lng) / 2;
+      const labelMarker = L.marker([midLat, midLng], {
+        icon: L.divIcon({
+          html: `<div style="background: white; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: #2B2140; box-shadow: 0 2px 8px rgba(43,33,64,0.15); white-space: nowrap;">${Math.round(distance)} km</div>`,
+          iconSize: [120, 30],
+          className: 'distance-label'
+        })
+      }).addTo(map);
+      
       const group = new L.featureGroup([tennantCreek, ney]);
       map.fitBounds(group.getBounds().pad(0.15));
     }
@@ -2202,28 +2472,60 @@
     updateAustralienInfo();
     setInterval(updateAustralienInfo, 60000);
 
-    /* --- Fotobuch: 5 Seiten à 4 Bilder, mit Blätter-Animation --- */
+    /* --- Fotobuch: statische Seiten + geteilte Live-Fotos (Kamera, für alle) --- */
     let pageIndex = 0;
+    let livePhotos = []; // [{id, data}], neueste zuerst — kommt live aus Firestore
     const photobookGrid = document.getElementById('photobookGrid');
     const photobookPageLabel = document.getElementById('photobookPageLabel');
+    const staticPageCount = CONFIG.photobook.length;
+
+    function liveePageCount(){
+      return Math.max(1, Math.ceil(livePhotos.length / 4));
+    }
+    function totalPageCount(){
+      return staticPageCount + liveePageCount();
+    }
 
     function renderPhotobookPage(){
-      const page = CONFIG.photobook[pageIndex];
       photobookGrid.innerHTML = '';
-      page.forEach(photo => {
-        const item = document.createElement('div');
-        item.className = 'photobook__photo';
-        const imgStyle = photo.image ? ` style="background-image:url('${photo.image}')"` : '';
-        item.innerHTML = `<div class="photobook__photo-img"${imgStyle}>${photo.image ? '' : '🖼️'}</div><p class="photobook__photo-caption">${photo.caption}</p>`;
-        photobookGrid.appendChild(item);
-      });
-      photobookPageLabel.textContent = `Seite ${pageIndex + 1} von ${CONFIG.photobook.length}`;
-      photobookGrid.querySelectorAll('.photobook__photo-img').forEach((imgEl, i) => {
-        imgEl.addEventListener('click', () => openEventModal({ title: page[i].caption, text: '', image: page[i].image }, '🖼️'));
-      });
+
+      if(pageIndex < staticPageCount){
+        // --- Statische Erinnerungs-Seite ---
+        const page = CONFIG.photobook[pageIndex];
+        page.forEach(photo => {
+          const item = document.createElement('div');
+          item.className = 'photobook__photo';
+          const imgStyle = photo.image ? ` style="background-image:url('${photo.image}')"` : '';
+          item.innerHTML = `<div class="photobook__photo-img"${imgStyle}>${photo.image ? '' : '🖼️'}</div><p class="photobook__photo-caption">${photo.caption}</p>`;
+          photobookGrid.appendChild(item);
+        });
+        photobookGrid.querySelectorAll('.photobook__photo-img').forEach((imgEl, i) => {
+          imgEl.addEventListener('click', () => openEventModal({ title: page[i].caption, text: '', image: page[i].image }, '🖼️'));
+        });
+      } else {
+        // --- Live-Fotos-Seite (von der Kamera, geteilt für alle) ---
+        const liveIndex = pageIndex - staticPageCount;
+        const slice = livePhotos.slice(liveIndex * 4, liveIndex * 4 + 4);
+        if(slice.length === 0){
+          const empty = document.createElement('div');
+          empty.className = 'photobook__live-empty';
+          empty.textContent = 'Noch keine gemeinsamen Fotos — nimm eins auf! 📷';
+          photobookGrid.appendChild(empty);
+        } else {
+          slice.forEach(photo => {
+            const item = document.createElement('div');
+            item.className = 'photobook__photo';
+            item.innerHTML = `<div class="photobook__photo-img is-live" style="background-image:url('${photo.data}')"></div><p class="photobook__photo-caption">Gemeinsames Foto</p>`;
+            photobookGrid.appendChild(item);
+            item.querySelector('.photobook__photo-img').addEventListener('click', () => openLivePhotoModal(photo));
+          });
+        }
+      }
+
+      photobookPageLabel.textContent = `Seite ${pageIndex + 1} von ${totalPageCount()}`;
     }
-    function flipToPage(newIndex, direction){
-      photobookGrid.style.transformOrigin = direction === 'next' ? 'right center' : 'left center';
+
+    function flipToPage(newIndex){
       photobookGrid.classList.add('is-flip-out');
       photobookGrid.addEventListener('animationend', function outHandler(){
         photobookGrid.removeEventListener('animationend', outHandler);
@@ -2238,12 +2540,102 @@
       });
     }
     document.getElementById('photoPrev').addEventListener('click', () => {
-      flipToPage((pageIndex - 1 + CONFIG.photobook.length) % CONFIG.photobook.length, 'prev');
+      flipToPage((pageIndex - 1 + totalPageCount()) % totalPageCount());
     });
     document.getElementById('photoNext').addEventListener('click', () => {
-      flipToPage((pageIndex + 1) % CONFIG.photobook.length, 'next');
+      flipToPage((pageIndex + 1) % totalPageCount());
     });
     renderPhotobookPage();
+
+    /* --- Live-Fotos: Firestore-Sync (Echtzeit, für alle Besucher) --- */
+    if(db){
+      db.collection('livePhotos').orderBy('ts', 'desc').onSnapshot(snapshot => {
+        livePhotos = snapshot.docs.map(doc => ({ id: doc.id, data: doc.data().data }));
+        if(pageIndex >= totalPageCount()) pageIndex = totalPageCount() - 1;
+        renderPhotobookPage();
+      }, err => console.warn('Live-Fotos konnten nicht geladen werden:', err));
+    }
+
+    /* --- Live-Fotos: Kamera-Aufnahme, Komprimierung & Upload --- */
+    const photoCaptureBtn = document.getElementById('photoCaptureBtn');
+    const photoCaptureInput = document.getElementById('photoCaptureInput');
+
+    photoCaptureBtn.addEventListener('click', () => {
+      if(!db){ alert('Geteilte Fotos sind noch nicht eingerichtet (Firebase fehlt).'); return; }
+      photoCaptureInput.click();
+    });
+
+    function compressImage(file, maxDim, quality){
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = e => { img.src = e.target.result; };
+        reader.onerror = reject;
+        img.onload = () => {
+          let { width, height } = img;
+          if(width > height && width > maxDim){ height = height * (maxDim / width); width = maxDim; }
+          else if(height > maxDim){ width = width * (maxDim / height); height = maxDim; }
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    photoCaptureInput.addEventListener('change', async () => {
+      const file = photoCaptureInput.files[0];
+      photoCaptureInput.value = '';
+      if(!file || !db) return;
+
+      photoCaptureBtn.disabled = true;
+      photoCaptureBtn.textContent = 'Wird hochgeladen …';
+      try {
+        // Schrittweise stärker komprimieren, bis die Datei sicher unter Firestores 1-MB-Limit passt
+        let dataUrl = await compressImage(file, 1280, 0.72);
+        if(dataUrl.length > 700000) dataUrl = await compressImage(file, 1000, 0.6);
+        if(dataUrl.length > 700000) dataUrl = await compressImage(file, 800, 0.5);
+
+        await db.collection('livePhotos').add({
+          data: dataUrl,
+          ts: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        pageIndex = staticPageCount; // zur ersten Live-Fotos-Seite springen
+      } catch(err){
+        alert('Hochladen fehlgeschlagen: ' + err.message);
+      } finally {
+        photoCaptureBtn.disabled = false;
+        photoCaptureBtn.textContent = '📷 Foto aufnehmen';
+      }
+    });
+
+    /* --- Live-Fotos: Ansehen & für alle löschen --- */
+    const livePhotoModal = document.getElementById('livePhotoModal');
+    const livePhotoModalImg = document.getElementById('livePhotoModalImg');
+    let livePhotoToDelete = null;
+
+    function openLivePhotoModal(photo){
+      livePhotoToDelete = photo.id;
+      livePhotoModalImg.style.backgroundImage = `url('${photo.data}')`;
+      livePhotoModal.hidden = false;
+    }
+    function closeLivePhotoModal(){
+      livePhotoModal.hidden = true;
+      livePhotoToDelete = null;
+    }
+    document.getElementById('livePhotoModalClose').addEventListener('click', closeLivePhotoModal);
+    document.getElementById('livePhotoModalBackdrop').addEventListener('click', closeLivePhotoModal);
+    document.getElementById('livePhotoModalDelete').addEventListener('click', async () => {
+      if(!livePhotoToDelete || !db) return;
+      try {
+        await db.collection('livePhotos').doc(livePhotoToDelete).delete();
+        closeLivePhotoModal();
+      } catch(err){
+        alert('Löschen fehlgeschlagen: ' + err.message);
+      }
+    });
 
     /* --- Drück-mich-Button: Herzen fliegen, solange gedrückt --- */
     const pressHeartBtn = document.getElementById('pressHeartBtn');
@@ -2390,27 +2782,25 @@
       heartBtn.classList.add('is-clicked');
       envelope.classList.add('is-opening');
       introOverlay.classList.add('is-closing');
-
-      const finishReveal = () => {
-        introOverlay.style.display = 'none';
-        introOverlay.setAttribute('aria-hidden', 'true');
-        document.body.classList.remove('intro-active');
-        document.getElementById('lovestoryTitle').focus();
-      };
-
-      introOverlay.addEventListener('animationend', function handler(e){
-        if(e.target !== introOverlay) return;
-        introOverlay.removeEventListener('animationend', handler);
-        finishReveal();
-      });
-
+      
+      introOverlay.style.pointerEvents = 'none';
+      document.body.classList.remove('intro-active');
+      introOverlay.setAttribute('aria-hidden', 'true');
+      
       setTimeout(() => {
-        if(document.body.classList.contains('intro-active')) finishReveal();
-      }, 2200);
+        introOverlay.style.display = 'none';
+        document.getElementById('lovestoryTitle').focus();
+      }, 1750);
     }
 
-    heartBtn.addEventListener('click', openLetter);
-    envelope.addEventListener('click', openLetter);
+    heartBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openLetter();
+    });
+    envelope.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openLetter();
+    });
 
   </script>
 
