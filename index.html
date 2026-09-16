@@ -166,6 +166,17 @@
     position: relative;
     padding-bottom: 14px;
   }
+  .page__title--slider::after{ content: none; }
+  .timeline__scrubber-wrap{ position: relative; width: 46px; height: 4px; margin: 0 0 20px; }
+  .timeline__scrubber-label{ position: absolute; top: -20px; left: 0; font-size: 0.7rem; color: var(--ink-soft); white-space: nowrap; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+  .timeline__scrubber-label.is-visible{ opacity: 1; pointer-events: auto; }
+  .timeline__scrubber{
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 4px; border-radius: 2px; outline: none; margin: 0; display: block;
+    background: linear-gradient(90deg, var(--coral), var(--mustard)), repeating-linear-gradient(115deg, rgba(255,255,255,0.16) 0 1px, transparent 1px 3px);
+  }
+  .timeline__scrubber::-webkit-slider-thumb{ -webkit-appearance: none; width: 4px; height: 4px; border-radius: 2px; background: transparent; cursor: pointer; }
+  .timeline__scrubber::-moz-range-thumb{ width: 4px; height: 4px; border: none; border-radius: 2px; background: transparent; cursor: pointer; }
   .page__title::after{
     content: '';
     position: absolute;
@@ -442,6 +453,31 @@
   .timeline__dot-date{ font-size: 0.75rem; color: var(--ink-soft); }
   .timeline__dot-title{ font-weight: 600; }
 
+  .timeline__dot--tiny{
+    padding: 2px 6px;
+    width: auto;
+    align-self: flex-start;
+    box-shadow: none;
+    border-color: transparent;
+    opacity: 0.55;
+  }
+  .timeline__dot--tiny::before{ width: 4px; height: 4px; left: -26px; }
+  .timeline__dot--tiny .timeline__dot-date{ font-size: 0.55rem; }
+  .timeline__dot--tiny .timeline__dot-title{ font-size: 0.55rem; font-weight: 400; }
+
+  .timeline__hidden-arrow{
+    align-self: flex-start;
+    background: none;
+    border: none;
+    color: var(--paper-dark);
+    opacity: 0.4;
+    font-size: 0.55rem;
+    line-height: 1;
+    padding: 0 6px;
+    margin: -10px 0;
+    cursor: pointer;
+  }
+
   .event-modal{
     position: fixed;
     inset: 0;
@@ -528,7 +564,53 @@
   .overview-modal__list{ list-style: none; margin: 0 0 16px; padding: 0; }
   .overview-modal__list li{ display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--paper-dark); font-size: 0.9rem; }
   .overview-modal__list b{ color: var(--coral); }
-  .overview-modal__final{ background: var(--paper); border-radius: 10px; padding: 12px 14px; text-align: center; font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+  /* Song-Übersicht */
+  .secret-modal__card.song-modal__card{ background: #181818; padding: 0; max-width: 360px; overflow: hidden; }
+  .song-modal__card .secret-modal__close{ color: #b3b3b3; z-index: 2; }
+  .song-modal__cover{ height: 130px; background: linear-gradient(135deg, #1DB954, #12793a); display: flex; align-items: center; justify-content: center; font-size: 2.8rem; }
+  .song-modal__body{ padding: 20px 22px 24px; text-align: left; }
+  .song-modal__title{ font-family: var(--font-display); font-size: 1.2rem; color: #fff; margin: 0 0 2px; }
+  .song-modal__artist{ font-size: 0.85rem; color: #b3b3b3; margin: 0 0 14px; }
+  .song-modal__blurb{ font-size: 0.9rem; color: #e6e6e6; line-height: 1.6; margin: 0 0 18px; }
+  .song-modal__footer{ display: flex; align-items: center; justify-content: space-between; }
+  .song-modal__duration{ color: #b3b3b3; font-size: 0.85rem; }
+  .song-modal__heart{ background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #1DB954; line-height: 1; padding: 4px; }
+  .song-modal__heart[data-fav="false"]{ color: #727272; }
+
+  /* Playlist-hinzufügen-Menü */
+  .secret-modal__card.playlist-add__card{ background: #181818; max-width: 340px; text-align: left; }
+  .playlist-add__card .secret-modal__close{ color: #b3b3b3; }
+  .playlist-add__title{ color: #fff; font-family: var(--font-display); font-size: 1.05rem; text-align: center; margin: 6px 0 16px; }
+  .playlist-add__list{ list-style: none; margin: 0; padding: 0; max-height: 280px; overflow-y: auto; }
+  .playlist-add__list li{ padding: 10px 10px; border-radius: 6px; color: #e6e6e6; font-size: 0.92rem; cursor: pointer; }
+  .playlist-add__list li:hover{ background: rgba(255,255,255,0.08); }
+
+  /* Hinweis-Toast */
+  .hint-toast{
+    position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 14px);
+    background: #181818; color: #fff; padding: 12px 20px; border-radius: 30px;
+    font-size: 0.88rem; box-shadow: var(--shadow-soft); cursor: pointer;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; z-index: 950;
+  }
+  .hint-toast.is-visible{ opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  .hint-toast--error{ max-width: 300px; text-align: left; white-space: normal; }
+  .hint-toast__title{ margin: 0 0 6px; font-weight: 600; }
+  .hint-toast__code{ margin: 0; font-family: monospace; font-size: 0.7rem; line-height: 1.5; color: #9a9a9a; word-break: break-all; max-height: 90px; overflow: hidden; }
+
+  /* Tresor */
+  .secret-modal__card.safe-card{ background: linear-gradient(160deg, #2B2140, #3B2E56); max-width: 320px; }
+  .safe-card .secret-modal__close{ color: #cfc6e0; }
+  .safe-card__title{ position: relative; color: #FBF1E4; font-family: var(--font-display); font-size: 1.15rem; text-align: center; margin: 4px 0 14px; }
+  .safe-card__display{ position: relative; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; text-align: center; font-family: monospace; font-size: 1.3rem; letter-spacing: 0.3em; color: #FBF1E4; min-height: 1.4em; margin-bottom: 14px; }
+  .safe-card__keypad{ position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .safe-card__key{ background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.25); color: #FBF1E4; border-radius: 8px; padding: 12px 0; font-size: 1.05rem; cursor: pointer; }
+  .safe-card__key:hover{ background: rgba(255,255,255,0.16); }
+  .safe-card__actions{ position: relative; display: flex; gap: 8px; }
+  .safe-card__actions button{ flex: 1; border: none; border-radius: 8px; padding: 11px 0; font-weight: 600; cursor: pointer; }
+  .safe-card__clear{ background: rgba(255,255,255,0.1); color: #FBF1E4; }
+  .safe-card__open{ background: #D4AF37; color: #2B2140; }
+  .safe-card.is-shaking{ animation: safeShake 0.4s ease; }
+  @keyframes safeShake{ 0%,100%{ transform: translateX(0); } 25%{ transform: translateX(-8px); } 75%{ transform: translateX(8px); } }
 
   /* ===================================================
      SÜSSE TEXTE — Unterreiter & Textanzeige
@@ -1221,7 +1303,11 @@
 
     <section class="page page--fullscreen" id="zeitstrahl">
       <button class="back-link" data-target="startseite">← Zur Startseite</button>
-      <h2 class="page__title">Zeitstrahl</h2>
+      <h2 class="page__title page__title--slider">Zeitstrahl</h2>
+      <div class="timeline__scrubber-wrap">
+        <span class="timeline__scrubber-label" id="scrubberLabel"></span>
+        <input type="range" id="timelineScrubber" class="timeline__scrubber" min="0" max="0" step="1" value="0">
+      </div>
       
       <div class="timeline__search-container">
         <input type="text" id="timelineSearch" class="timeline__search-input" placeholder="🔍 Nach Event oder Datum suchen...">
@@ -1461,6 +1547,52 @@
     </div>
   </div>
 
+  <div class="secret-modal" id="songModal" hidden>
+    <div class="secret-modal__backdrop" id="songModalBackdrop"></div>
+    <div class="secret-modal__card song-modal__card" role="dialog" aria-modal="true">
+      <button class="secret-modal__close" id="songModalClose" aria-label="Schließen">✕</button>
+      <div class="song-modal__cover">🎵</div>
+      <div class="song-modal__body">
+        <p class="song-modal__title" id="songModalTitle"></p>
+        <p class="song-modal__artist" id="songModalArtist"></p>
+        <p class="song-modal__blurb" id="songModalBlurb"></p>
+        <div class="song-modal__footer">
+          <span class="song-modal__duration" id="songModalDuration"></span>
+          <button class="song-modal__heart" id="songModalHeart" data-fav="true" aria-label="Favorit">♥</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="secret-modal" id="playlistAddModal" hidden>
+    <div class="secret-modal__backdrop" id="playlistAddBackdrop"></div>
+    <div class="secret-modal__card playlist-add__card" role="dialog" aria-modal="true">
+      <button class="secret-modal__close" id="playlistAddClose" aria-label="Schließen">✕</button>
+      <p class="playlist-add__title">Füge das Lied einer Playlist hinzu</p>
+      <ul class="playlist-add__list" id="playlistAddList"></ul>
+    </div>
+  </div>
+
+  <div class="secret-modal" id="safeModal" hidden>
+    <div class="secret-modal__backdrop" id="safeModalBackdrop"></div>
+    <div class="secret-modal__card safe-card" role="dialog" aria-modal="true" id="safeCard">
+      <button class="secret-modal__close" id="safeModalClose" aria-label="Schließen">✕</button>
+      <p class="safe-card__title">🔒 Tresor</p>
+      <div class="safe-card__display" id="safeDisplay"></div>
+      <div class="safe-card__keypad" id="safeKeypad"></div>
+      <div class="safe-card__actions">
+        <button class="safe-card__clear" id="safeClear">Löschen</button>
+        <button class="safe-card__open" id="safeOpen">Öffnen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint-toast" id="hintToast">Hier klicken um mehr anzuzeigen</div>
+  <div class="hint-toast hint-toast--error" id="hintError">
+    <p class="hint-toast__title">Ups, leider ist hier ein Fehler aufgetreten.</p>
+    <p class="hint-toast__code" id="hintErrorCode"></p>
+  </div>
+
   <footer id="footerText"><!-- wird per JS gefüllt --></footer>
 
   <script>
@@ -1497,6 +1629,7 @@
         { date: "2024-12-30", title: "Erster gemeinsamer Urlaub", text: "Am 30. Dezember 2024 fuhren wir mit meiner Familie nach Bad Kissingen. Dort verberachten wir gemeinsam die Silvesterzeit. Das Wasserbett war umwerfend.", image: null },
         { date: "2025-02-14", title: "Valentinstag", text: "Der 14. Februar 2025 war gekommen. Ich kam an dem Tag aus Berlin heim. Abends besuchte ich dich noch. Dabei überreichte ich dir einen neuen Throne-of-Glass-Teil. Nur leider wollte deine Mutter dir diesen zum Geburtstag schenken.", image: null },
         { date: "2025-02-16", title: "Erstes Mal Karneval", text: "Am 16. Februar 2025 sah ich dich das erste Mal live tanzen. Zusammen mit deiner Gruppe rocktest du die Bühne. Gleich zweimal hatte ich die Ehre. Du bist super, ich bin stolz auf dich.", image: null },
+        { date: "2025-02-17", title: "·", text: "·", image: null, tiny: true, secretCode: "8253" },
         { date: "2025-02-18", title: "Geburtstag", text: "Der 18. Februar 2025, endlich 18! Als Geschenk bekamst du von mir ein Lego-Set von uns beiden. Schade nur, dass es sehr viel Verspätung hatte.", image: null },
         { date: "2025-05-12", title: "Endlich auch 18", text: "Es war der 12. Mai 2025. Direkt nachdem ich 18 wurde, fuhren wir mit dem BMW meines Vaters Richtung Boppard. An dem Aussichtspunkt genossen wir die Aussicht. Abends tranken wir noch einen Sekt mit meiner Familie. Es war ein sehr schöner Tag.", image: null },
         { date: "2025-05-30", title: "Geburtstagsfeier", text: "Am 30. Mai 2025 feierte ich dann meinen Geburtstag. Sowohl im Vorhinein als auch währenddessen halfst du ordentlich mit. Obwohl der Tag für dich Höhen und Tiefen hatte, schienst du am Ende ganz zufrieden. Erst als Émile sich dazu entschied, bei mir zu schlafen mit den Worten: „Ich mache jetzt durch“, drehte sich die Stimmung wieder bei dir.", image: null },
@@ -1938,14 +2071,14 @@
       ],
       /* Sortiert nach Zahlenwert aufsteigend — Reihenfolge bestimmt die "Stelle" im finalen Passwort */
       secretCodes: [
+        { code: "0000", location: "Zeitstrahl – Suchleiste „Code“ eingeben → Tresor leer öffnen" },
         { code: "20",   location: "Fotobuch – Bild 20" },
-        { code: "67",   location: "Süße Texte – Poesie (zufällig)" },
         { code: "110",  location: "Sonstiges – Drück mich (10 Sek. halten)" },
-        { code: "422",  location: "Playlist – Songlänge 4:22" },
+        { code: "422",  location: "Playlist – Yellow: Herz doppelklicken → Playlist „CODE“ finden → Toast anklicken" },
         { code: "888",  location: "Australien – „unendlich sehr“" },
-        { code: "0908", location: "Zeitstrahl – 9. Aug 2026" },
-        { code: "1209", location: "Startseite – Unterüberschrift (zusammen seit ...)" },
-        { code: "8345", location: "Startseite – „Jubiläumsgeschenk für mein Bärchen“" }
+        { code: "3020", location: "Süße Texte – Poesie (5% Chance): Error #C1121C → RAL-Farbcode „Verkehrsrot“ = RAL 3020" },
+        { code: "8253", location: "Zeitstrahl – winziger Eintrag am 17. Feb 2025 anklicken" },
+        { code: "93785", location: "Briefe – 7x öffnen → Postfach-Nachricht" }
       ],
       finalPassword: "15146004",
       masterCode: "6382",
@@ -2003,8 +2136,76 @@
       document.body.classList.toggle('sub-active', targetId !== 'startseite');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       if(targetId === 'startseite') letterOpened = false;
-      if(targetId === 'briefe' && !letterStackReady) setupLetterStack();
+      if(targetId === 'briefe'){
+        briefeVisitCount++;
+        if(briefeVisitCount >= 7 && !mailboxUnlocked){
+          mailboxUnlocked = true;
+          showMailbox();
+        } else if(!letterStackReady && !mailboxUnlocked){
+          setupLetterStack();
+        }
+      }
     }
+    let briefeVisitCount = 0;
+    let mailboxUnlocked = false;
+    function showMailbox(){
+      lettersGrid.classList.remove('is-stacked');
+      lettersGrid.innerHTML = `<div class="letters-empty-view">
+        <span class="letters-empty-view__icon" id="mailboxIcon" style="cursor:pointer;">📬</span>
+        <h3 class="letters-empty-view__title">1 neue Nachricht</h3>
+        <p class="letters-empty-view__text">Dein Postfach hat sich gefüllt. Öffne die Nachricht ✨</p>
+      </div>`;
+      document.getElementById('mailboxIcon').addEventListener('click', () => showSecretCode('93785'));
+    }
+
+    /* --- Tresor (ersetzt Code 0908) --- */
+    const safeModal = document.getElementById('safeModal');
+    const safeCard = document.getElementById('safeCard');
+    const safeDisplay = document.getElementById('safeDisplay');
+    const safeKeypad = document.getElementById('safeKeypad');
+    let safeInput = '';
+
+    ['1','2','3','4','5','6','7','8','9','⌫','0','C'].forEach(k => {
+      const btn = document.createElement('button');
+      btn.className = 'safe-card__key';
+      btn.textContent = k;
+      btn.addEventListener('click', () => {
+        if(k === 'C'){ safeInput = ''; }
+        else if(k === '⌫'){ safeInput = safeInput.slice(0, -1); }
+        else if(safeInput.length < 8){ safeInput += k; }
+        safeDisplay.textContent = safeInput;
+      });
+      safeKeypad.appendChild(btn);
+    });
+
+    function openSafeModal(){
+      safeInput = '';
+      safeDisplay.textContent = '';
+      safeModal.hidden = false;
+      requestAnimationFrame(() => safeModal.classList.add('is-open'));
+    }
+    function closeSafeModal(){
+      safeModal.classList.remove('is-open');
+      setTimeout(() => { safeModal.hidden = true; }, 250);
+    }
+    document.getElementById('safeModalClose').addEventListener('click', closeSafeModal);
+    document.getElementById('safeModalBackdrop').addEventListener('click', closeSafeModal);
+    document.getElementById('safeClear').addEventListener('click', () => { safeInput = ''; safeDisplay.textContent = ''; });
+
+    document.getElementById('safeOpen').addEventListener('click', () => {
+      if(safeInput === ''){
+        closeSafeModal();
+        setTimeout(() => showSecretCode('0000'), 300);
+      } else {
+        safeCard.classList.remove('is-shaking');
+        void safeCard.offsetWidth;
+        safeCard.classList.add('is-shaking');
+      }
+    });
+
+    document.body.addEventListener('click', e => {
+      if(e.target && e.target.id === 'schoenesWord') openSecretModal('', 'vielleicht ja auch ein Code', '');
+    });
 
     document.querySelectorAll('[data-target]').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -2022,7 +2223,9 @@
     const eventModalTitle = document.getElementById('eventModalTitle');
     const eventModalText = document.getElementById('eventModalText');
 
+    let activeEventSecretCode = null;
     function openEventModal(ev, fallbackIcon = '🖼️'){
+      activeEventSecretCode = ev.secretCode || null;
       eventModalTitle.textContent = ev.title;
       eventModalText.textContent = ev.text;
       eventModalImage.style.backgroundImage = ev.image ? `url('${ev.image}')` : 'none';
@@ -2030,6 +2233,14 @@
       eventModal.hidden = false;
       requestAnimationFrame(() => eventModal.classList.add('is-open'));
     }
+    document.querySelector('.event-modal__card').addEventListener('click', e => {
+      if(activeEventSecretCode && e.target.id !== 'eventModalClose'){
+        const code = activeEventSecretCode;
+        activeEventSecretCode = null;
+        closeEventModal();
+        setTimeout(() => showSecretCode(code), 300);
+      }
+    });
     function closeEventModal(){
       eventModal.classList.remove('is-open');
       setTimeout(() => { eventModal.hidden = true; }, 250);
@@ -2055,12 +2266,9 @@
       sortedEvents.forEach(ev => {
         const formattedDate = formatDateShort(ev.date);
         const dot = document.createElement('button');
-        dot.className = 'timeline__dot';
+        dot.className = 'timeline__dot' + (ev.tiny ? ' timeline__dot--tiny' : '');
         dot.innerHTML = `<span class="timeline__dot-date">${formattedDate}</span><span class="timeline__dot-title">${ev.title}</span>`;
-        dot.addEventListener('click', () => {
-          openEventModal(ev);
-          if(ev.date === '2026-08-09') setTimeout(() => showSecretCode('0908'), 500);
-        });
+        dot.addEventListener('click', () => openEventModal(ev));
         timelineLine.appendChild(dot);
 
         eventElements.push({
@@ -2068,10 +2276,38 @@
           event: ev,
           searchableText: `${ev.title} ${ev.text} ${formattedDate} ${ev.date}`.toLowerCase()
         });
+
+        if(ev.date === '2025-02-16'){
+          const arrow = document.createElement('button');
+          arrow.className = 'timeline__hidden-arrow';
+          arrow.textContent = '⌄';
+          arrow.addEventListener('click', () => {
+            if(arrow.dataset.used) return;
+            arrow.dataset.used = 'true';
+            const decoyDot = document.createElement('button');
+            decoyDot.className = 'timeline__dot';
+            decoyDot.innerHTML = `<span class="timeline__dot-date">17. Feb 2025</span><span class="timeline__dot-title">?</span>`;
+            decoyDot.addEventListener('click', () => openEventModal({ title: '', text: 'Hier ist ein Code', image: null }));
+            arrow.after(decoyDot);
+          });
+          timelineLine.appendChild(arrow);
+        }
       });
     }
 
     renderTimeline();
+
+    const timelineScrubber = document.getElementById('timelineScrubber');
+    const scrubberLabel = document.getElementById('scrubberLabel');
+    if(sortedEvents.length) timelineScrubber.max = sortedEvents.length - 1;
+    function updateScrubberLabel(){
+      scrubberLabel.textContent = formatDateShort(sortedEvents[timelineScrubber.value].date);
+      scrubberLabel.classList.add('is-visible');
+    }
+    timelineScrubber.addEventListener('input', updateScrubberLabel);
+    timelineScrubber.addEventListener('pointerdown', updateScrubberLabel);
+    timelineScrubber.addEventListener('pointerup', () => setTimeout(() => scrubberLabel.classList.remove('is-visible'), 1500));
+    scrubberLabel.addEventListener('click', () => openEventModal(sortedEvents[timelineScrubber.value]));
 
     /* --- Suchfunktion für den Zeitstrahl --- */
     function filterTimeline(){
@@ -2097,7 +2333,10 @@
       }
     }
 
-    timelineSearch.addEventListener('input', filterTimeline);
+    timelineSearch.addEventListener('input', () => {
+      filterTimeline();
+      if(timelineSearch.value.trim().toLowerCase() === 'code') openSafeModal();
+    });
 
     /* --- Süße Texte: Zufalls-Generator ohne Wiederholung --- */
     function createShuffleBag(items){
@@ -2263,8 +2502,7 @@
         if(cat === 'zufaellig') showPoesieScratchCard(zufallBag());
         if(cat === 'nachrichten') showPoesieScratchCard(nachrichtenBag());
         if(cat === 'poesie'){
-          showPoesieScratchCard(poesieBag());
-          if(Math.random() < 0.2) setTimeout(() => showSecretCode('67'), 900);
+          showPoesieScratchCard(Math.random() < 0.05 ? 'Error #C1121C' : poesieBag());
         }
       });
     });
@@ -2322,7 +2560,7 @@
           lettersGrid.innerHTML = `<div class="letters-empty-view">
             <span class="letters-empty-view__icon">💌</span>
             <h3 class="letters-empty-view__title">Noch keine neuen Briefe</h3>
-            <p class="letters-empty-view__text">Aber bald wird hier etwas Schönes auf dich warten. Schau regelmäßig vorbei! ✨</p>
+            <p class="letters-empty-view__text">Aber bald wird hier etwas <span id="schoenesWord">Schönes</span> auf dich warten. Schau regelmäßig vorbei! ✨</p>
           </div>`;
           lettersGrid.classList.remove('is-stacked');
         }, 750);
@@ -2524,9 +2762,167 @@
 
     /* --- Weitere Trigger-Stellen --- */
     document.getElementById('missYouValue').addEventListener('click', () => showSecretCode('888'));
-    document.getElementById('togetherSince').addEventListener('click', () => showSecretCode('1209'));
-    document.getElementById('trackYellow').addEventListener('click', () => showSecretCode('422'));
-    document.getElementById('footerText').addEventListener('click', () => showSecretCode('8345'));
+
+
+
+    /* --- Song-Übersicht pro Track --- */
+    const SONGS = [
+      { title: "Accidentally In Love", artist: "Counting Crows", duration: "3:12", favorited: true,
+        blurb: "Genau so hat sich unsere Liebe angefühlt: unerwartet, übermütig und einfach leicht." },
+      { title: "Car's Outside", artist: "James Arthur", duration: "2:58", favorited: true,
+        blurb: "Der Song erzählt vom Weggehen-Müssen, obwohl man viel lieber bleiben würde — genau das fühle ich, wenn ich mich von dir verabschiede." },
+      { title: "invisible string", artist: "Taylor Swift", duration: "3:41", favorited: true,
+        blurb: "Ein Lied darüber, dass manche Menschen füreinander bestimmt sind, lange bevor sie sich überhaupt begegnen." },
+      { title: "Just The Way You Are", artist: "Bruno Mars", duration: "4:05", favorited: true,
+        blurb: "Weil ich dich genau so liebe, wie du bist — ganz ohne Wenn und Aber." },
+      { title: "Marry You", artist: "Bruno Mars", duration: "3:27", favorited: true,
+        blurb: "So spontan und übermütig verliebt fühle ich mich, wenn ich an eine Zukunft mit dir denke." },
+      { title: "pov", artist: "Ariana Grande", duration: "2:49", favorited: true,
+        blurb: "Ich möchte, dass du dich einmal so siehst, wie ich dich sehe: wunderschön und einzigartig." },
+      { title: "u + me = <3", artist: "Olivia Rodrigo", duration: "3:33", favorited: true,
+        blurb: "Kein kompliziertes Liebeslied, einfach nur pure, unbeschwerte Freude — genauso wie mit dir." },
+      { title: "Until I Found You", artist: "Stephen Sanchez, Em Beihold", duration: "3:16", favorited: true,
+        blurb: "Ein Lied über das lange Suchen — und das Ankommen bei der einen richtigen Person. Bei dir." },
+      { title: "Yellow", artist: "Coldplay", duration: "4:22", favorited: false,
+        blurb: "Dieser Song steht für bedingungslose Bewunderung — dafür, wie sehr du für mich leuchtest." }
+    ];
+
+    const songModal = document.getElementById('songModal');
+    const songModalHeart = document.getElementById('songModalHeart');
+    let currentSongIndex = -1;
+
+    function openSongModal(i){
+      currentSongIndex = i;
+      const s = SONGS[i];
+      document.getElementById('songModalTitle').textContent = s.title;
+      document.getElementById('songModalArtist').textContent = s.artist;
+      document.getElementById('songModalBlurb').textContent = s.blurb;
+      document.getElementById('songModalDuration').textContent = s.duration;
+      songModalHeart.dataset.fav = String(s.favorited);
+      songModalHeart.textContent = s.favorited ? '♥' : '♡';
+      songModal.hidden = false;
+      requestAnimationFrame(() => songModal.classList.add('is-open'));
+    }
+    function closeSongModal(){
+      songModal.classList.remove('is-open');
+      setTimeout(() => { songModal.hidden = true; }, 250);
+    }
+    document.getElementById('songModalClose').addEventListener('click', closeSongModal);
+    document.getElementById('songModalBackdrop').addEventListener('click', closeSongModal);
+
+    document.querySelectorAll('.fake-spotify__tracks .track-row').forEach((row, i) => {
+      row.addEventListener('click', () => openSongModal(i));
+    });
+
+    // Nur bei Yellow (letzter Song) öffnet ein Doppelklick aufs Herz das Playlist-Menü
+    songModalHeart.addEventListener('dblclick', () => {
+      if(SONGS[currentSongIndex].title === 'Yellow'){
+        closeSongModal();
+        setTimeout(openPlaylistAdd, 260);
+      }
+    });
+
+    /* --- Playlist-hinzufügen-Menü mit versteckter Code-Playlist --- */
+    const playlistAddModal = document.getElementById('playlistAddModal');
+    const playlistAddList = document.getElementById('playlistAddList');
+    function randomNonsenseName(){
+      const alphabet = 'abcdefghijklmnopqrstuvwxyzäöü';
+      const len = 8 + Math.floor(Math.random() * 7);
+      let s = '';
+      for(let i = 0; i < len; i++) s += alphabet[Math.floor(Math.random() * alphabet.length)];
+      return s;
+    }
+
+    function scrambleCodeName(){
+      const letters = 'hierdrückenfür'.split('');
+      for(let i = letters.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [letters[i], letters[j]] = [letters[j], letters[i]];
+      }
+      ['C','O','D','E'].forEach(ch => {
+        letters.splice(Math.floor(Math.random() * (letters.length + 1)), 0, ch);
+      });
+      return letters.join('');
+    }
+
+    function openPlaylistAdd(){
+      const codeName = scrambleCodeName();
+      const entries = [
+        { name: randomNonsenseName(), special: false },
+        { name: randomNonsenseName(), special: false },
+        { name: randomNonsenseName(), special: false },
+        { name: randomNonsenseName(), special: false },
+        { name: randomNonsenseName(), special: false },
+        { name: randomNonsenseName(), special: false },
+        { name: codeName, special: true }
+      ];
+      entries.sort(() => Math.random() - 0.5);
+      playlistAddList.innerHTML = '';
+      entries.forEach(entry => {
+        const li = document.createElement('li');
+        li.textContent = entry.name;
+        li.addEventListener('click', () => {
+          closePlaylistAdd();
+          setTimeout(() => showHintToast(entry.special), 450);
+        });
+        playlistAddList.appendChild(li);
+      });
+      playlistAddModal.hidden = false;
+      requestAnimationFrame(() => playlistAddModal.classList.add('is-open'));
+    }
+    function closePlaylistAdd(){
+      playlistAddModal.classList.remove('is-open');
+      setTimeout(() => { playlistAddModal.hidden = true; }, 250);
+    }
+    document.getElementById('playlistAddClose').addEventListener('click', closePlaylistAdd);
+    document.getElementById('playlistAddBackdrop').addEventListener('click', closePlaylistAdd);
+
+    /* --- Hinweis-Toast (führt zu Code 422) --- */
+    const hintToast = document.getElementById('hintToast');
+    const hintError = document.getElementById('hintError');
+    const hintErrorCode = document.getElementById('hintErrorCode');
+    let hintToastTimer = null;
+    let hintToastIsReal = false;
+
+    function showHintToast(isReal){
+      hintToastIsReal = isReal;
+      hintToast.classList.add('is-visible');
+      clearTimeout(hintToastTimer);
+      hintToastTimer = setTimeout(() => hintToast.classList.remove('is-visible'), 4000);
+    }
+
+    function randomLowercaseBlock(len){
+      const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+      let s = '';
+      for(let i = 0; i < len; i++) s += alphabet[Math.floor(Math.random() * alphabet.length)];
+      return s;
+    }
+
+    hintToast.addEventListener('click', () => {
+      hintToast.classList.remove('is-visible');
+      clearTimeout(hintToastTimer);
+
+      const isReal = hintToastIsReal;
+      const totalLen = 220 + Math.floor(Math.random() * 60);
+      if(isReal){
+        const hidden = 'hierklickenfürcode';
+        const beforeLen = Math.floor(Math.random() * (totalLen - hidden.length));
+        hintErrorCode.textContent = randomLowercaseBlock(beforeLen) + hidden + randomLowercaseBlock(totalLen - hidden.length - beforeLen);
+      } else {
+        hintErrorCode.textContent = randomLowercaseBlock(totalLen);
+      }
+
+      hintError.dataset.real = String(isReal);
+      hintError.classList.add('is-visible');
+      clearTimeout(hintToastTimer);
+      hintToastTimer = setTimeout(() => hintError.classList.remove('is-visible'), 6000);
+    });
+
+    hintError.addEventListener('click', () => {
+      hintError.classList.remove('is-visible');
+      clearTimeout(hintToastTimer);
+      if(hintError.dataset.real === 'true') showSecretCode('422');
+    });
 
     /* --- Code-Pad: einzelne Codes verraten eine Stelle des finalen Passworts --- */
     const codepadForm = document.getElementById('codepadForm');
