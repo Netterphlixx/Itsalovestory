@@ -1311,6 +1311,148 @@
   .mg-retry-btn{ background: var(--coral); color: #fff; }
   .mg-close-btn{ background: var(--paper-dark); color: var(--ink); }
 
+
+
+  /* ===================================================
+     ROMANTISCHES FINISH — nur Optik, keine Funktion
+     =================================================== */
+  body::before{
+    content:'♡';
+    position:fixed;
+    top:7vh;
+    right:5vw;
+    z-index:-1;
+    font-family:var(--font-display);
+    font-size:clamp(5rem,14vw,10rem);
+    color:rgba(232,118,138,.055);
+    transform:rotate(12deg);
+    pointer-events:none;
+  }
+  body::after{
+    content:'♡';
+    position:fixed;
+    bottom:5vh;
+    left:4vw;
+    z-index:-1;
+    font-family:var(--font-display);
+    font-size:clamp(4rem,11vw,8rem);
+    color:rgba(255,111,94,.045);
+    transform:rotate(-15deg);
+    pointer-events:none;
+  }
+  .lovestory-title{
+    letter-spacing:.01em;
+    text-shadow:0 3px 18px rgba(232,118,138,.14);
+  }
+  .page{
+    position:relative;
+    border-color:rgba(232,118,138,.18);
+    background:
+      radial-gradient(circle at 100% 0,rgba(232,118,138,.075),transparent 32%),
+      radial-gradient(circle at 0 100%,rgba(255,111,94,.045),transparent 30%),
+      linear-gradient(160deg,#fffdfb,var(--paper) 130%);
+  }
+  .page::before{
+    content:'♡';
+    position:absolute;
+    top:18px;
+    right:24px;
+    font-family:var(--font-display);
+    font-size:1.25rem;
+    color:rgba(232,118,138,.45);
+    pointer-events:none;
+  }
+  .page__title::after{
+    width:74px;
+    height:3px;
+    background:linear-gradient(90deg,var(--rose),var(--coral),transparent);
+  }
+  .page__intro{ color:#776477; }
+  .back-link{
+    color:#c75f76;
+    transition:transform .18s ease,color .18s ease;
+  }
+  .back-link:hover{ color:#a9435d; transform:translateX(-3px); text-decoration:none; }
+
+  .subtab-grid{
+    position:relative;
+    gap:10px;
+  }
+  .subtab{
+    border:1px solid rgba(200,95,118,.18) !important;
+    border-radius:999px !important;
+    background:linear-gradient(135deg,#fffafa,#f9e9ed) !important;
+    color:#70485a !important;
+    box-shadow:0 5px 16px rgba(140,74,91,.08) !important;
+    transition:transform .18s ease,box-shadow .18s ease,background .18s ease !important;
+  }
+  .subtab:hover,.subtab.is-active{
+    transform:translateY(-2px);
+    background:linear-gradient(135deg,#fff5f7,#f3d8df) !important;
+    box-shadow:0 8px 20px rgba(140,74,91,.14) !important;
+  }
+  .text-display{
+    position:relative;
+    border:1px solid rgba(232,118,138,.18) !important;
+    border-radius:22px !important;
+    background:
+      radial-gradient(circle at 12% 18%,rgba(232,118,138,.08),transparent 25%),
+      linear-gradient(145deg,#fffdfc,#fff5f3) !important;
+    box-shadow:0 14px 34px rgba(91,55,72,.10) !important;
+    overflow:hidden;
+  }
+  .text-display::before,.text-display::after{
+    position:absolute;
+    font-family:var(--font-display);
+    color:rgba(232,118,138,.28);
+    pointer-events:none;
+  }
+  .text-display::before{ content:'“'; top:-12px; left:16px; font-size:5rem; line-height:1; }
+  .text-display::after{ content:'♡'; right:20px; bottom:8px; font-size:2rem; }
+  .text-display > p{ position:relative; z-index:1; }
+
+  .scratch-card{
+    border:1px solid rgba(232,118,138,.22);
+    border-radius:22px;
+    background:linear-gradient(145deg,#fffaf9,#f8e6ea);
+    box-shadow:0 14px 34px rgba(91,55,72,.12);
+  }
+  .scratch-card__message{
+    color:#553746;
+    text-shadow:0 1px 0 #fff;
+  }
+
+  .tile{
+    border-color:rgba(232,118,138,.16);
+    background:
+      radial-gradient(circle at 90% 15%,rgba(232,118,138,.07),transparent 28%),
+      linear-gradient(160deg,#fffdfc,var(--paper) 130%);
+  }
+  .tile:hover{
+    transform:translateY(-4px) scale(1.005);
+    box-shadow:0 14px 30px rgba(91,55,72,.15);
+  }
+  .tile__icon{ filter:drop-shadow(0 3px 5px rgba(232,118,138,.15)); }
+
+  .together-window__text{
+    border-color:rgba(232,118,138,.16);
+    background:linear-gradient(145deg,#fffdfd,#f9e9ed);
+  }
+
+  .timeline__search-input{
+    border-color:rgba(232,118,138,.22) !important;
+    background:rgba(255,252,252,.88) !important;
+    box-shadow:0 6px 18px rgba(91,55,72,.06);
+  }
+  .timeline__search-input:focus{
+    border-color:rgba(200,95,118,.5) !important;
+    box-shadow:0 0 0 4px rgba(232,118,138,.10),0 8px 22px rgba(91,55,72,.08) !important;
+  }
+
+  .photobook__book{
+    filter:drop-shadow(0 14px 25px rgba(91,55,72,.10));
+  }
+
 </style>
 </head>
 <body class="intro-active">
@@ -2417,6 +2559,19 @@
     const poesieBag = createShuffleBag(CONFIG.suesseTexte.poesie);
     const zufallBag = createShuffleBag([...CONFIG.suesseTexte.nachrichten, ...CONFIG.suesseTexte.poesie]);
 
+    // Fehlercode: exakt 1 von 20 Poesie-Aufrufen (= 5 %) pro Zyklus.
+    let poesieDraws = 0;
+    let poesieErrorAt = 1 + Math.floor(Math.random() * 20);
+    function getPoesieText(){
+      poesieDraws++;
+      if(poesieDraws === poesieErrorAt){
+        poesieDraws = 0;
+        poesieErrorAt = 1 + Math.floor(Math.random() * 20);
+        return 'Error #C1121C';
+      }
+      return poesieBag();
+    }
+
     function launchConfetti(){
       const count = 120;
       for(let i = 0; i < count; i++){
@@ -2555,7 +2710,7 @@
         if(cat === 'zufaellig') showPoesieScratchCard(zufallBag());
         if(cat === 'nachrichten') showPoesieScratchCard(nachrichtenBag());
         if(cat === 'poesie'){
-          showPoesieScratchCard(Math.random() < 0.05 ? 'Error #C1121C' : poesieBag());
+          showPoesieScratchCard(getPoesieText());
         }
       });
     });
@@ -2709,6 +2864,7 @@
     let pageIndex = 0;
     const photobookGrid = document.getElementById('photobookGrid');
     const photobookPageLabel = document.getElementById('photobookPageLabel');
+    const photoNext = document.getElementById('photoNext');
 
     function renderPhotobookPage(){
       const page = CONFIG.photobook[pageIndex];
@@ -2721,6 +2877,7 @@
         photobookGrid.appendChild(item);
       });
       photobookPageLabel.textContent = `Seite ${pageIndex + 1} von ${CONFIG.photobook.length}`;
+      photoNext.hidden = false;
       photobookGrid.querySelectorAll('.photobook__photo-img').forEach((imgEl, i) => {
         imgEl.addEventListener('click', () => {
           openEventModal({ title: page[i].caption, text: '', image: page[i].image }, '🖼️');
@@ -2754,13 +2911,14 @@
         photobookGrid.appendChild(item);
       });
       photobookPageLabel.textContent = `Seite ? von ?`;
+      photoNext.hidden = true;
     }
 
     document.getElementById('photoPrev').addEventListener('click', () => {
       if(onSecretPage){ onSecretPage = false; flipToPage(CONFIG.photobook.length - 1); return; }
       flipToPage((pageIndex - 1 + CONFIG.photobook.length) % CONFIG.photobook.length);
     });
-    document.getElementById('photoNext').addEventListener('click', () => {
+    photoNext.addEventListener('click', () => {
       if(onSecretPage){
         const idx = CONFIG.secretCodes.findIndex(c => c.code === '340');
         if(idx !== -1){
