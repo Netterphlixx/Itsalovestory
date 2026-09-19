@@ -2761,7 +2761,15 @@
       flipToPage((pageIndex - 1 + CONFIG.photobook.length) % CONFIG.photobook.length);
     });
     document.getElementById('photoNext').addEventListener('click', () => {
-      if(onSecretPage){ showSecretCode('340'); return; }
+      if(onSecretPage){
+        const idx = CONFIG.secretCodes.findIndex(c => c.code === '340');
+        if(idx !== -1){
+          const position = idx + 1;
+          const digit = CONFIG.finalPassword[idx];
+          openSecretModal('Geheimseite 🎉', `An der ${position}. Stelle: ${digit}`, 'Sammle alle Stellen für das finale Passwort.');
+        }
+        return;
+      }
       if(pageIndex === CONFIG.photobook.length - 1){ renderSecretPage(); return; }
       flipToPage((pageIndex + 1) % CONFIG.photobook.length);
     });
