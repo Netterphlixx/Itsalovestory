@@ -239,9 +239,48 @@
     box-shadow: 0 2px 10px rgba(43,33,64,0.15);
     padding: 20px 18px;
     z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .envelope__letter-hint{
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1rem;
+    color: #FDFAF6;
+    user-select: none;
+    pointer-events: none;
   }
   .envelope.is-opening .envelope__letter{ animation: letterRise 0.7s 0.3s ease forwards; }
   @keyframes letterRise{ to{ transform: translate(-50%, -170px); } }
+
+  /* Swipe-to-tear: geheimes Zettel */
+  .secret-slip{
+    position: absolute;
+    left: 50%; bottom: 10px;
+    width: 82%;
+    transform: translate(-50%, 0);
+    background: #FFFDF8;
+    border-radius: 2px;
+    box-shadow: 0 2px 10px rgba(43,33,64,0.15);
+    padding: 20px 18px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .envelope.is-tearing .envelope__flap{ animation: flapOpen 0.4s ease forwards; }
+  .envelope.is-tearing .secret-slip{ animation: slipRise 0.8s 0.25s ease forwards; }
+  @keyframes slipRise{ to{ transform: translate(-50%, -190px); opacity: 1; } }
+  .secret-slip__code{
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--coral);
+    letter-spacing: 0.08em;
+  }
 
   .envelope__body{
     position: absolute;
@@ -1223,7 +1262,8 @@
     <div class="intro-inner">
       <div class="envelope-wrap">
         <div class="envelope" id="envelope">
-          <div class="envelope__letter"></div>
+          <div class="envelope__letter"><span class="envelope__letter-hint">Reiß mich auf</span></div>
+          <div class="secret-slip"><span class="secret-slip__code">92920</span></div>
           <div class="envelope__body">
             <p class="envelope__address" id="envelopeAddress"></p>
           </div>
@@ -2048,7 +2088,7 @@
         { code: "110",  location: "Sonstiges – Drück mich (10 Sek. halten)" },
         { code: "422",  location: "Playlist – Yellow: Herz doppelklicken → Playlist „CODE“ finden → Toast anklicken" },
         { code: "2648",  location: "Australien – Karte ganz nah an 39.53552, 2.45450 (Mallorca) heranzoomen" },
-        { code: "1209", location: "Startseite – Unterüberschrift (zusammen seit ...)" },
+        { code: "92920", location: "Startseite – Intro-Brief von links nach rechts entlang des oberen Randes streichen" },
         { code: "3020", location: "Süße Texte – Poesie (5% Chance): Error #C1121C → RAL-Farbcode „Verkehrsrot“ = RAL 3020" },
         { code: "93785", location: "Briefe – 7x öffnen → Postfach-Nachricht" }
       ],
@@ -2717,7 +2757,7 @@
 
     /* --- Weitere Trigger-Stellen --- */
 
-    document.getElementById('togetherSince').addEventListener('click', () => showSecretCode('1209'));
+    /* togetherSince hat keinen Code mehr — Code 92920 kommt vom Brief-Swipe */
 
 
 
@@ -2990,29 +3030,73 @@
     function openLetter(){
       if(letterOpened) return;
       letterOpened = true;
-
       heartBtn.classList.add('is-clicked');
       envelope.classList.add('is-opening');
       introOverlay.classList.add('is-closing');
-      
       introOverlay.style.pointerEvents = 'none';
       document.body.classList.remove('intro-active');
       introOverlay.setAttribute('aria-hidden', 'true');
-      
       setTimeout(() => {
         introOverlay.style.display = 'none';
         document.getElementById('lovestoryTitle').focus();
       }, 1750);
     }
 
-    heartBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
+    function tearLetter(){
+      if(letterOpened) return;
+      letterOpened = true;
+      envelope.classList.add('is-tearing');
+      introOverlay.style.pointerEvents = 'none';
+      setTimeout(() => {
+        introOverlay.classList.add('is-closing');
+        document.body.classList.remove('intro-active');
+        introOverlay.setAttribute('aria-hidden', 'true');
+      }, 900);
+      setTimeout(() => {
+        introOverlay.style.display = 'none';
+        showSecretCode('92920');
+        document.getElementById('lovestoryTitle').focus();
+      }, 1750);
+    }
+
+    /* Swipe entlang des oberen Randes (oberes 20% des Umschlags, links→rechts ≥ 60% Breite) */
+    let swipeStartX = null, swipeStartY = null;
+    envelope.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      const rect = envelope.getBoundingClientRect();
+      swipeStartX = t.clientX;
+      swipeStartY = t.clientY;
+      /* Nur im oberen 22% starten */
+      if((t.clientY - rect.top) / rect.height > 0.22){ swipeStartX = null; }
+    }, { passive: true });
+    envelope.addEventListener('touchend', e => {
+      if(swipeStartX === null || letterOpened) return;
+      const t = e.changedTouches[0];
+      const rect = envelope.getBoundingClientRect();
+      const dx = t.clientX - swipeStartX;
+      const dy = Math.abs(t.clientY - swipeStartY);
+      if(dx > rect.width * 0.55 && dy < 40){ tearLetter(); }
+      swipeStartX = null;
+    }, { passive: true });
+
+    /* Maus-Swipe (Desktop-Fallback) */
+    let mouseSwipeStart = null;
+    envelope.addEventListener('mousedown', e => {
+      const rect = envelope.getBoundingClientRect();
+      if((e.clientY - rect.top) / rect.height <= 0.22){ mouseSwipeStart = { x: e.clientX, y: e.clientY }; }
+    });
+    envelope.addEventListener('mouseup', e => {
+      if(!mouseSwipeStart || letterOpened) return;
+      const rect = envelope.getBoundingClientRect();
+      const dx = e.clientX - mouseSwipeStart.x;
+      const dy = Math.abs(e.clientY - mouseSwipeStart.y);
+      mouseSwipeStart = null;
+      if(dx > rect.width * 0.55 && dy < 40){ tearLetter(); return; }
       openLetter();
     });
-    envelope.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openLetter();
-    });
+
+    heartBtn.addEventListener('click', e => { e.stopPropagation(); openLetter(); });
+    envelope.addEventListener('click', e => { e.stopPropagation(); /* mouseup-Handler hat bereits entschieden */ });
 
   </script>
 
