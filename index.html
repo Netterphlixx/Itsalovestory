@@ -166,17 +166,6 @@
     position: relative;
     padding-bottom: 14px;
   }
-  .page__title--slider::after{ content: none; }
-  .timeline__scrubber-wrap{ position: relative; width: 46px; height: 4px; margin: 0 0 20px; }
-  .timeline__scrubber-label{ position: absolute; top: -20px; left: 0; font-size: 0.7rem; color: var(--ink-soft); white-space: nowrap; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
-  .timeline__scrubber-label.is-visible{ opacity: 1; pointer-events: auto; }
-  .timeline__scrubber{
-    -webkit-appearance: none; appearance: none;
-    width: 100%; height: 4px; border-radius: 2px; outline: none; margin: 0; display: block;
-    background: linear-gradient(90deg, var(--coral), var(--mustard)), repeating-linear-gradient(115deg, rgba(255,255,255,0.16) 0 1px, transparent 1px 3px);
-  }
-  .timeline__scrubber::-webkit-slider-thumb{ -webkit-appearance: none; width: 4px; height: 4px; border-radius: 2px; background: transparent; cursor: pointer; }
-  .timeline__scrubber::-moz-range-thumb{ width: 4px; height: 4px; border: none; border-radius: 2px; background: transparent; cursor: pointer; }
   .page__title::after{
     content: '';
     position: absolute;
@@ -464,19 +453,6 @@
   .timeline__dot--tiny::before{ width: 4px; height: 4px; left: -26px; }
   .timeline__dot--tiny .timeline__dot-date{ font-size: 0.55rem; }
   .timeline__dot--tiny .timeline__dot-title{ font-size: 0.55rem; font-weight: 400; }
-
-  .timeline__hidden-arrow{
-    align-self: flex-start;
-    background: none;
-    border: none;
-    color: var(--paper-dark);
-    opacity: 0.4;
-    font-size: 0.55rem;
-    line-height: 1;
-    padding: 0 6px;
-    margin: -10px 0;
-    cursor: pointer;
-  }
 
   .event-modal{
     position: fixed;
@@ -1303,11 +1279,7 @@
 
     <section class="page page--fullscreen" id="zeitstrahl">
       <button class="back-link" data-target="startseite">← Zur Startseite</button>
-      <h2 class="page__title page__title--slider">Zeitstrahl</h2>
-      <div class="timeline__scrubber-wrap">
-        <span class="timeline__scrubber-label" id="scrubberLabel"></span>
-        <input type="range" id="timelineScrubber" class="timeline__scrubber" min="0" max="0" step="1" value="0">
-      </div>
+      <h2 class="page__title">Zeitstrahl</h2>
       
       <div class="timeline__search-container">
         <input type="text" id="timelineSearch" class="timeline__search-input" placeholder="🔍 Nach Event oder Datum suchen...">
@@ -1381,7 +1353,7 @@
 
         <div class="info-item">
           <span class="info-item__label">💗 Wie sehr ich dich vermisse</span>
-          <span class="info-item__value" id="missYouValue">unendlich sehr</span>
+          <span class="info-item__value" id="missYouValue">mal 39.53552</span>
         </div>
       </div>
       <div id="australienMap" style="width: 100%; height: 400px; border-radius: 14px; margin-top: 24px; box-shadow: 0 2px 6px rgba(43, 33, 64, 0.06), 0 16px 32px rgba(43, 33, 64, 0.14);"></div>
@@ -1629,7 +1601,7 @@
         { date: "2024-12-30", title: "Erster gemeinsamer Urlaub", text: "Am 30. Dezember 2024 fuhren wir mit meiner Familie nach Bad Kissingen. Dort verberachten wir gemeinsam die Silvesterzeit. Das Wasserbett war umwerfend.", image: null },
         { date: "2025-02-14", title: "Valentinstag", text: "Der 14. Februar 2025 war gekommen. Ich kam an dem Tag aus Berlin heim. Abends besuchte ich dich noch. Dabei überreichte ich dir einen neuen Throne-of-Glass-Teil. Nur leider wollte deine Mutter dir diesen zum Geburtstag schenken.", image: null },
         { date: "2025-02-16", title: "Erstes Mal Karneval", text: "Am 16. Februar 2025 sah ich dich das erste Mal live tanzen. Zusammen mit deiner Gruppe rocktest du die Bühne. Gleich zweimal hatte ich die Ehre. Du bist super, ich bin stolz auf dich.", image: null },
-        { date: "2025-02-17", title: "·", text: "·", image: null, tiny: true, secretCode: "8253" },
+
         { date: "2025-02-18", title: "Geburtstag", text: "Der 18. Februar 2025, endlich 18! Als Geschenk bekamst du von mir ein Lego-Set von uns beiden. Schade nur, dass es sehr viel Verspätung hatte.", image: null },
         { date: "2025-05-12", title: "Endlich auch 18", text: "Es war der 12. Mai 2025. Direkt nachdem ich 18 wurde, fuhren wir mit dem BMW meines Vaters Richtung Boppard. An dem Aussichtspunkt genossen wir die Aussicht. Abends tranken wir noch einen Sekt mit meiner Familie. Es war ein sehr schöner Tag.", image: null },
         { date: "2025-05-30", title: "Geburtstagsfeier", text: "Am 30. Mai 2025 feierte ich dann meinen Geburtstag. Sowohl im Vorhinein als auch währenddessen halfst du ordentlich mit. Obwohl der Tag für dich Höhen und Tiefen hatte, schienst du am Ende ganz zufrieden. Erst als Émile sich dazu entschied, bei mir zu schlafen mit den Worten: „Ich mache jetzt durch“, drehte sich die Stimmung wieder bei dir.", image: null },
@@ -2075,9 +2047,9 @@
         { code: "20",   location: "Fotobuch – Bild 20" },
         { code: "110",  location: "Sonstiges – Drück mich (10 Sek. halten)" },
         { code: "422",  location: "Playlist – Yellow: Herz doppelklicken → Playlist „CODE“ finden → Toast anklicken" },
-        { code: "888",  location: "Australien – „unendlich sehr“" },
+        { code: "2648",  location: "Australien – Karte ganz nah an 39.53552, 2.45450 (Mallorca) heranzoomen" },
+        { code: "1209", location: "Startseite – Unterüberschrift (zusammen seit ...)" },
         { code: "3020", location: "Süße Texte – Poesie (5% Chance): Error #C1121C → RAL-Farbcode „Verkehrsrot“ = RAL 3020" },
-        { code: "8253", location: "Zeitstrahl – winziger Eintrag am 17. Feb 2025 anklicken" },
         { code: "93785", location: "Briefe – 7x öffnen → Postfach-Nachricht" }
       ],
       finalPassword: "15146004",
@@ -2223,9 +2195,7 @@
     const eventModalTitle = document.getElementById('eventModalTitle');
     const eventModalText = document.getElementById('eventModalText');
 
-    let activeEventSecretCode = null;
     function openEventModal(ev, fallbackIcon = '🖼️'){
-      activeEventSecretCode = ev.secretCode || null;
       eventModalTitle.textContent = ev.title;
       eventModalText.textContent = ev.text;
       eventModalImage.style.backgroundImage = ev.image ? `url('${ev.image}')` : 'none';
@@ -2233,14 +2203,6 @@
       eventModal.hidden = false;
       requestAnimationFrame(() => eventModal.classList.add('is-open'));
     }
-    document.querySelector('.event-modal__card').addEventListener('click', e => {
-      if(activeEventSecretCode && e.target.id !== 'eventModalClose'){
-        const code = activeEventSecretCode;
-        activeEventSecretCode = null;
-        closeEventModal();
-        setTimeout(() => showSecretCode(code), 300);
-      }
-    });
     function closeEventModal(){
       eventModal.classList.remove('is-open');
       setTimeout(() => { eventModal.hidden = true; }, 250);
@@ -2266,7 +2228,7 @@
       sortedEvents.forEach(ev => {
         const formattedDate = formatDateShort(ev.date);
         const dot = document.createElement('button');
-        dot.className = 'timeline__dot' + (ev.tiny ? ' timeline__dot--tiny' : '');
+        dot.className = 'timeline__dot';
         dot.innerHTML = `<span class="timeline__dot-date">${formattedDate}</span><span class="timeline__dot-title">${ev.title}</span>`;
         dot.addEventListener('click', () => openEventModal(ev));
         timelineLine.appendChild(dot);
@@ -2276,38 +2238,10 @@
           event: ev,
           searchableText: `${ev.title} ${ev.text} ${formattedDate} ${ev.date}`.toLowerCase()
         });
-
-        if(ev.date === '2025-02-16'){
-          const arrow = document.createElement('button');
-          arrow.className = 'timeline__hidden-arrow';
-          arrow.textContent = '⌄';
-          arrow.addEventListener('click', () => {
-            if(arrow.dataset.used) return;
-            arrow.dataset.used = 'true';
-            const decoyDot = document.createElement('button');
-            decoyDot.className = 'timeline__dot';
-            decoyDot.innerHTML = `<span class="timeline__dot-date">17. Feb 2025</span><span class="timeline__dot-title">?</span>`;
-            decoyDot.addEventListener('click', () => openEventModal({ title: '', text: 'Hier ist ein Code', image: null }));
-            arrow.after(decoyDot);
-          });
-          timelineLine.appendChild(arrow);
-        }
       });
     }
 
     renderTimeline();
-
-    const timelineScrubber = document.getElementById('timelineScrubber');
-    const scrubberLabel = document.getElementById('scrubberLabel');
-    if(sortedEvents.length) timelineScrubber.max = sortedEvents.length - 1;
-    function updateScrubberLabel(){
-      scrubberLabel.textContent = formatDateShort(sortedEvents[timelineScrubber.value].date);
-      scrubberLabel.classList.add('is-visible');
-    }
-    timelineScrubber.addEventListener('input', updateScrubberLabel);
-    timelineScrubber.addEventListener('pointerdown', updateScrubberLabel);
-    timelineScrubber.addEventListener('pointerup', () => setTimeout(() => scrubberLabel.classList.remove('is-visible'), 1500));
-    scrubberLabel.addEventListener('click', () => openEventModal(sortedEvents[timelineScrubber.value]));
 
     /* --- Suchfunktion für den Zeitstrahl --- */
     function filterTimeline(){
@@ -2579,7 +2513,8 @@
       window.australienMapInitialized = true;
       const mapEl = document.getElementById('australienMap');
       if(!mapEl || mapEl._leaflet_map) return;
-      const map = L.map('australienMap').setView([20, 90], 3);
+      const map = L.map('australienMap', { maxZoom: 19 }).setView([20, 90], 3);
+      mapEl._leaflet_map = map;
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '© OpenStreetMap', maxZoom: 19}).addTo(map);
       const tennantCreek = L.latLng(-19.6333, 134.1833);
       const ney = L.latLng(49.2993, 7.3882);
@@ -2604,17 +2539,37 @@
       const midLng = (tennantCreek.lng + ney.lng) / 2;
       const labelMarker = L.marker([midLat, midLng], {
         icon: L.divIcon({
-          html: `<div style="background: white; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: #2B2140; box-shadow: 0 2px 8px rgba(43,33,64,0.15); white-space: nowrap;">${Math.round(distance)} km</div>`,
+          html: `<div style="background: white; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: #2B2140; box-shadow: 0 2px 8px rgba(43,33,64,0.15); white-space: nowrap;">2.45450mi</div>`,
           iconSize: [120, 30],
           className: 'distance-label'
         })
       }).addTo(map);
-      
+
       const group = new L.featureGroup([tennantCreek, ney]);
       map.fitBounds(group.getBounds().pad(0.15));
+
+      // Versteckter Punkt auf Mallorca (Code 2648) — reicht, grob auf die Insel gezoomt zu sein
+      const secretSpot = L.latLng(39.53552, 2.45450);
+      const secretMarker = L.circleMarker(secretSpot, { radius: 6, weight: 0, opacity: 0, fillOpacity: 0 }).addTo(map);
+      const mallorcaBounds = L.latLngBounds([39.1, 2.2], [39.95, 3.5]);
+      let secretRevealed = false;
+      map.on('zoomend moveend', () => {
+        if(secretRevealed) return;
+        if(map.getZoom() >= 7 && mallorcaBounds.contains(map.getCenter())){
+          secretRevealed = true;
+          secretMarker.setStyle({ weight: 2, opacity: 1, fillOpacity: 0.85, fillColor: '#D4AF37', color: '#fff' });
+          showSecretCode('2648');
+        }
+      });
     }
     const australienObserver = new MutationObserver(() => {
-      if(document.getElementById('australien').classList.contains('active') && !window.australienMapInitialized) initAustralienMap();
+      if(document.getElementById('australien').classList.contains('active')){
+        if(!window.australienMapInitialized) initAustralienMap();
+        else {
+          const el = document.getElementById('australienMap');
+          if(el && el._leaflet_map) el._leaflet_map.invalidateSize();
+        }
+      }
     });
     australienObserver.observe(document.getElementById('australien'), {attributes: true});
 
@@ -2761,7 +2716,8 @@
     document.getElementById('overviewModalBackdrop').addEventListener('click', closeOverviewModal);
 
     /* --- Weitere Trigger-Stellen --- */
-    document.getElementById('missYouValue').addEventListener('click', () => showSecretCode('888'));
+
+    document.getElementById('togetherSince').addEventListener('click', () => showSecretCode('1209'));
 
 
 
