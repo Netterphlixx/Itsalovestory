@@ -1530,6 +1530,15 @@
   body.mode-alt .press-heart-btn,
   body.mode-alt .heart-btn,
   body.mode-alt .mg-retry-btn{ background:#C9304F; }
+  /* Scroll-Fix: ".page{position:relative}" (Romantik-Finish) überschrieb "position:fixed" der
+     Vollbild-Seiten, dadurch wuchs die Seite über den Bildschirm und der Body (overflow:hidden) blockierte das Scrollen */
+  .page.page--fullscreen{
+    position: fixed;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
   /* Date-Ideen, die nur im alternativen Modus erscheinen */
   .date-idea--alt{ display:none; }
   body.mode-alt .date-idea--alt{
