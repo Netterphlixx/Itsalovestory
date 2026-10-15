@@ -754,6 +754,7 @@
   .codepad__form{ display: flex; gap: 10px; }
   .codepad__input{
     flex: 1;
+    min-width: 0;
     font-family: var(--font-body);
     font-size: 1.1rem;
     padding: 12px 14px;
@@ -762,6 +763,9 @@
     letter-spacing: 0.05em;
   }
   .codepad__submit{
+    flex-shrink: 0;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     background: var(--coral);
     color: white;
     border: none;
@@ -998,6 +1002,7 @@
     background: linear-gradient(135deg, #34A8E0, #2196F3);
     color: white;
   }
+  .date-ideas-list{
     display: grid;
     gap: 16px;
     margin-top: 24px;
@@ -1453,6 +1458,108 @@
     filter:drop-shadow(0 14px 25px rgba(91,55,72,.10));
   }
 
+  /* ===================================================
+     ALTERNATIVER MODUS (Code "18" an / Code "0" aus)
+     Dezent: tiefere Rot-/Weintöne statt Korall & Senf
+     =================================================== */
+  body{ transition: background-color .6s ease, color .6s ease; }
+  body.mode-alt{
+    --paper:      #F4E1E4;
+    --paper-dark: #E8CBD1;
+    --ink:        #2A1426;
+    --ink-soft:   #6A4A63;
+    --coral:      #C9304F;
+    --mustard:    #B8566E;
+    --rose:       #A8325E;
+    --shadow-soft: 0 2px 6px rgba(42, 20, 38, 0.10), 0 16px 32px rgba(42, 20, 38, 0.22);
+    background:
+      radial-gradient(circle at 15% 20%, rgba(168,50,94,0.13), transparent 45%),
+      radial-gradient(circle at 85% 75%, rgba(201,48,79,0.13), transparent 45%),
+      radial-gradient(rgba(42,20,38,0.04) 1px, transparent 1px),
+      var(--paper);
+    background-size: auto, auto, 22px 22px, auto;
+  }
+  body.mode-alt::before{ color:rgba(201,48,79,.08); }
+  body.mode-alt::after{ color:rgba(168,50,94,.07); }
+  body.mode-alt .page{
+    border-color:rgba(201,48,79,.25);
+    background:
+      radial-gradient(circle at 100% 0,rgba(201,48,79,.10),transparent 32%),
+      radial-gradient(circle at 0 100%,rgba(168,50,94,.07),transparent 30%),
+      linear-gradient(160deg,#fff8f8,var(--paper) 130%);
+  }
+  body.mode-alt .page::before{ color:rgba(201,48,79,.55); }
+  body.mode-alt .tile{
+    border-color:rgba(201,48,79,.22);
+    background:
+      radial-gradient(circle at 90% 15%,rgba(201,48,79,.10),transparent 28%),
+      linear-gradient(160deg,#fff8f8,var(--paper) 130%);
+  }
+  body.mode-alt .together-window__text{
+    border-color:rgba(201,48,79,.22);
+    background:linear-gradient(145deg,#fff8f8,#f3d9de);
+  }
+  body.mode-alt .subtab{
+    border-color:rgba(168,50,94,.28) !important;
+    background:linear-gradient(135deg,#fff5f6,#f1d3da) !important;
+    color:#5A2442 !important;
+  }
+  body.mode-alt .subtab:hover,
+  body.mode-alt .subtab.is-active{
+    background:linear-gradient(135deg,#ffeef1,#ebc2cd) !important;
+  }
+  body.mode-alt .text-display,
+  body.mode-alt .scratch-card{
+    border-color:rgba(201,48,79,.28) !important;
+    background:
+      radial-gradient(circle at 12% 18%,rgba(201,48,79,.10),transparent 25%),
+      linear-gradient(145deg,#fff8f8,#f7e0e5) !important;
+  }
+  body.mode-alt .scratch-card__message{ color:#3E1A33; }
+  body.mode-alt .back-link{ color:#B02447; }
+  body.mode-alt .back-link:hover{ color:#8C1A38; }
+  body.mode-alt .page__title::after{
+    background:linear-gradient(90deg,#A8325E,#C9304F,transparent);
+  }
+  body.mode-alt .timeline__dot::before{ background:#C9304F; }
+  body.mode-alt .timeline__line{ border-left-color:#E8CBD1; }
+  body.mode-alt .timeline__search-input{ border-color:rgba(201,48,79,.3) !important; }
+  body.mode-alt .event-modal__image{ background:linear-gradient(135deg,#A8325E,#C9304F); }
+  body.mode-alt .playlist-card--press{ background:linear-gradient(135deg,#C9304F,#A8325E); }
+  body.mode-alt .codepad__submit,
+  body.mode-alt .press-heart-btn,
+  body.mode-alt .heart-btn,
+  body.mode-alt .mg-retry-btn{ background:#C9304F; }
+  /* Date-Ideen, die nur im alternativen Modus erscheinen */
+  .date-idea--alt{ display:none; }
+  body.mode-alt .date-idea--alt{
+    display:flex;
+    position:relative;
+    overflow:hidden;
+    border:1px solid rgba(212,175,55,.35);
+    background:
+      radial-gradient(circle at 100% 0,rgba(201,48,79,.35),transparent 55%),
+      linear-gradient(150deg,#3A1A33,#2A1426);
+    box-shadow:0 10px 26px rgba(42,20,38,.28);
+  }
+  body.mode-alt .date-idea--alt::after{
+    content:'♥';
+    position:absolute; right:16px; bottom:6px;
+    font-size:2.2rem; color:rgba(232,118,138,.14);
+    pointer-events:none;
+  }
+  body.mode-alt .date-idea--alt .date-idea__emoji{
+    width:54px; height:54px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(212,175,55,.35);
+    font-size:1.7rem;
+  }
+  body.mode-alt .date-idea--alt h3{ color:#FBE9EC; }
+  body.mode-alt .date-idea--alt .date-idea__sublist{ color:#E6CBD3; list-style:none; padding-left:0; }
+  body.mode-alt .date-idea--alt .date-idea__sublist li::before{ content:'♥ '; color:#E8768A; font-size:.75em; }
+  body.mode-alt .photobook__photo-img{ background-image:linear-gradient(135deg,#A8325E,#C9304F); }
+
 </style>
 </head>
 <body class="intro-active">
@@ -1614,6 +1721,47 @@
               <li>Spazieren</li>
               <li>Picknicken</li>
               <li>Lesen</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Nur im alternativen Modus sichtbar -->
+        <div class="date-idea date-idea--alt">
+          <span class="date-idea__emoji">📸</span>
+          <div class="date-idea__content">
+            <h3>Erotisches Fotoshooting</h3>
+            <ul class="date-idea__sublist">
+              <li>in erotischer Kleidung</li>
+              <li>in erotischer Stellung</li>
+              <li>zu zweit oder alleine</li>
+            </ul>
+          </div>
+        </div>
+        <div class="date-idea date-idea--alt">
+          <span class="date-idea__emoji">🪩</span>
+          <div class="date-idea__content">
+            <h3>Besuch im KitKat Club</h3>
+            <ul class="date-idea__sublist">
+              <li>Feiern gehen</li>
+              <li>sexuell interagieren vor anderen Leuten</li>
+            </ul>
+          </div>
+        </div>
+        <div class="date-idea date-idea--alt">
+          <span class="date-idea__emoji">🎭</span>
+          <div class="date-idea__content">
+            <h3>Wahrheit oder Pflicht</h3>
+            <ul class="date-idea__sublist">
+              <li>langsamer Aufbau mit großem Happy End</li>
+            </ul>
+          </div>
+        </div>
+        <div class="date-idea date-idea--alt">
+          <span class="date-idea__emoji">🪆</span>
+          <div class="date-idea__content">
+            <h3>Besuch im Puppenbordell</h3>
+            <ul class="date-idea__sublist">
+              <li>zu „dritt“ miteinander interagieren</li>
             </ul>
           </div>
         </div>
@@ -3273,6 +3421,14 @@ function startHearts(){
       e.preventDefault();
       const value = codepadInput.value.trim();
       codepadInput.value = '';
+
+      /* Moduswechsel: "18" = alternative Optik, "0" = zurück zur normalen Optik */
+      if(value === '18' || value === '0'){
+        const on = value === '18';
+        document.body.classList.toggle('mode-alt', on);
+        codepadFeedback.textContent = on ? 'Etwas hat sich verändert … ♥' : 'Alles wieder wie vorher.';
+        return;
+      }
 
       if(value === CONFIG.finalPassword){
         resetChest();
