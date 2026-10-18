@@ -1530,6 +1530,63 @@
   body.mode-alt .press-heart-btn,
   body.mode-alt .heart-btn,
   body.mode-alt .mg-retry-btn{ background:#C9304F; }
+  /* ===== Brief "Meine Zukunft mit dir" ===== */
+  .future-letter-card{
+    display:flex; align-items:center; gap:16px; width:100%;
+    margin:22px 0 6px; padding:18px 20px; text-align:left; cursor:pointer;
+    font-family:var(--font-body); color:var(--ink);
+    border:1px solid rgba(212,175,55,.45); border-radius:var(--radius);
+    background:linear-gradient(150deg,#fffaf0,var(--paper-dark));
+    box-shadow:var(--shadow-soft);
+    touch-action:manipulation; -webkit-tap-highlight-color:transparent;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .future-letter-card[hidden]{ display:none; }
+  .future-letter-card.is-revealed{ animation:futureLetterIn .7s ease both; }
+  @keyframes futureLetterIn{ from{ opacity:0; transform:translateY(-14px) scale(.96); } to{ opacity:1; transform:none; } }
+  .future-letter-card:hover{ transform:translateY(-2px); }
+  .future-letter-card__icon{
+    flex-shrink:0; width:52px; height:52px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:1.6rem;
+    background:rgba(212,175,55,.18); border:1px solid rgba(212,175,55,.5);
+  }
+  .future-letter-card__text{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+  .future-letter-card__title{ font-family:var(--font-display); font-size:1.2rem; font-weight:700; }
+  .future-letter-card__sub{ font-size:.82rem; color:var(--ink-soft); }
+
+  .letter-reader{ position:fixed; inset:0; z-index:950; display:flex; align-items:center; justify-content:center; padding:16px; }
+  .letter-reader[hidden]{ display:none; }
+  .letter-reader__backdrop{ position:absolute; inset:0; background:rgba(30,20,35,.6); opacity:0; transition:opacity .35s ease; }
+  .letter-reader__sheet{
+    position:relative; width:100%; max-width:560px; max-height:88vh; max-height:88dvh;
+    overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain;
+    padding:38px 28px 34px; border-radius:6px;
+    background:
+      repeating-linear-gradient(transparent 0 31px, rgba(160,120,80,.10) 31px 32px),
+      linear-gradient(160deg,#fffdf6,#f6ead2);
+    border:1px solid rgba(160,120,80,.3);
+    box-shadow:0 24px 60px rgba(0,0,0,.35);
+    opacity:0; transform:translateY(24px) scale(.97);
+    transition:opacity .35s ease, transform .35s ease;
+  }
+  .letter-reader.is-open .letter-reader__backdrop{ opacity:1; }
+  .letter-reader.is-open .letter-reader__sheet{ opacity:1; transform:none; }
+  .letter-reader__close{
+    position:absolute; top:10px; right:12px; width:34px; height:34px; border:none; border-radius:50%;
+    background:rgba(43,33,64,.08); color:var(--ink); font-size:1rem; cursor:pointer;
+  }
+  .letter-reader__title{ font-family:var(--font-display); font-size:1.7rem; text-align:center; margin:0; color:var(--ink); }
+  .letter-reader__divider{ text-align:center; color:var(--coral); font-size:1.3rem; margin:6px 0 18px; }
+  .letter-reader__part{ margin-bottom:22px; }
+  .letter-reader__part h4{
+    font-family:var(--font-display); font-style:italic; font-size:1.05rem; color:var(--coral);
+    margin:0 0 8px; padding-bottom:4px; border-bottom:1px solid rgba(212,175,55,.45); display:inline-block;
+  }
+  .letter-reader__part p{ margin:0 0 10px; line-height:1.75; font-size:.98rem; color:var(--ink); }
+  .letter-reader__sign{ text-align:right; font-family:var(--font-display); font-style:italic; font-size:1.15rem; color:var(--ink-soft); margin:10px 0 0; }
+  body.mode-alt .future-letter-card{ border-color:rgba(201,48,79,.35); background:linear-gradient(150deg,#fff8f8,#f3d9de); }
+  body.mode-alt .letter-reader__part h4{ border-bottom-color:rgba(201,48,79,.4); }
+
   /* Scroll-Fix: ".page{position:relative}" (Romantik-Finish) überschrieb "position:fixed" der
      Vollbild-Seiten, dadurch wuchs die Seite über den Bildschirm und der Body (overflow:hidden) blockierte das Scrollen */
   .page.page--fullscreen{
@@ -1671,7 +1728,60 @@
       <button class="back-link" data-target="startseite">← Zur Startseite</button>
       <h2 class="page__title">Briefe</h2>
       <p class="page__intro">Öffne einen Brief, wenn der Moment passt.</p>
+      <button class="future-letter-card" id="futureLetterBtn" type="button" hidden>
+        <span class="future-letter-card__icon" aria-hidden="true">💌</span>
+        <span class="future-letter-card__text">
+          <span class="future-letter-card__title">Meine Zukunft mit dir</span>
+          <span class="future-letter-card__sub">Ein Brief für uns · zum Öffnen tippen</span>
+        </span>
+      </button>
       <div class="tile-grid" id="lettersGrid"></div>
+
+      <div class="letter-reader" id="letterReader" hidden>
+        <div class="letter-reader__backdrop" data-close></div>
+        <article class="letter-reader__sheet" role="dialog" aria-modal="true" aria-labelledby="letterReaderTitle">
+          <button class="letter-reader__close" type="button" data-close aria-label="Schließen">✕</button>
+          <h3 class="letter-reader__title" id="letterReaderTitle">Meine Zukunft mit dir</h3>
+          <div class="letter-reader__divider" aria-hidden="true">♡</div>
+
+          <section class="letter-reader__part">
+            <h4>In einem halben Jahr</h4>
+            <p>In einem halben Jahr bin ich ziemlich frisch aus dem Ausland zurück. Zu dieser Zeit sind wir natürlich noch zusammen. Entweder bin ich schon bei dir oben eingezogen, oder ich wohne noch unten bei uns, aber kurz davor.</p>
+            <p>Du gehst auf jeden Fall deiner Ausbildung nach, ich kümmere mich um den Haushalt und habe vielleicht einen Minijob. Wir gehen mindestens alle zwei Wochen einmal aus. Unseren Mini-Urlaub haben wir natürlich schon hinter uns.</p>
+          </section>
+
+          <section class="letter-reader__part">
+            <h4>In einem Jahr</h4>
+            <p>Deine Ausbildung ist in vollem Gange, und ich fange gerade mit meinem Studium an. Unser Leben wird anfangen, sich aufzuspalten, und im schlimmsten Fall muss ich wegziehen. Dennoch sehen wir uns regelmäßig.</p>
+            <p>Wir gehen immer noch viel auf Dates und verbringen den Großteil unserer freien Zeit miteinander. Unsere Ferien und Urlaube nutzen wir, um gemeinsam wegzufahren. Unsere Liebe bleibt stark und da.</p>
+          </section>
+
+          <section class="letter-reader__part">
+            <h4>In fünf Jahren</h4>
+            <p>Unsere „Lern“-Zeit neigt sich dem Ende zu. Wir planen zusammen eine Reise über verschiedene Kontinente, bevor wir endgültig im Berufsleben versinken. Vorher ziehen wir natürlich wieder zusammen.</p>
+            <p>Das nächste Jahr nutzen wir nur, um die Welt zu sehen, neue Erfahrungen zu machen und das Leben zu genießen.</p>
+          </section>
+
+          <section class="letter-reader__part">
+            <h4>In zehn Jahren</h4>
+            <p>Mittlerweile haben wir zwei bis drei Kinder, seien es unsere eigenen oder adoptierte. Wir leben noch in der Wohnung, schauen uns aber nach einem günstigen Haus um. Nach der Australienreise haben wir geheiratet. Wir sind jetzt Mann und Frau.</p>
+            <p>Wir gehen beide unserer beruflichen Tätigkeit nach, kümmern uns aber darum, dass unsere Kinder zu keinem Zeitpunkt vernachlässigt werden.</p>
+          </section>
+
+          <section class="letter-reader__part">
+            <h4>In zwanzig Jahren</h4>
+            <p>Wir leben nun in einem Haus. Unsere Kinder gehen zur Schule. Mittlerweile haben wir zwei Hunde und zwei Katzen. Wir können beide nun etwas mehr arbeiten gehen.</p>
+            <p>In den Ferien unserer Kinder fliehen wir nach Mallorca oder woandershin, je nachdem, wohin uns unser Geld treibt. Wir unternehmen sehr viel mit den Kindern. Es gibt definitiv feste Oma-und-Opa-Tage.</p>
+          </section>
+
+          <section class="letter-reader__part">
+            <h4>In fünfzig Jahren</h4>
+            <p>Wir sind alt, unsere Kinder auch. Wir genießen die Rente, gehen viel auf Entdeckungstour und passen regelmäßig auf unsere Enkelkinder auf. Gemeinsam sterben wir, und wir lassen uns nebeneinander begraben.</p>
+          </section>
+
+          <p class="letter-reader__sign">Für immer dein ♡</p>
+        </article>
+      </div>
     </section>
 
     <section class="page page--fullscreen" id="fotobuch">
@@ -2881,6 +2991,22 @@
       lettersGrid.appendChild(btn);
     });
 
+    /* --- Brief "Meine Zukunft mit dir" öffnen/schließen --- */
+    const letterReader = document.getElementById('letterReader');
+    const futureLetterBtn = document.getElementById('futureLetterBtn');
+    function openFutureLetter(){
+      letterReader.hidden = false;
+      letterReader.querySelector('.letter-reader__sheet').scrollTop = 0;
+      requestAnimationFrame(() => letterReader.classList.add('is-open'));
+    }
+    function closeFutureLetter(){
+      letterReader.classList.remove('is-open');
+      setTimeout(() => { letterReader.hidden = true; }, 350);
+    }
+    futureLetterBtn.addEventListener('click', openFutureLetter);
+    letterReader.addEventListener('click', e => { if(e.target.closest('[data-close]')) closeFutureLetter(); });
+    document.addEventListener('keydown', e => { if(e.key === 'Escape' && !letterReader.hidden) closeFutureLetter(); });
+
     let letterStackReady = false;
     function setupLetterStack(){
       const items = Array.from(lettersGrid.children);
@@ -2924,10 +3050,12 @@
         setTimeout(() => {
           lettersGrid.innerHTML = `<div class="letters-empty-view">
             <span class="letters-empty-view__icon">💌</span>
-            <h3 class="letters-empty-view__title">Noch keine neuen Briefe</h3>
-            <p class="letters-empty-view__text">Aber bald wird hier etwas <span id="schoenesWord">Schönes</span> auf dich warten. Schau regelmäßig vorbei! ✨</p>
+            <h3 class="letters-empty-view__title">Schau öfters vorbei</h3>
+            <p class="letters-empty-view__text">Bald wird hier noch etwas <span id="schoenesWord">Schönes</span> auf dich warten. ✨</p>
           </div>`;
           lettersGrid.classList.remove('is-stacked');
+          futureLetterBtn.hidden = false;
+          futureLetterBtn.classList.add('is-revealed');
         }, 750);
         setTimeout(() => overlay.remove(), 1600);
       }
