@@ -481,6 +481,19 @@
   .timeline__dot-date{ font-size: 0.75rem; color: var(--ink-soft); }
   .timeline__dot-title{ font-weight: 600; }
 
+  /* 18+ Styling für Zeitstrahl-Punkte */
+  .timeline__dot.timeline__dot--alt {
+    display: none;
+    border-color: rgba(201,48,79,0.35);
+    background: radial-gradient(circle at 100% 0, rgba(201,48,79,0.1), transparent 55%), linear-gradient(150deg, #fff8f8, #f3d9de);
+  }
+  body.mode-alt .timeline__dot.timeline__dot--alt {
+    display: flex;
+  }
+  body.mode-alt .timeline__dot.timeline__dot--alt::before {
+    background: #C9304F;
+  }
+
   .timeline__dot--tiny{
     padding: 2px 6px;
     width: auto;
@@ -1752,7 +1765,7 @@
 
           <section class="letter-reader__part">
             <h4>In einem Jahr</h4>
-            <p>Deine Ausbildung ist in vollem Gange, und ich fange gerade mit meinem Studium an. Unser Leben wird anfangen, sich aufzuspalten, und im schlimmsten Fall muss ich wegziehen. Dennoch sehen wir uns regelmäßig.</p>
+            <p>Deine Ausbildung is in vollem Gange, und ich fange gerade mit meinem Studium an. Unser Leben wird anfangen, sich aufzuspalten, und im schlimmsten Fall muss ich wegziehen. Dennoch sehen wir uns regelmäßig.</p>
             <p>Wir gehen immer noch viel auf Dates und verbringen den Großteil unserer freien Zeit miteinander. Unsere Ferien und Urlaube nutzen wir, um gemeinsam wegzufahren. Unsere Liebe bleibt stark und da.</p>
           </section>
 
@@ -2113,33 +2126,41 @@
         { date: "2024-08-15", title: "Urlaub", text: "Es war der 15. August 2024. Für mich begann mein Urlaub am Bodensee. Zu der Zeit fingen wir an, richtige Texte miteinander zu schreiben. Meine Snapchat-Zeit schoss in die Höhe, mein Urlaub war durch dich geprägt. Zudem stellten wir fest, dass unsere Väter damals in die gleiche Klasse gingen.", image: null },
         { date: "2024-08-31", title: "Erste Übernachtung", text: "31. August 2024. Nachdem der Japaner wieder ausgezogen war, trafen wir uns bei mir. Wir machten nicht viel. Lagen auf dem Boden und warfen mit einem Gummi. Abends gingen wir raus in den Wald. Wir sahen die schönste Sternschnuppe, die ich jemals gesehen hatte. Ich dachte daran, dich zu küssen.", image: null },
         { date: "2024-09-08", title: "Das erste Mal bei dir", text: "Am 8. September 2024 beschlossen wir ganz spontan, dass ich zu dir komme. Wir gingen uns abends noch entgegen. Bei dir machten wir auch nicht viel. Wir lagen auf der Couch und kuschelten. Bis 06:00 Uhr nachts blieben wir wach. Wir gingen schlafen. Nachdem wir wieder aufwachten, küssten wir uns zum ersten Mal.", image: null },
+        { date: "2024-09-09", title: "Denjis Traum", text: "Am 9. September 2024 lagen wir bei dir auf der Couch und kuschelten. Ich lag auf deinem Bauch und entfernte Fussel von deinem Oberteil. Dabei fiel mir einer auf deinen Brüsten auf. Ich machte dich darauf aufmerksam, da ich ja nicht einfach dahinfassen konnte. Danach nahm ich meinen Mut zusammen und fragte, ob ich das nicht doch tun könnte. Daraufhin gabst du mir die Erlaubnis. Vorsichtig fasste ich mit dem Zeigefinger auf deine Brust. Das war mein erster Kontakt mit Brüsten, den ich nie vergessen werde.", image: null, isAlt: true },
         { date: "2024-09-12", title: "Wir kamen zusammen", text: "Am 12. September 2024 war es so weit. Einen Tag nach 9/11, einen Tag vor Freitag, dem 13., genau ein halbes Jahr nach dem Geburtstag deines Vaters. Nachdem ich abends nach der Schule zu dir gekommen war, stellte ich dir die Frage: „Willst du meine Freundin sein?“", image: null },
         { date: "2024-09-20", title: "Eine neue Katze", text: "Am 20. September 2024 war der Tag gekommen. Du kamst mit deiner Mutter zu uns und gemeinsam holtet ihr euch Bounty ab. Katze 1 von 3 war rekrutiert.", image: null },
         { date: "2024-10-01", title: "ONE PIECE", text: "Am 1. Oktober 2024 gegen 16 Uhr schauten wir gemeinsam die erste Folge von One Piece. Mal schauen, wie lange die Reise noch gehen wird?", image: null },
         { date: "2024-10-20", title: "Rehabilitationsphase", text: "Es war der 20. Oktober 2024. Du kamst von deiner Mandel-OP zurück aus dem Krankenhaus und durftest nichts richtig machen. Also schenkte ich dir ein Lego-Orchideen-Set, welches wir gemeinsam aufbauten.", image: null },
+        { date: "2024-10-25", title: "Ein Tag im Oktober/November", text: "Wir lagen in deinem Bett. Ich erinnere mich zwar nicht mehr an die genaue Uhrzeit, aber es war dunkel. Ich tastete deinen Körper ab, während meine Hand langsam nach unten glitt und zu deiner Vagina kam. Experimentell spielte ich an dir herum und steckte meinen Finger in dich hinein. Du gabst mir das Gefühl, dass es dir gefalle – wie sich später herausstellte, hatte wohl nur ich meinen Spaß dabei gehabt.", image: null, isAlt: true },
+        { date: "2024-11-29", title: "Eine spritzige Überraschung", text: "Mitten im No-Nut-November, einen Tag vor meiner Deutschklausur, verbrachte ich die Nacht bei dir. Mitten in der Nacht wurden wir gleichzeitig wach. Ich nahm deine Hand und zog sie langsam zu mir nach unten. Du griffst meinen Penis und begannst, deine Hand auf und ab zu bewegen. Ich zog meine Hose herunter und schob die Decke weg. Es war zwar sehr gewöhnungsbedürftig, aber es war ja auch dein erstes Mal – jetzt weiß ich, wie du dich gefühlt hast. Allerdings hast du es geschafft: Wir mussten eine Sauerei wegräumen, und ich war raus aus dem NNN.", image: null, isAlt: true },
         { date: "2024-12-01", title: "Weihnachtsbeginn", text: "Am 1. Dezember 2024 schauten Moritz und ich zusammen den Solo Leveling Film im Kino. Auf dem Rückweg durch den Koblenzer Weihnachtsmarkt kaufte ich dir ein Lebkuchenherz, welches ich dir am darauffolgenden Morgen gab.", image: null },
+        { date: "2024-12-05", title: "Schwere Folgen", text: "Nachdem wir uns im Dezember 2024 sexuell schon ein bisschen eingegroovt hatten, sollte ein großes Event stattfinden: unser erstes Mal. Zuvor hatte ich noch mit Holger Fortnite gespielt, danach sollte es zur Sache gehen. Wie ich im Nachhinein reflektieren konnte, fühlte ich mich innerlich jedoch noch nicht bereit. So kam es dazu, dass meine Erektion nicht lange anhielt und der Sex scheiterte. Dieser Misserfolg bildete leider die Basis für viele weitere fehlgeschlagene Versuche.", image: null, isAlt: true },
         { date: "2024-12-13", title: "Winterball", text: "Am 13. Dezember 2024 war Winterball an unserer Schule. Wir gingen beide in wunderschönen Outfits dorthin. Nachdem Herr Siegel im Karaoke performte, machte Tim ein paar Bilder von uns. Seine Methoden waren zwar skurril, aber dabei entstand unser erstes schönes Bild zusammen.", image: null },
         { date: "2024-12-24", title: "Weihnachten", text: "Es war der 24. Dezember 2024, unser erstes Weihnachten zusammen. Als Geschenk gab es für dich mein kleines Bärchen, und für mich ein immer noch absolut cooles Katana.", image: null },
         { date: "2024-12-30", title: "Erster gemeinsamer Urlaub", text: "Am 30. Dezember 2024 fuhren wir mit meiner Familie nach Bad Kissingen. Dort verberachten wir gemeinsam die Silvesterzeit. Das Wasserbett war umwerfend.", image: null },
+        { date: "2025-01-06", title: "Körperwelten", text: "Am 6. Januar 2026 lösten wir das Geschenk meiner Mutter ein und fuhren mit ihr nach Heidelberg zu der Körperwelten-Ausstellung. Ein Wunsch von uns beiden wurde wahr. Das Zu-Sehende war sehr faszinierend.", image: null },
+        { date: "2025-01-18", title: "FKK", text: "Der 18. Januar 2026 war gekommen. Wir besuchten den FKK in Emmelshausen. Du als Ellis und ich als Osterhase. Wir trafen sehr unterhaltsame Typen.", image: null },
+        { date: "2025-02-01", title: "Oberweseler Karneval", text: "Julia lud uns auf ihre Sitzung ein. Zusammen mit Tim und Lara fuhren wir dorthin. Nachdem der Wein mir und Tim etwas zu viel wurde, hast du uns alle wieder sicher hochgebracht.", image: null },
+        { date: "2025-02-07", title: "Erstes Foto", text: "Am 7. Februar 2025 – du warst also noch minderjährig – habe ich das erste Mal ein Foto von deinen Brüsten geschossen. Dieses hat es dann auch zu meinen Zeichnungen geschafft.", image: null, isAlt: true },
         { date: "2025-02-14", title: "Valentinstag", text: "Der 14. Februar 2025 war gekommen. Ich kam an dem Tag aus Berlin heim. Abends besuchte ich dich noch. Dabei überreichte ich dir einen neuen Throne-of-Glass-Teil. Nur leider wollte deine Mutter dir diesen zum Geburtstag schenken.", image: null },
         { date: "2025-02-16", title: "Erstes Mal Karneval", text: "Am 16. Februar 2025 sah ich dich das erste Mal live tanzen. Zusammen mit deiner Gruppe rocktest du die Bühne. Gleich zweimal hatte ich die Ehre. Du bist super, ich bin stolz auf dich.", image: null },
-
         { date: "2025-02-18", title: "Geburtstag", text: "Der 18. Februar 2025, endlich 18! Als Geschenk bekamst du von mir ein Lego-Set von uns beiden. Schade nur, dass es sehr viel Verspätung hatte.", image: null },
+        { date: "2025-05-02", title: "Senckenberg Museum", text: "Ein spontanes Geschenk von mir. Am 2. Mai 2026 fuhren wir nach Frankfurt ins Senckenberg Naturmuseum. Wir lernten viel über Dinosaurier und andere Tiere dieser Welt. Es war ein sehr schöner Tag.", image: null },
         { date: "2025-05-12", title: "Endlich auch 18", text: "Es war der 12. Mai 2025. Direkt nachdem ich 18 wurde, fuhren wir mit dem BMW meines Vaters Richtung Boppard. An dem Aussichtspunkt genossen wir die Aussicht. Abends tranken wir noch einen Sekt mit meiner Familie. Es war ein sehr schöner Tag.", image: null },
+        { date: "2025-05-17", title: "24h-Rennen", text: "Am 17. Mai 2026 fand das 24-Stunden-Rennen auf dem Nürburgring statt. Zusammen besuchten wir dieses. Wir beide hatten Spaß, uns das alles gemeinsam anzuschauen. Schade nur, dass das Verstappen-Team aufgrund eines technischen Problems ausschied.", image: null },
         { date: "2025-05-30", title: "Geburtstagsfeier", text: "Am 30. Mai 2025 feierte ich dann meinen Geburtstag. Sowohl im Vorhinein als auch währenddessen halfst du ordentlich mit. Obwohl der Tag für dich Höhen und Tiefen hatte, schienst du am Ende ganz zufrieden. Erst als Émile sich dazu entschied, bei mir zu schlafen mit den Worten: „Ich mache jetzt durch“, drehte sich die Stimmung wieder bei dir.", image: null },
         { date: "2025-07-03", title: "Letzte Stufenfeier", text: "3. Juli 2025. Ich nahm mir vor, es diesmal richtig krachen zu lassen. Das hatte aber nur so bedingt funktioniert. Am Ende lagen wir auf dem Parkplatz auf dem Boden. Mein Vater holte uns ab. Zumindest für dich war es eine Steigerung zum letzten Mal.", image: null },
         { date: "2025-07-20", title: "Paris", text: "Am 20. Juli 2025 startete unsere Reise nach Paris. Mit dem frisch bekommenen Seat Leon machten wir uns auf. Sechs Stunden sollte unsere Reise gehen. Die darauffolgenden Tage bestanden aus viel Laufen und Sehen. Wir waren auf dem Arc de Triomphe, sahen den Eiffelturm, besichtigten den Louvre und noch vieles mehr. Es war ein gelungener Urlaub, nur einmal wurde der Handyakku bei uns etwas knapp. Nach dem Urlaub stritten wir. Das war uns eine Lehre für unsere Beziehung.", image: null },
+        { date: "2025-07-21", title: "Auf und Ab (Frankreich)", text: "Während unseres Frankreichurlaubs (2025) waren wir das erste Mal für längere Zeit alleine, und diese Gelegenheit nutzten wir voll aus. Wir probierten es wie viele Male zuvor noch einmal mit dem Sex, diesmal jedoch mit Erfolg: Beim ersten Mal steckte ich ihn direkt ohne Kondom in dich hinein. Nach hin und her kam ich allerdings nicht zum Orgasmus. Wenige Stunden später unternahmen wir den zweiten Versuch – diesmal kam ich zum Abspritzen. Innerhalb unseres Urlaubs hatten wir viele Male Sex; die Zeit alleine musste schließlich genutzt werden.", image: null, isAlt: true },
         { date: "2025-09-12", title: "Jahrestag!", text: "Am 12. September 2025 war es dann endlich so weit. Ein Jahr waren wir nun schon zusammen. Zusammen gingen wir in Emmelshausen essen.", image: null },
         { date: "2025-10-24", title: "Chainsaw Man", text: "Der 24. Oktober 2025 war gekommen. In schwarzer Hose und weißem Hemd gingen wir zusammen mit Jenni, Tim und Moritz ins Kino. Zusammen schauten wir den besten Film des Jahres. Davor gab es aber noch leckere Ramen.", image: null },
+        { date: "2025-11-15", title: "Dessert nach McDonalds", text: "Ich erinnere mich nicht mehr genau an das Datum, aber die Jahreszeit war fortgeschritten, weshalb ich den November 2025 vermute. Abends sind wir losgefahren, um eine große Bestellung bei McDonalds zu holen, die wir vor Ort aßen. Das Essen für die Heimfahrt wurde danach geholt. Bevor wir uns jedoch auf den Weg machten, geschah etwas Unvorhersehbares: Mitten auf dem Parkplatz mit Blick auf den Drive-through beugtest du dich über die Mittelkonsole und gabst mir einen Blowjob. Ein Moment, für den ich alles geben würde, um ihn noch einmal zu erleben.", image: null, isAlt: true },
         { date: "2025-12-12", title: "Unser Winterball", text: "Am 12. Dezember 2025 stand der Winterball meiner Stufe an. Wir beide kamen wieder sehr schick gekleidet. Es war ein schöner Abend. Leider gab es von drei gemachten Fotos nur eines, welches wirklich punkten konnte. Das erste wurde von Émile gestört, während beim zweiten Nelli den Flitzer spielte.", image: null },
         { date: "2025-12-31", title: "Silvester", text: "Am 31. Dezember 2025 trafen wir uns bei mir. Zusammen mit meiner Familie feierten wir bei mir zu Hause. Danach gab es Feuerwerk bei uns in der Straße.", image: null },
-        { date: "2026-01-06", title: "Körperwelten", text: "Am 6. Januar 2026 lösten wir das Geschenk meiner Mutter ein und fuhren mit ihr nach Heidelberg zu der Körperwelten-Ausstellung. Ein Wunsch von uns beiden wurde wahr. Das Zu-Sehende war sehr faszinierend.", image: null },
-        { date: "2026-01-18", title: "FKK", text: "Der 18. Januar 2026 war gekommen. Wir besuchten den FKK in Emmelshausen. Du als Ellis und ich als Osterhase. Wir trafen sehr unterhaltsame Typen.", image: null },
-        { date: "2026-02-01", title: "Oberweseler Karneval", text: "Julia lud uns auf ihre Sitzung ein. Zusammen mit Tim und Lara fuhren wir dorthin. Nachdem der Wein mir und Tim etwas zu viel wurde, hast du uns alle wieder sicher hochgebracht.", image: null },
+        { date: "2026-02-06", title: "Überwältigend", text: "Am 6. Februar 2026 kamst du mit einem erotischen neuen BH nach Hause. Dieser wurde am Abend direkt mit einem deiner besten Blowjobs eingeweiht. Die Bilder davon werde ich nie vergessen.", image: null, isAlt: true },
         { date: "2026-03-26", title: "Abiball", text: "26. März 2026. Eine frohe und zugleich sehr traurige Veranstaltung. Dennoch war der Abend gelungen. Meine Oma hatte riesigen Spaß. Mit dem Männerballett zeigte ich, dass ich dir in nichts nachstehe.", image: null },
-        { date: "2026-05-02", title: "Senckenberg Museum", text: "Ein spontanes Geschenk von mir. Am 2. Mai 2026 fuhren wir nach Frankfurt ins Senckenberg Naturmuseum. Wir lernten viel über Dinosaurier und andere Tiere dieser Welt. Es war ein sehr schöner Tag.", image: null },
-        { date: "2026-05-17", title: "24h-Rennen", text: "Am 17. Mai 2026 fand das 24-Stunden-Rennen auf dem Nürburgring statt. Zusammen besuchten wir dieses. Wir beide hatten Spaß, uns das alles gemeinsam anzuschauen. Schade nur, dass das Verstappen-Team aufgrund eines technischen Problems ausschied.", image: null },
         { date: "2026-06-30", title: "Amsterdam", text: "Am 30. Juni 2026 fuhren wir zusammen in die Nähe von Amsterdam. Wir machten dort Urlaub, um uns gemeinsam das Bruno-Mars-Konzert anschauen zu können. Es war eine sehr schöne Stadt und ein noch schöneres Konzert. Durch einen Umweg auf dem Heimweg schafften wir es noch, Kühe zu sehen. Nach unserem Ausflug haben wir das Auto bei vollem Tank auf 1000 km Restreichweite hochgefahren.", image: null },
+        { date: "2026-07-01", title: "Eine ganz eigene Liveshow", text: "Am 1. Juli 2026 spazierten wir abends durch das Rotlichtviertel in Amsterdam. Dabei ließen wir uns natürlich nicht die Gelegenheit entgehen, einer Peepshow zuzuschauen. Auch wenn es jedes Mal dieselbe Frau war, war es definitiv eine einmalige Erfahrung.", image: null, isAlt: true },
         { date: "2026-07-11", title: "Mallorca", text: "Am 11. Juli 2026 ging es für uns auf nach Mallorca. Für dich war es das erste Mal. Die Hitze war sehr drückend, machte das Schwimmen im Meer aber umso angenehmer. Leider war der Urlaub dort viel zu kurz.", image: null },
         { date: "2026-08-09", title: "Ein trauriger Abschied", text: "Der 9. August 2026 war gekommen. Um 04:00 Uhr war die Zeit für uns gekommen. Es ging auf zum Flughafen. Wir umarmten uns und küssten uns. Allerdings nicht für das letzte Mal. Eine lange Reise sollte für uns beide beginnen. Der Anfang einer Probe. Wir schaffen das, Tabea. Ich liebe dich.", image: null },
         { date: "2026-09-12", title: "Jubiläum", text: "Es ist der 12. September 2026. Vor genau zwei Jahren kamen wir zusammen. Wir haben seitdem viel durchgemacht und sind zusammengewachsen. Es ist der Beginn einer langen Reise, allerdings der Grundaufbau unseres ganzen Lebens. Ich liebe dich, Tabea. Darauf, dass noch viele, viele weitere Jahre folgen!", image: null }
@@ -2264,7 +2285,7 @@
           "Kein Kilometer der Welt kann verhindern, dass ich an dich denke.",
           "Du fehlst mir bei jedem Schritt.",
           "Dein Platz in meinem Bett ist viel zu leer.",
-          "Ich wünschte, ich könnte mich zu dir beamen.",
+          "I wünschte, ich könnte mich zu dir beamen.",
           "Vermisse dein Lächeln aus der Nähe.",
           "Nur noch X Tage, bis ich dich wieder küssen darf!",
           "Das beste Gefühl? Wenn der Countdown abläuft.",
@@ -2318,7 +2339,7 @@
           "Jeder Tag geschaffte Distanz ist ein Sieg für uns.",
           "Du bist der schönste Anblick auf meinem Handydisplay!",
           "Ich liebe dich mehr als mein stabiles WLAN-Signal.",
-          "Danke, dass du mein Datenvolumen jeden Monat aufbrauchst!",
+          "Danke, dass du dein Datenvolumen jeden Monat aufbrauchst!",
           "Mein Akku stirbt, aber meine Liebe zu dir nie.",
           "Du bist mein liebster Videocall des Tages!",
           "Schlechter Empfang, aber perfekte Gefühle.",
@@ -2342,7 +2363,7 @@
           "Die Sehnsucht ist der Beweis für unsere tiefe Liebe.",
           "Kein Ozean ist zu groß für das, was wir fühlen.",
           "Du machst die Ferne erträglich und die Nähe unbezahlbar.",
-          "Ich liebe dich von hier bis zu dir und noch viel weiter.",
+          "I love dich von hier bis zu dir und noch viel weiter.",
           "Deine Nachrichten machen den Abstand ein Stückchen kleiner.",
           "Egal wie weit weg: Du bist und bleibst meine Wichtigste/mein Wichtigster.",
           "Ein Tag näher an unserem endgültigen Zusammenkommen"
@@ -2756,7 +2777,7 @@
       sortedEvents.forEach(ev => {
         const formattedDate = formatDateShort(ev.date);
         const dot = document.createElement('button');
-        dot.className = 'timeline__dot';
+        dot.className = ev.isAlt ? 'timeline__dot timeline__dot--alt' : 'timeline__dot';
         dot.innerHTML = `<span class="timeline__dot-date">${formattedDate}</span><span class="timeline__dot-title">${ev.title}</span>`;
         dot.addEventListener('click', () => openEventModal(ev));
         timelineLine.appendChild(dot);
@@ -2778,8 +2799,12 @@
 
       eventElements.forEach(item => {
         const isMatch = item.searchableText.includes(query);
-        item.element.style.display = isMatch ? 'flex' : 'none';
-        if(isMatch) visibleCount++;
+        // Prüfen, ob das Element im DOM sichtbar sein darf (bei isAlt nur wenn mode-alt aktiv ist)
+        const isAltActive = document.body.classList.contains('mode-alt');
+        const shouldShow = isMatch && (!item.event.isAlt || isAltActive);
+        
+        item.element.style.display = shouldShow ? 'flex' : 'none';
+        if(shouldShow) visibleCount++;
       });
 
       timelineNoResults.style.display = visibleCount === 0 ? 'block' : 'none';
@@ -3238,7 +3263,7 @@
     let pressCodeGiven = false;
     const PRESS_DURATION = 25000;
 
-function startHearts(){
+    function startHearts(){
       pressStartTime = Date.now();
       pressCodeGiven = false;
       if(heartInterval) return;
@@ -3383,12 +3408,6 @@ function startHearts(){
     }
     document.getElementById('overviewModalClose').addEventListener('click', closeOverviewModal);
     document.getElementById('overviewModalBackdrop').addEventListener('click', closeOverviewModal);
-
-    /* --- Weitere Trigger-Stellen --- */
-
-    /* togetherSince hat keinen Code mehr — Code 92920 kommt vom Brief-Swipe */
-
-
 
     /* --- Song-Übersicht pro Track --- */
     const SONGS = [
@@ -3564,6 +3583,8 @@ function startHearts(){
         const on = value === '18';
         document.body.classList.toggle('mode-alt', on);
         codepadFeedback.textContent = on ? 'Etwas hat sich verändert … ♥' : 'Alles wieder wie vorher.';
+        // Nach Moduswechsel die Zeitstrahl-Suche aktualisieren, damit 18+-Einträge korrekt gefiltert werden
+        filterTimeline();
         return;
       }
 
