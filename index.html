@@ -1590,6 +1590,7 @@
   }
   .letter-reader__title{ font-family:var(--font-display); font-size:1.7rem; text-align:center; margin:0; color:var(--ink); }
   .letter-reader__divider{ text-align:center; color:var(--coral); font-size:1.3rem; margin:6px 0 18px; }
+  .letter-reader__secret{ display:block; width:100%; border:0; padding:0; background:transparent; font-family:inherit; cursor:pointer; }
   .letter-reader__part{ margin-bottom:22px; }
   .letter-reader__part h4{
     font-family:var(--font-display); font-style:italic; font-size:1.05rem; color:var(--coral);
@@ -1607,6 +1608,178 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+  }
+
+  /* ===================================================
+     GESCHICHTEN — Kategorien, Auswahl, Leseansicht
+     =================================================== */
+  .stories-view[hidden]{ display:none; }
+  .stories-list__title{
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin: 4px 0 6px;
+    color: var(--ink);
+  }
+
+  .story-cat-list{ display:flex; flex-direction:column; gap:14px; margin:24px 0 8px; }
+  .story-cat{
+    display:flex; align-items:center; gap:16px;
+    width:100%; text-align:left;
+    padding:18px 20px;
+    border-radius:var(--radius);
+    border:1px solid rgba(232,118,138,.24);
+    background:
+      radial-gradient(circle at 100% 0,rgba(232,118,138,.12),transparent 45%),
+      linear-gradient(160deg,#fffdfc,var(--paper) 130%);
+    box-shadow:0 5px 16px rgba(140,74,91,.08);
+    font-family:var(--font-body);
+    color:var(--ink);
+    cursor:pointer;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .story-cat:hover{ transform:translateY(-3px); box-shadow:0 12px 26px rgba(140,74,91,.16); border-color:var(--coral); }
+  .story-cat__icon{
+    flex:0 0 auto; width:56px; height:56px;
+    display:grid; place-items:center;
+    font-size:1.9rem; border-radius:50%;
+    background:rgba(255,255,255,.75);
+    box-shadow:inset 0 0 0 1px rgba(232,118,138,.22);
+  }
+  .story-cat__body{ flex:1; min-width:0; }
+  .story-cat__title{ display:block; font-family:var(--font-display); font-size:1.2rem; font-weight:600; line-height:1.25; }
+  .story-cat__meta{ display:block; margin-top:4px; font-size:.88rem; color:var(--ink-soft); }
+  .story-cat__chev{ flex:0 0 auto; font-size:1.7rem; line-height:1; color:var(--coral); }
+  .story-cat__badge{
+    display:inline-block; margin-left:8px; padding:2px 8px;
+    border-radius:999px; vertical-align:middle;
+    font-family:var(--font-body); font-size:.68rem; font-weight:700; letter-spacing:.06em;
+    color:#fff; background:#C9304F;
+  }
+  .story-cat--alt{ display:none; }
+  body.mode-alt .story-cat.story-cat--alt{
+    display:flex;
+    border-color:rgba(201,48,79,.38);
+    background:
+      radial-gradient(circle at 100% 0,rgba(201,48,79,.20),transparent 50%),
+      linear-gradient(150deg,#fff3f4,#f3d9de);
+  }
+  body.mode-alt .story-cat:hover{ border-color:#C9304F; }
+  body.mode-alt .story-cat__chev{ color:#C9304F; }
+
+  .story-list{ display:flex; flex-direction:column; gap:12px; margin-top:18px; }
+  .story-item{
+    display:block; width:100%; text-align:left;
+    padding:16px 18px;
+    border-radius:var(--radius);
+    border:1px solid rgba(232,118,138,.22);
+    background:linear-gradient(160deg,#ffffff,var(--paper) 130%);
+    box-shadow:0 4px 14px rgba(140,74,91,.07);
+    font-family:var(--font-body);
+    color:var(--ink);
+    cursor:pointer;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .story-item:hover{ transform:translateY(-2px); box-shadow:0 10px 22px rgba(140,74,91,.14); border-color:var(--coral); }
+  .story-item__title{ display:block; font-family:var(--font-display); font-size:1.12rem; font-weight:600; line-height:1.3; }
+  .story-item__teaser{ display:block; margin-top:6px; font-size:.95rem; line-height:1.5; color:var(--ink-soft); }
+  .story-item__meta{ display:block; margin-top:9px; font-size:.78rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--coral); }
+  body.mode-alt .story-item{ border-color:rgba(201,48,79,.26); }
+  body.mode-alt .story-item:hover{ border-color:#C9304F; }
+  body.mode-alt .story-item__meta{ color:#C9304F; }
+
+  .story-empty{
+    margin-top:18px; padding:36px 22px; text-align:center;
+    border:1.5px dashed rgba(232,118,138,.45);
+    border-radius:var(--radius);
+    background:rgba(255,255,255,.55);
+    color:var(--ink-soft); line-height:1.6;
+  }
+  .story-empty__icon{ display:block; font-size:2.4rem; margin-bottom:8px; }
+  .story-empty strong{ display:block; margin-bottom:4px; font-family:var(--font-display); font-size:1.15rem; color:var(--ink); }
+
+  /* Leseansicht */
+  .story-reader{
+    --story-size:1.1rem;
+    padding:24px clamp(18px,4vw,38px) 28px;
+    border-radius:var(--radius);
+    border:1px solid rgba(232,118,138,.22);
+    background:#fffdfb;
+    box-shadow:0 6px 22px rgba(140,74,91,.09);
+    color:var(--ink);
+  }
+  .story-reader__toolbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px; }
+  .story-reader__cat{ font-size:.78rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--coral); }
+  .story-reader__size{ display:flex; gap:6px; }
+  .story-reader__size button{
+    min-width:40px; height:36px; padding:0 10px;
+    border-radius:999px;
+    border:1px solid rgba(232,118,138,.32);
+    background:#fff; color:var(--ink);
+    font-family:var(--font-body); font-weight:600; font-size:.9rem;
+    cursor:pointer; touch-action:manipulation;
+  }
+  .story-reader__size button:hover{ border-color:var(--coral); }
+  .story-reader__title{ margin:0 0 6px; font-family:var(--font-display); font-size:clamp(1.55rem,5.2vw,2.1rem); line-height:1.2; }
+  .story-reader__meta{ margin:0 0 22px; font-size:.88rem; color:var(--ink-soft); }
+  .story-reader__body{ font-family:var(--font-display); font-size:var(--story-size); line-height:1.85; max-width:62ch; }
+  .story-reader__body p{ margin:0 0 1.2em; }
+  .story-reader__body.has-dropcap p:first-child::first-letter{
+    float:left; margin:.06em .12em 0 0;
+    font-size:3.2em; line-height:.82; font-weight:600; color:var(--coral);
+  }
+  .story-reader__end{ margin:26px 0 6px; text-align:center; font-size:.85rem; letter-spacing:.4em; color:var(--coral); }
+  .story-reader__nav{ display:flex; gap:10px; margin-top:18px; }
+  .story-btn{
+    flex:1; padding:12px 14px;
+    border-radius:999px;
+    border:1px solid rgba(232,118,138,.32);
+    background:linear-gradient(135deg,#fffafa,#f9e9ed);
+    color:#70485a;
+    font-family:var(--font-body); font-weight:600; font-size:.95rem;
+    cursor:pointer; touch-action:manipulation;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .story-btn:hover:not(:disabled){ transform:translateY(-2px); box-shadow:0 8px 18px rgba(140,74,91,.14); }
+  .story-btn:disabled{ opacity:.35; cursor:default; }
+
+  /* Gute-Nacht-Variante: ruhiges Nachtblau */
+  .story-reader--night{
+    background:
+      radial-gradient(1.5px 1.5px at 12% 18%,rgba(255,255,255,.75),transparent),
+      radial-gradient(1px 1px at 78% 10%,rgba(255,255,255,.6),transparent),
+      radial-gradient(1.5px 1.5px at 90% 42%,rgba(255,255,255,.55),transparent),
+      radial-gradient(1px 1px at 30% 62%,rgba(255,255,255,.45),transparent),
+      radial-gradient(1px 1px at 66% 84%,rgba(255,255,255,.5),transparent),
+      linear-gradient(170deg,#1c2145,#2b2140 70%,#3a2a52);
+    border-color:rgba(255,255,255,.12);
+    color:#f3ecdf;
+  }
+  .story-reader--night .story-reader__cat,
+  .story-reader--night .story-reader__end,
+  .story-reader--night .story-reader__body.has-dropcap p:first-child::first-letter{ color:#f4c76a; }
+  .story-reader--night .story-reader__meta{ color:rgba(243,236,223,.68); }
+  .story-reader--night .story-reader__size button,
+  .story-reader--night .story-btn{
+    background:rgba(255,255,255,.08); color:#f3ecdf; border-color:rgba(244,199,106,.35);
+  }
+
+  /* Erotische Geschichten (nur 18-Modus): dunkles Pflaumen-Violett mit Gold */
+  .story-reader--plum{
+    background:radial-gradient(circle at 100% 0,rgba(201,48,79,.35),transparent 55%),linear-gradient(150deg,#3A1A33,#2A1426);
+    border-color:rgba(212,175,55,.38);
+    color:#f6e9ea;
+  }
+  .story-reader--plum .story-reader__cat,
+  .story-reader--plum .story-reader__end,
+  .story-reader--plum .story-reader__body.has-dropcap p:first-child::first-letter{ color:#e3bf63; }
+  .story-reader--plum .story-reader__meta{ color:rgba(246,233,234,.68); }
+  .story-reader--plum .story-reader__size button,
+  .story-reader--plum .story-btn{
+    background:rgba(255,255,255,.07); color:#f6e9ea; border-color:rgba(212,175,55,.4);
   }
 
   /* Tab "Heiße Texte" nur im alternativen Modus */
@@ -1688,6 +1861,10 @@
           <span class="tile__icon" aria-hidden="true">🍬</span>
           <span class="tile__label">Süße Texte</span>
         </button>
+        <button class="tile" data-target="geschichten">
+          <span class="tile__icon" aria-hidden="true">📖</span>
+          <span class="tile__label">Geschichten</span>
+        </button>
         <button class="tile" data-target="briefe">
           <span class="tile__icon" aria-hidden="true">💌</span>
           <span class="tile__label">Briefe</span>
@@ -1742,11 +1919,52 @@
       </div>
     </section>
 
+    <section class="page page--fullscreen" id="geschichten">
+      <button class="back-link" data-target="startseite">← Zur Startseite</button>
+      <h2 class="page__title">Geschichten</h2>
+
+      <!-- Ansicht 1: Kategorien -->
+      <div class="stories-view" id="storiesCategories">
+        <p class="page__intro">Zum Einschlafen, Träumen und Wiederlesen.</p>
+        <div class="story-cat-list" id="storyCatList"></div>
+      </div>
+
+      <!-- Ansicht 2: Geschichten einer Kategorie -->
+      <div class="stories-view" id="storiesList" hidden>
+        <button class="back-link" id="storiesBackToCats" type="button">← Alle Kategorien</button>
+        <h3 class="stories-list__title" id="storiesListTitle"></h3>
+        <p class="page__intro" id="storiesListIntro"></p>
+        <div class="story-list" id="storyItems"></div>
+      </div>
+
+      <!-- Ansicht 3: Lesen -->
+      <div class="stories-view" id="storiesReaderView" hidden>
+        <button class="back-link" id="storiesBackToList" type="button">← Zurück zur Auswahl</button>
+        <article class="story-reader" id="storyReader">
+          <div class="story-reader__toolbar">
+            <span class="story-reader__cat" id="storyReaderCat"></span>
+            <div class="story-reader__size" role="group" aria-label="Schriftgröße">
+              <button type="button" id="storySizeDown" aria-label="Schrift kleiner">A−</button>
+              <button type="button" id="storySizeUp" aria-label="Schrift größer">A+</button>
+            </div>
+          </div>
+          <h3 class="story-reader__title" id="storyReaderTitle"></h3>
+          <p class="story-reader__meta" id="storyReaderMeta"></p>
+          <div class="story-reader__body" id="storyReaderBody"></div>
+          <div class="story-reader__end" aria-hidden="true">✦ ✦ ✦</div>
+          <div class="story-reader__nav">
+            <button type="button" class="story-btn" id="storyPrev">← Vorherige</button>
+            <button type="button" class="story-btn" id="storyNext">Nächste →</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
     <section class="page page--fullscreen" id="briefe">
       <button class="back-link" data-target="startseite">← Zur Startseite</button>
       <h2 class="page__title">Briefe</h2>
       <p class="page__intro">Öffne einen Brief, wenn der Moment passt.</p>
-      <button class="future-letter-card" id="futureLetterBtn" type="button" hidden>
+      <button class="future-letter-card" id="futureLetterBtn" type="button">
         <span class="future-letter-card__icon" aria-hidden="true">💌</span>
         <span class="future-letter-card__text">
           <span class="future-letter-card__title">Meine Zukunft mit dir</span>
@@ -1760,7 +1978,7 @@
         <article class="letter-reader__sheet" role="dialog" aria-modal="true" aria-labelledby="letterReaderTitle">
           <button class="letter-reader__close" type="button" data-close aria-label="Schließen">✕</button>
           <h3 class="letter-reader__title" id="letterReaderTitle">Meine Zukunft mit dir</h3>
-          <div class="letter-reader__divider" aria-hidden="true">♡</div>
+          <button class="letter-reader__divider letter-reader__secret" id="letterSecretHeart" type="button" aria-label="Geheimen Code entdecken" title="Ein kleiner geheimer Hinweis">♡</button>
 
           <section class="letter-reader__part">
             <h4>In einem halben Jahr</h4>
@@ -2661,6 +2879,355 @@
           "Schickst du mir ein Foto von dir, damit ich leichter kommen kann?"
         ]
       },
+      /* ===== GESCHICHTEN =====
+         Neue Geschichte: einfach einen Eintrag in "stories" der passenden Kategorie ergänzen.
+         Format:  { title: "Titel", teaser: "Kurzer Anreiz (optional)", date: "12. September 2026 (optional)",
+                    text: `Erster Absatz.
+
+Zweiter Absatz (Leerzeile = neuer Absatz).` }
+         "erotisch" erscheint nur im 18-Modus. */
+      geschichten: {
+        gutenacht: {
+          icon: "🌙",
+          title: "Gute Nacht Geschichten",
+          subtitle: "Zum Einschlafen und Träumen",
+          intro: "Kleine Geschichten für den Weg in den Schlaf.",
+          theme: "night",
+          stories: []
+        },
+        selbst: {
+          icon: "✍️",
+          title: "Selbstgeschriebene Geschichten",
+          subtitle: "Von mir für dich geschrieben",
+          intro: "Geschichten, die ich nur für dich aufgeschrieben habe.",
+          theme: "default",
+          stories: []
+        },
+        erotisch: {
+          alt: true,
+          icon: "🌹",
+          title: "Erotische Geschichten",
+          subtitle: "Nur für uns beide",
+          intro: "Für die Momente, in denen die Fantasie mehr Platz braucht.",
+          theme: "plum",
+          stories: [
+            {
+              title: "Erotische Geschichte 1",
+              teaser: "Eine versteckte Bucht, die Mittagshitze und ein Pärchen, das vielleicht doch zuschaut.",
+              text: "„Schatz, packst du die Handtücher ein?“\n\nAnna war schon halb durch die Tür und erstarrte in der Bewegung. „Sorry, klar.“\n\nTypisch, Anna war manchmal so verpeilt. Andererseits konnte er ihr einfach nicht böse sein. Sie musste nur einmal mit ihren großen Rehaugen klimpern und er verzieh ihr das größte Missgeschick.\n\nErik tastete über seine Brust – die Sonnencreme war eingezogen. Er zog sich sein T-Shirt über den Kopf und stellte zufrieden fest, dass seine Ärmel spannten. Er folgte Anna hinaus aus dem Appartement und konnte dabei nicht anders, als auf ihren verführerisch schwingenden Po zu starren. Sie trug ein enges Strandkleid, welches ihre Kurven aufreizend betonte und ihren knappen Bikini durchschimmern ließ.\n\n„Wo bist du denn gerade?“\n\nErik blinzelte sich ins Hier und Jetzt zurück, dann lächelte er seine Freundin an. „Dein Hintern hat mich hypnotisiert, ich konnte nichts dagegen tun.“\n\nAnna schüttelte den Kopf, lächelte aber zurück. „Wir fahren an den Strand und den haben wir nicht für uns. Heb’ dir deine Fantasien für heute Abend auf.“\n\n„Ganz wie die Dame befiehlt.“\n\nSie fuhren über eine Schotterpiste, die auf verschlungenen Pfaden zu einer Bucht führte, die Anna am Vorabend auf Google Maps entdeckt hatte. Die Sonne drückte und die Klimaanlage des Ford Fiesta verlor den Kampf gegen die Mittagshitze.\n\nAnna wedelte sich Luft zu. „Wenn wir da sind, springe ich nackt ins Wasser.“\n\nErik grinste, sagte aber nichts. Sie fuhren um eine Biegung und auf einmal öffnete sich eine Lücke in den pinienbewachsenen Felswänden, darin das im gleißenden Sonnenschein azurblau flimmernde Meer.\n\nErik ließ den Wagen am Straßenrand ausrollen. Kaum standen die Räder, entflohen sie der mobilen Sauna in den kühlenden Schatten der Bäume. Ein schmaler Trampelpfad führte hinab zu einem versteckt liegenden Sandstrand.\n\nGerade als Erik unten angelangt war, hörte er ein Knacken, gefolgt von einem überraschten Aufschrei. Er fuhr herum und riss gerade noch rechtzeitig die Arme hoch, um einen Wust aus wildrudernden Armen und Beinen aufzufangen.\n\nAnna landete an seiner Brust.\n\n„Puh“, seufzte sie erleichtert.\n\nErik spürte ihre verschwitzte Haut an seiner. Er hatte plötzlich anderes im Kopf. Abgelenkt murmelte er: „Die Wurzel wäre mir auch fast zum Verhängnis geworden.“\n\nAnna schaute Erik vorwurfsvoll an. Jedenfalls glaubte sie, vorwurfsvoll zu schauen. Erik fand, dass sie mit der gekräuselten Stirn noch süßer ausschaute als sonst.\n\n„Meinst du nicht, du hättest mich vorwarnen sollen?“\n\n„Wo wäre denn da die Spannung gewesen?“\n\nAnna rollte mit den Augen. „Irgendwann lande ich im Krankenhaus, dann hast du deine Spannung.“ Sie befreite sich aus Eriks Armen. „Gehen wir uns jetzt endlich abkühlen?“\n\nAnna stapfte durch den knöcheltiefen Sand voran, ließ ihre Strandtasche an die nächstbeste Pinie fallen und zog ihr Kleid über den Kopf.\n\nErik folgte ihr und blickte sich um. Hohe Felswände flankierten den kaum fünfzig Meter breiten Strand, der auf den ersten Blick verlassen wirkte. Doch dann bemerkte er eine einzelne verlassene Stranddecke am anderen Ende.\n\nAnna war schon auf dem Weg zum Wasser, Erik hatte jedoch andere Pläne.\n\n„Stopp!“, rief er.\n\nAnna drehte sich ungeduldig um.\n\nErik ging auf sie zu. „Du hast gesagt, wenn du da bist, würdest du nackt ins Wasser springen.“\n\n„Das habe ich doch nur so daher geredet. Du weißt ganz genau, dass ich noch nie nacktbaden war – zumindest außerhalb unserer Badewanne.“\n\nErik zuckte mit den Schultern und wollte zu einer Erwiderung ansetzen – in dem Moment kam ein Pärchen in die Bucht geschwommen. Beide hoben grüßend die Hände, als sie aus dem Wasser stiegen. Sie waren nackt.\n\nErik grüßte zurück. Dann wandte er sich wieder Anna zu, deren Blick an dem Pärchen hängen geblieben war. „Du beschwerst dich doch immer über die Bikiniabdrücke. Und außerdem“, Erik nickte zu dem Pärchen, welches sich auf der bis eben verlassenen Stranddecke ausbreitete, „wäre es doch unhöflich, uns angezogen dazuzulegen.“\n\nAnna schaute verunsichert drein. „Ich weiß nicht.“\n\nErik zuckte erneut mit den Schultern, dann zog er erst sein T-Shirt und kurzerhand auch seine Badehose aus.\n\n„Wie du willst“, sagte er und ging ins Wasser.\n\nErik schloss die Augen und atmete tief die nach Salz duftende Seeluft ein. Er spürte die Sonne auf seiner nackten Haut, die leichte Meeresbrise. Er hatte ganz vergessen, wie frei man sich fühlen konnte.\n\n„Na gut, aber nur das Oberteil.“ Anna legte es hastig ab und lief Erik hinterher.\n\nDieser verkniff sich einen triumphierenden Kommentar und sprang in das glasklare Wasser – Anna hinterher. Die Wellen, die sie dabei verursachten, zerstörten für einen Moment die spiegelglatte Oberfläche und verbargen das, was darunter lag.\n\nAnna schwamm Erik in die Arme. Er drückte sie an sich. Er spürte ihre Brüste an seiner Brust.\n\n„Ungewohnt, aber irgendwie schön“, sagte Anna und grinste zu Erik hinauf.\n\nDas Wasser beruhigte sich und gab den Blick auf Annas zusammengepresste Brüste frei. Kein Dirndl hätte sie besser zur Geltung bringen können, schoss es Erik durch den Kopf. Er spürte ein wohliges Ziehen in seiner Lendengegend.\n\nAnna bemerkte seine Erregung ebenfalls. „Ey, ich hab dir gesagt, du sollst dir das für heute Abend aufheben.“\n\nSie löste sich von Erik, was aber nur zur Folge hatte, dass ihre kirschroten Nippel sichtbar wurden.\n\nDas Ziehen wurde zu einem Pochen. Erik spürte, wie sein Penis wuchs. Er wollte nicht bis heute Abend warten, er wollte Anna hier am Strand nehmen.\n\n„Es sieht ja keiner, wenn er hart ist. Lass uns nur ein wenig unsere Nähe genießen.“\n\nErik legte eine Hand auf Annas Schulter, drehte sie und zog sie an sich. Anna ließ es geschehen. Ihr Po drückte sich gegen seinen härter werdenden Schwanz, der sich zu dem schmalen Streifen in ihrer Poritze drängte. Ein wohliger Schauer überkam ihn. Er umschloss Anna mit seinen Armen und küsste ihren Hals.\n\nSie schloss die Augen und seufzte. „Erik, da ist ein anderes Pärchen.“\n\nStatt zu antworten, wanderten seine Hände zu ihren Brüsten. Er griff sie, erst sanft, dann fordernder.\n\nAnna stöhnte leise. Erik hob sie ein wenig an. Sein mittlerweile komplett harter Schwanz rutschte zwischen ihre Schenkel und drückte nun gegen ihre Muschi.\n\n„Erik, es geht wirklich nicht.“\n\nAnna löste sich und schwamm mit einem neckischen Grinsen auf den Lippen zum Ufer.\n\nErik legte den Kopf in den Nacken und seufzte.\n\n„Kommst du?“, fragte Anna schelmisch, wohlwissend, dass Erik mit seiner Erektion wohl kaum das Wasser verlassen konnte.\n\nNa warte, dachte dieser sich. Er sah dabei zu, wie Anna ihre Handtücher ausbreitete, während er darauf wartete, dass seine Erregung abklang.\n\nAls es endlich so weit war, räkelte sich Anna längst in der Sonne. Erik ließ sich neben sie fallen.\n\n„Cremst du mich ein?“, fragte sie.\n\nErik ignorierte den provozierenden Ton in ihrer Stimme. Offenbar dachte sie, dass er es am Strand nicht nochmals versuchen würde.\n\nEr kramte die Sonnencreme aus der Tasche und kniete sich über Anna. Ein kurzer Blick rüber zu dem fremden Pärchen verriet ihm, dass dieses eher weniger an ihnen interessiert zu sein schien. Sie dösten oder schliefen vielleicht sogar.\n\nMit kreisenden Bewegungen verteilte Erik die Creme auf Annas Rücken. Er strich von ihren Schultern zu ihrem Nacken und dann, Wirbel für Wirbel, tiefer bis zum Ansatz ihres Bikiniunterteils. Hier verharrte Erik für einen Moment. War es die Creme oder war es seine Berührung, die sie erschaudern ließ?\n\nEr führte seine Fingerkuppen unter den Saum und zog diesen ganz langsam ein Stück weit herab, bis sich ein verheißungsvoller Schatten zwischen ihren Pobacken zeigte.\n\n„Erik, das möchte ich anbehalten“, sagte Anna nicht ganz überzeugend. Sie griff nach hinten und zog sich ihr Höschen wieder hoch.\n\n„Du bist die einzige hier, die nicht nackt ist“, antwortete Erik. Er griff Annas Hand und drückte sie mit sanfter Gewalt zurück auf das Handtuch. „Außerdem will ich nicht, dass du am Ende Sonnencremeflecken auf dem Bikini hast.“\n\nEr zog ihr Höschen erneut herunter. Annas Hände blieben auf dem Handtuch liegen. Stück für Stück entblößte er erst ihren Po und mit einem letzten Zug ihre rasierten Schamlippen.\n\n„Fühlt sich das nicht gut an, der kühlende Luftzug zwischen den Schenkeln?“\n\nAnna erwiderte nichts, aber ihr lauter werdender Atem war Antwort genug.\n\nErik träufelte Sonnencreme auf Annas Po und verteilte diese mit einer Massage, die seine Daumen wie zufällig immer wieder zwischen ihre Pobacken gleiten ließ. Er selbst spürte, wie sein Schwanz wieder anschwoll. So wie er über seiner Freundin kniete, hätte das fremde Pärchen nur einmal aufschauen müssen, um alles zu sehen. Doch sie schienen immer noch nichts mitzubekommen.\n\nErik wurde mutiger. Als er das nächste Mal mit den Daumen in ihre Poritze glitt, strich er sanft über Annas Anus.\n\n„Erik“, begehrte sie wenig überzeugend auf.\n\nUnd dann stahl sich ein unterdrücktes Seufzen über ihre Lippen, als er den Druck auf ihrem Anus erhöhte und mit der Daumenkuppe in sie eindrang.\n\nErik beugte sich zu Anna herunter. Er schob ihre Haare beiseite und flüsterte ihr ins Ohr: „Ich werde dir jetzt dein Höschen ganz ausziehen und du wirst dich nicht dagegen wehren. Danach drehst du dich zu mir auf die Seite. Dann werde ich dich fingern. Das andere Pärchen schläft und selbst wenn sie schauen sollten, sehen sie nur deine Rückseite.“\n\n„Und wenn sie es doch mitbekommen?“\n\nStatt zu antworten, legte sich Erik ganz auf Anna. Er drückte seinen mittlerweile steinharten Schwanz zwischen ihre Pobacken und hauchte ihr in den Nacken.\n\nAnna stöhnte auf und ergab sich ihrem Schicksal.\n\nErik zog das Höschen über ihre Füße und nahm Anna in den Arm. Sie schmiegte sich an ihn. Seine freie Hand führte er an ihrem Körper hinab, streichelte über ihren Schamhügel und verschwand zwischen ihren Schenkeln. Anna spreizte kaum merklich ihre Beine, sodass sich ihre Schamlippen öffneten und Erik mit seinen Fingern dazwischen gleiten konnte. Nasse Wärme empfing ihn. Annas Klit war geschwollen, stark geschwollen. Machte es sie etwa an, dass sie beobachtet werden könnten?\n\nLangsam umkreiste er ihr Lustzentrum. „Es gefällt dir, dass wir beobachtet werden könnten – stimmt’s?“\n\nAnna wimmerte vor Lust.\n\nErik sah über ihren Haarschopf hinweg. Hatte der Typ sich gerade bewegt? Waren seine Lider geschlossen oder sah er heimlich herüber? Ahnte er etwas?\n\n„Ich glaube, der Typ hat sich gerade bewegt.“\n\nAnna zuckte zurück, doch Erik hielt sie fest und wurde schneller. Anna verlor ihren letzten Rest Schamgefühl. In diesem Moment schien sie nur noch aus Lust zu bestehen. Sie rutschte tiefer in den Arm von Erik, presste ihr Becken gegen seine Hand. Sie packte Eriks Schwanz und klammerte sich an ihn, zerkratzte mit der anderen Hand Eriks Rücken.\n\nAnnas Griff war zügellos. Eriks Eichel pochte. Er biss sich auf die Lippen, um nicht selbst aufzustöhnen.\n\n„Ich komme gleich“, stöhnte Anna.\n\n„Du kommst, während dir ein Fremder zusieht, das findest du geil?“\n\nStatt zu antworten, krallten sich Annas Finger noch fester um Eriks Schwanz. Ein Beben ging durch ihren Körper.\n\nDie Situation, der Moment waren so heiß, dass Erik nur durch den Anblick seiner kommenden Freundin selbst bis an den Rand eines Orgasmus getrieben wurde – doch dann erschlaffte Annas Griff um seinen Schwanz und ihr unterdrücktes Stöhnen wurde zu einem leisen Schluchzen.\n\nErik streichelte ihr den Rücken. Irgendwann beruhigte sie sich.\n\n„Das war unglaublich heiß“, flüsterte Erik.\n\nAnna hob den Kopf und lächelte ihn an. „Ich weiß nicht, was in mich gefahren ist. Lass uns gehen, ich will mich im Hotel revanchieren.“"
+            },
+            {
+              title: "Verführt in der Therme",
+              teaser: "Ein nächtlicher Besuch in der Therme, ein fremder Blick und eine Begegnung, die Lara so schnell nicht vergessen wird.",
+              text: `Der harte Wasserstrahl drückte sich zwischen ihre Schulterblätter. Sie schloss seufzend die Augen und lehnte den Kopf gegen den Beckenrand.
+>>Lara gleich ist der Aufguss, kommst du?<<
+Sie schüttelte träge den Kopf: >>Ich glaube, ich setze aus. Die Finnische ist mir eh zu heiß.<<
+>>Wie du willst, dann bis gleich.<<
+Neben Lara plätscherte es. Sie schlinzte durch ihre halbgeschlossenen Lider und sah Mareikes nackten Po in Richtung der Blockholzsauna wackeln.
+Nebelschwaden trieben über das Solebecken dahin und stiegen auf in die klare Winternacht. Lara war allein. Einzig Sie und das warme Salzwasser – das sie umspielte, sie hielt. Lara wechselte die Düse, die nun ihre Lendenwirbelsäule massierte.
+Mareike hatte tatsächlich zuerst am Wochenende in die Therme gehen wollen. Mit einem Schauer dachte Lara an die Massen, mit denen sie sich das Solebad und die Saunen hätte teilen müssen. So war es unendlich viel besser.
+Hinter ihr hörte Mareike sanfte Schritte. Sie drehte sich zum Beckenrand.
+Frotteeslipper, kräftige Beine,… Laras Lider öffneten sich…, ein knapp um die Hüfte gelegtes Handtuch. So knapp, dass sich ein Spalt an der Hüfte öffnete. Ihr Blick wanderte höher,… Ein kaum sichtbarer Bauchansatz, eine breit trainierte Brust. Lara gefiel, was sie sah. Sollte sie einen Blickkontakt wagen?
+>Na klar, oder glaubst du, der kann hellsehen? Woher soll er denn wissen, dass du ihn gut findest!<, schalt Mareike sie in ihren Gedanken.
+Lara nahm ihren Mut zusammen und sah dem Fremden direkt ins Gesicht – und hätte sich beinahe schockverliebt. Ihre imaginäre Wunschliste war gerade abgearbeitet worden: Maskuline, aber nicht zu kantige Züge, ein Drei-Tage-Bart, der ganz bestimmt nicht kratzte, dunkle Augen zum Verlieren…
+Der einzige Fehler: Er sah sie nicht an. Der Fremde ging an ihr vorbei direkt auf die Blocksauna zu. Hatte er sie überhaupt bemerkt?
+Lara reckte den Hals, um ihm besser hinterherschauen zu können und bewegte sich so zurück in den Wasserstrahl, der nun ihre Vorderseite massierte.
+Das Handtuch des Fremden spannte sich über einen trainierten Po, der nun hinter einer massiven Holztür verschwand.
+Sollte sie doch in die Sauna gehen?
+Aber dann würde der Typ am Ende noch denken, sie wäre ihm hinterhergelaufen… Was ja streng genommen auch stimmte… Lara seufzte und wusste im selben Moment, dass sie bei ihrem ursprünglichen Plan bleiben würde.
+Erst jetzt bemerkte sie, dass der Wasserstrahl ihren Schamhügel massierte. Lara schloss die Augen und sah wieder den Fremden vor sich – nur dieses Mal blieb er am Beckenrand vor ihr stehen. Das Handtuch fiel…
+Lara sah sich um. Sie war immer noch allein. Die Dunkelheit und die Nebelschwaden schützten sie vor Blicken. Sie ließ es zu, dass die Sole sie anhob, während der Wasserdruck tiefer wanderte. Lara öffnete sich dem Strahl, der zwischen ihre Schamlippen glitt. Warme Schauer überkamen sie. Sie zog sich näher an den Beckenrand. Das Wasser suchte sich seinen Weg, prasselte auf ihr Lustzentrum.
+Der Fremde ließ sich zu ihr ins Wasser gleiten. Er sprach nicht, er kam einfach näher. Seine Hände legten sich um ihre Taille. Er zog sie an sich.
+Lara ließ ihr Becken gegen den Strahl der Düse kreisen.
+Die Tür der Sauna schlug zu. Lara verharrte in der Bewegung. Schritte. Sie sah sich um. Reflexartig zog sie die Beine zusammen, auch wenn niemand sehen konnte, was sie unter Wasser tat.
+Da war wieder der gutaussehende Unbekannte. Lara tat so, als würde sie die Augen geschlossen halten. Doch eigentlich beobachtete sie ihn.
+Er ging zu den Außenduschen neben der Sauna und legte sein Handtuch ab. Dann prasselte das Wasser in seinen Nacken, lief sein breites Kreuz hinab auf einen knackigen Po.
+Lara wusste nicht, was in sie fuhr, aber sie öffnete ihre Schenkel bis der vertraute Druck des Wassers erneut auf ihren Kitzler traf. Sie seufzte leise.
+Der Fremde drehte sich um. Lara kniff die Augen zusammen und biss sich gleichzeitig auf die Zunge. Hatte er sie gehört? Er konnte sie nicht gehört haben. Aber was, wenn doch?
+Schritte, die näherkamen.
+Plätschern, kleine Wellen kitzelten Laras Kinn. Oh nein, er war im Becken.
+
+Lara öffnete die Augen und drehte sich weg vom Beckenrand. Ein protestierendes Ziehen ging durch ihren Unterleib.
+>>Doch ein bisschen zu heiß da drin.<< Der Fremde lächelte sie mit in der Dunkelheit unnatürlich weiß strahlenden Zähnen an.
+Lara schaute ihn verwirrt an. Die Situation überforderte sie komplett. Die Erregung, ihre Fantasie… und jetzt sprach genau der Typ sie einfach an?
+Der Fremde deutete auf die Sauna. >>Hab überlesen, dass die heute auf 100°C hochgeheizt wird. Ist nicht meine Wohlfühltemperatur.<<
+Lara nickte erleichtert. >>Ähm ja, meine auch nicht.<<
+>>Ich bin Nick. Darf ich nach deinem Namen fragen?<< Der Fremde lächelte wieder.
+>>Ich… Ich bin Lara.<<
+Jetzt stotterte sie auch noch! Am liebsten hätte sich Lara selbst geohrfeigt.
+Der Fremde kam ein Stückchen näher. >>Weißt du Lara, du stehst an meinem Lieblingsplatz… Genießt du es?<<
+Blut in ihrem Kopf! Was meinte er damit? Meinte er das, was sie dachte?! Das konnte nicht sein.
+>>Ja das Solebad ist tatsächlich ganz schön<<, antwortete Lara möglichst cool.
+Nicks Lächeln wurde breiter… Es hatte etwas Wissendes. Er lehnte sich zu ihr an den Beckenrand. >>Ich meinte eigentlich nicht das ganze Solebad… Ich meine vielmehr genau den Ort, an dem du stehst…<<
+Lara wusste nicht, wie sie reagieren sollte. Das erneute Klappern der Saunatür rettete sie. Ein Strom nackter Menschen ergoss sich aus der Sauna – Mareike winkte ihr zu.
+Lara winkte erleichtert zurück.
+>>Das da drüben ist meine Freundin.<< Lara wusste, dass Nick wusste, dass ihre Erklärung überflüssig war. Aber sie wollte vom Thema ablenken. Sie wollte nicht wissen, ob Nick bemerkt hatte, was sie gerade getan hatte. Sie wollte hier weg – und doch wieder nicht. Die Situation war ihr unangenehm, aber Nick zog sie an.
+>>Ich bin manchmal neidisch auf euch Frauen. Klar, der Wasserstrahl fühlt sich auch für uns gut an, aber nicht so, wie es für dich gewesen sein muss.<<
+Lara starrte Nick ungläubig an. Sollte sie vor Scham im Wasser versinken oder ihn empört zusammenschreien?
+>>Hey Lara, wieso schaust du so bedröppelt und wer ist der nette Herr an deiner Seite?<<, Mareike war mit einem Satz ins Wasser gesprungen und schwamm auf sie zu.
+>>Der nette Herr an ihrer Seite heißt Nick. Und deine Freundin schaut so bedröppelt, weil ich eben ein bisschen unhöflich gewesen bin.<< Reagierte dieser schnell, eher er sich wieder Lara zu wandte. >>Bitte entschuldige.<< Leiser fügte er hinzu: >>Das war kein Vorwurf, mir gefällt die Vorstellung.<<
+>>Was flüstert ihr da?<<, fragte Mareike amüsiert.
+In Laras Kopf drehte sich ein Karussell. Dachte ihre Freundin etwa, dass sie flirteten? Aber irgendwie taten sie das ja auch… Wenn auch auf eine seltsame Art und Weise. >>Mir gefällt die Vorstellung<<, leuchtete in ihrem Kopf auf. Der reale Nick wurde dem aus ihrer Fantasie zum Verwechseln ähnlich. Aber es war eine Fantasie gewesen. Eine Fantasie ist etwas Anderes. In ihrer Fantasie hatte Lara aus reiner Erregung bestanden, jetzt raste ihr Herz vor Aufregung.
+>>Ich hab Lara nur gefragt, ob sie öfter hier ist.<< Nicks Stimme troff vor Ironie.
+Eine Berührung an ihrem Oberschenkel ließ Laras Herz für einen Moment aussetzen. Nick war näher zu ihr gerückt. Es war sein nackter Oberschenkel, der nun den ihren berührte.
+>>Aaah ja. Nun, vermutlich wird sie ab jetzt jeden Tag hier sein<<, lachte Mareike. >>Dann lass ich euch zwei Turteltauben mal alleine. Ab zum zweiten Aufguss.<<
+Lara stierte ihrer Freundin mit großen Augen nach. Sie konnte sie doch jetzt nicht alleine lassen. Wieso ging sie? Und wieso überhaupt fiel sie ihr so in den Rücken?
+>>Deine Freundin ist schon speziell<<, durchbrach Nick das Schweigen mit einem Schmunzeln.
+>>Ja, manchmal überrascht sie sogar mich<<, antwortete Lara abwesend. Ihre Aufmerksamkeit richtete sich vollkommen auf die fremde Haut, die ihren Oberschenkel berührte.
+Auf einmal drehte Nick ihr sein Gesicht zu. Lara blickte in seine dunklen, von Wasserdampf umwölkten Augen.
+>>Ich hab dir nicht ganz die Wahrheit gesagt, als ich zu dir ins Becken stieg.<< Nicks Gesicht kam näher. Lara konnte sich nicht bewegen. Wie hypnotisiert hing sie an den fremden Lippen. >>Mir ist die Sauna nicht zu heiß gewesen. Ich hatte dich im Vorbeigehen bemerkt und du hast mir so gut gefallen… Aber ich hab dich nicht stören wollen, bei dem, was du… Aber dann… Lara, ich würde dich gern küssen.<<
+Sie registrierte, dass Nicks letzter Satz eigentlich eine Frage gewesen war. Aber Lara war überfordert. Sie schaute von links nach rechts, von rechts nach links, wieder in die Augen von Nick, die ihr jetzt so nahe waren. Sie wusste nicht, ob sie ihn küssen wollte. Er war ein Fremder, komplett nackt wie sie selbst in einer öffentlichen Therme. Jederzeit konnte jemand in das Solebecken kommen.
+Finger glitten um ihren Nacken, fanden ihren Hinterkopf. Dann sah Lara nur noch Nicks Lippen – bevor sie die Augen schloss.
+Sein Kuss entzündete ein Feuer in ihr. Lara vergaß wo sie war, wer sie war. Da war nur noch das warme Wasser, die kühle Luft und Nicks Kuss. Der Kuss eines fremden Mannes, den nichts weiter als Wasser von ihrem Körper trennte. Lara glitt zurück in ihre Fantasie. Sie wollte Nick jetzt.
+Und Nick verstand. Er drückte sie gegen den Beckenrand. Seine Hände wanderten ihren Hals hinab, zeichneten eine Linie zwischen ihren Brüsten zu ihrem Bauch und fassten ihre Taille. Lara wurde angehoben, ihre Füße verloren den Kontakt zum Boden und sie lehnte sich bereitwillig nach hinten, öffnete sich dem fremden Mann, der zwischen ihre Schenkel trat.
+Eine seiner Hände löste sich. Finger strichen sanft zu ihrer Scham, umspielten ihre Lippen, kniffen drückten, pressten.
+Lara löste sich aus Nicks Kuss und stöhnte leise.
+Ein Finger glitt in ihre Spalte und fand ihre vorspringende Perle. Lara stöhnte lauter.
+>>Schhht<<, machte Nick, während sein Finger ihren Kitzler zu umkreisen begann.
+Zu dem Finger gesellte sich etwas Anderes. Lara spürte Nicks hartes Glied an ihren Schamlippen.
+Sie hatte eine Kupferkette, sie verhütete, aber… In diesem Moment war es ihr egal. Sie wollte seine Härte in sich spüren.
+Nick verharrte, wartete auf Widerspruch, der nicht kam und deutete als Einverständnis. Er erhöhte den Druck und sein Penisschob sich in Lara. Sie seufzte auf. Nick glitt Zentimeter für Zentimeter in sie, bis kein Platz mehr für seinen Finger war.
+
+Lara klammerte sich an den muskulösen Körper, schlang ihre Beine um seine Taille. Dann spürte sie seine Stöße, die tief bis zu ihrem Muttermund drangen. Erst schmerzte es ein wenig, doch mehr und mehr überrollten sie Wellen der Lust.
+Nick trat nach links und Lara spürte den Wasserstrahl über ihre Pofalte wandern.
+>>Höher oder tiefer<<, flüsterte Nick ihr ins Ohr, während er sie langsam weiter stieß.
+Was meinte… Der Wasserstrahl. >>Tiefer…<<
+Lara sank mit Nick hinab, bis der Wasserstrahl in ihre Poritze und genau auf ihren Anus drückte. Sie keuchte und öffnete die Augen. Die Sterne bewegten sich im Takt von Nicks Stößen.
+Er wurde fordernder. Nick fickte sie gegen den Wasserstrahl, der ihren Anus besser als jeder Finger, jede Zunge massierte. Die Wellen wurden zu einem Orkan, der in ihr tobte, gespeist von dem Gedanken, dass sie es mit einem fremden Mann in einem öffentlichen Solebecken trieb.
+Plötzlich drehte Nick Lara herum und drückte sie auf den Wasserstrahl. Dann war er hinter ihr. Sie spürte seinen Schwanz erneut in sie eindringen. Laras Kopf wurde in ihren Nacken gezogen. Sie fühlte seine Lippen auf ihrem Hals, auf ihren Lippen. Sie reckte sich ihm entgegen.
+Sie küssten sich, wild, leidenschaftlich. Nicks Arme gingen ein Bündnis mit dem Wasser ein, hielten Lara eng umschlungen. Sie konnte nichts tun, als sich mit ihren Fingern in den Beckenrand zu krallen.
+Und dann war da Nicks Schwanz, der auf Laras G-Punkt drückte, während der Wasserstrahl unbarmherzig auf ihre Lustperle trommelte.
+Lara wurde überrollt. Ihr Orgasmus kam schnell und unkontrolliert. Ein Sturm, der ihren Körper krampfen ließ. Nicks Kuss verhinderte, dass sie ihre Lust hinausstöhnte. Stattdessen gab sie erstickte Laute von sich, die sie selbst kaum wahrnahm.
+Und noch während Laras Körper krampfte, nahm Nick seine Stöße wieder auf.
+>>Verhütest du?<<, flüsterte er ihr ins Ohr.
+>>Ja<<, hauchte Lara. >>Komm in mir.<<
+Lara spürte Nicks Hände auf ihren Brüsten. Immer noch wurde ihr Körper von wohligen Schauern geschüttelt. Seine Stöße wurden gröber, sie hörte ihn keuchen. Ein unterdrücktes Stöhnen und dann flutete sein Sperma ihren Unterleib.
+Nick hielt Lara noch einen Moment umschlungen, bis sein Schwanz an Größe verlor. Dann spürte sie seine Lippen auf ihrem Hinterkopf, er entzog sich ihr.
+>>Ich bin jeden Dienstag hier…<<, flüsterte er.
+Sein Griff löste sich. Lara schloss ihre Augen wieder und legte ihren Kopf auf die kühlen Fliesen des Beckenrandes. Sie wusste, dass er verschwunden war.
+Irgendwo klapperte eine Tür. Stimmen, Gelächter, dann ein Plätschern.
+>>Wo ist denn der heiße Typ hin, sag nicht du hast ihn vergrault?<<
+Lara hob den Kopf und sah in das wissbegierige Gesicht ihrer Freundin. >>Vielleicht sehe ich ihn wieder – nächsten Dienstag.<<`
+            },
+            {
+              title: "Zwischen den Reben",
+              teaser: "Drei Jahre nach ihrer Trennung treffen Mara und Jakob bei der Weinlese wieder aufeinander – und alte Gefühle sind noch lange nicht vergessen.",
+              date: "29. Oktober 2026",
+              text: `Als Mara ihn zwischen den Rebzeilen wiedersah, hielt sie die Leseschere fest umklammert. Diesen Moment hatte sie gefürchtet – drei Jahre waren vergangen, seit sie das letzte Mal bei der Weinlese ihrer Eltern geholfen hatte. Drei Jahre, in denen sie sich nicht gesehen, gehört und berührt hatten.
+
+Jakob stand einige Rebstöcke weiter, eine leere Lesekiste unter dem Arm. Sein Haar war kürzer als damals, seine Schultern wirkten breiter. Nur die Art, wie er sie ansah, hatte sich nicht verändert: Ruhig, aufmerksam und ein wenig zu lange schaute er zu ihr herüber.
+
+„Du bist also doch gekommen“, sagte er.
+
+Mara setzte die Schere an den Stiel. „Ich hatte zugesagt.“
+
+„Das hat Dich früher nicht aufgehalten, andere Pläne zu machen.“
+
+Der Schnitt ging daneben. Eine einzelne Beere platzte zwischen ihren Fingern und hinterließ klebrigen Saft auf ihrer Haut.
+
+„Fangen wir gleich so an?“
+
+„Wir haben drei Jahre verloren. Ich dachte, wir sparen diesmal Zeit.“
+
+Bevor sie antworten konnte, stellte Jakob die Kiste zwischen ihnen ab. „Die hier nur halb voll machen. Sonst werden die Trauben unten zerdrückt.“
+
+„Ich weiß noch, wie eine Weinlese funktioniert.“
+
+„Gut.“ Sein Blick glitt zu ihrer Hand. „Dann muss ich Dir das nicht noch einmal beibringen.“
+
+Er ging weiter, als hätte er nichts gesagt. Mara sah ihm nach und ärgerte sich darüber, wie schnell ihr Körper sich an ihn erinnerte. Sie spürte den Adrenalinrausch, auch zwischen ihren Beinen.
+
+Die Sonne stand inzwischen hoch genug, um den belebten Weinberg in ein gleißendes Licht zu tauchen. Überall raschelten Blätter, Eimer wurden geleert. Der Duft reifer Trauben mischte sich mit dem von trockener Erde und dem Gras zwischen den Zeilen.
+
+Mara kniete vor einem Rebstock und hob die Blätter an. Die Trauben hingen dicht und schwer darunter. Sie schnitt eine nach der anderen ab, prüfte das Lesegut und entfernte beschädigte Beeren. Als sie sich aufrichtete, stand Jakob direkt hinter ihr.
+
+„Lass mich vorbei“, sagte er.
+
+„Die nächste Zeile ist frei.“
+
+„Aber meine Kiste steht hier.“
+
+Er legte eine Hand an ihre Hüfte und schob sich hinter ihr entlang. Es war kaum mehr als eine flüchtige Berührung. Trotzdem spürte sie jeden einzelnen Finger durch den dünnen Stoff ihres Shirts.
+
+„Absicht?“, fragte sie, ohne sich umzudrehen.
+
+Sein Atem streifte ihren Nacken. „Du warst im Weg.“
+
+„Natürlich.“
+
+„Du könntest Dich beschweren.“
+
+„Bei wem? Dem Kellermeister?“, fragte sie ungläubig.
+
+„Weiß Dein Vater immer noch nicht, dass wir uns gut … kennen?“
+
+Jetzt wandte sie sich zu ihm. Zwischen ihnen war kaum Platz. Auf Jakobs Unterarm glänzte eine Spur aus Staub und Traubensaft. Mara wusste noch genau, wie sich diese Arme angefühlt hatten, wenn er sie hochhob. Wie leicht es ihm gefallen war, sie festzuhalten.
+
+„Was willst Du von mir?“, flüsterte sie.
+
+„Dass Du nicht noch einmal einfach so aus meinem Leben verschwindest.“
+
+Auch sein Ton war leise geworden. Mara senkte den Blick und griff nach ihrem Eimer.
+
+„Wir sollten weiterarbeiten.“
+
+„Ja“, sagte Jakob. „Das sollten wir.“
+
+„“
+Am Abend brachten sie die letzten Lesekisten zum Weingut. Ihre Schultern schmerzten, an ihren Knien klebte Erde und ihre Finger waren dunkel verfärbt. Im Hof wurden lange Tische aufgestellt. Es gab Brot, Käse, Zwiebelkuchen und den ersten Federweißer der Saison. Jemand schaltete Musik ein. Mit jedem Glas wurden die Stimmen lauter und das Lachen ausgelassener.
+
+Mara saß zwischen ihrem Bruder und einer Nachbarin, doch sie spürte Jakob auf der anderen Seite des Tisches, ohne hinsehen zu müssen. Manchmal trafen sich ihre Blicke über den Gläsern. Keiner von beiden lächelte.
+
+Erst als die Dämmerung längst über den Weinbergen lag, trat er neben sie.
+
+„Deine Jacke ist noch oben in der Hütte.“
+
+Mara sah auf den Stuhl neben sich. Tatsächlich war er leer.
+
+„Woher weißt Du das?“
+
+„Weil ich sie dort hingelegt habe.“
+
+„Warum?“
+
+„Damit Du mitkommst.“
+
+So unverhohlen war er früher nie gewesen. Vielleicht war genau das der Grund, weshalb sie aufstand und mit ihm ging. Sie trabten schweigend den Hang hinauf. Hinter ihnen wurden die Stimmen leiser, bis nur noch das Knirschen ihrer Schritte und das Rascheln der Reben zu hören waren. Die Luft war kühl geworden.
+
+Die Weinberghütte stand am höchsten Punkt des Hangs. Jakob öffnete die Tür und schaltete eine kleine Lampe an. Ihr warmes Licht fiel auf eine schmale Holzbank, ein Regal mit alten Gläsern und Maras Jacke, die über einer Stuhllehne hing. Sie nahm sie nicht.
+
+„Du hast mich hergelockt“, sagte sie.
+
+Jakob blieb an der Tür stehen. Er kam nicht näher, bis Mara selbst einen Schritt auf ihn zuging.
+
+„Warum bist Du damals gegangen?“, fragte er.
+
+„Weil Du mich nie gebeten hast zu bleiben.“
+
+„Du hattest den Koffer schon gepackt, als ich von Deinen Umzugsplänen erfahren habe.“
+
+„Ich wollte, dass Du es trotzdem tust.“
+
+Er lachte kurz auf, aber es lag nichts Fröhliches darin. „Ich wollte nicht der Mann sein, der Dich von Deinem Leben abhält.“
+
+„Und ich wollte nicht die Frau sein, die um einen Platz in Deinem bettelt.“
+
+Für einige Sekunden sahen sie einander nur an.
+
+„Wir waren ziemlich dumm“, sagte er schließlich.
+
+Mara wollte etwas erwidern, doch Jakob hob die Hand. Seine Finger strichen über ihre Wange. Sie legte ihre Hand um sein Handgelenk.
+
+„Wenn ich Dich jetzt küsse“, sagte er, „will ich nicht wieder raten müssen, was Du möchtest.“
+
+Ihr Puls schlug hart gegen seine Finger: „Dann frag.“
+
+Sein Blick fiel auf ihren Mund. „Darf ich Dich küssen?“
+
+Er ließ sich Zeit. Sein erster Kuss war weich, beinahe prüfend. Erst als Mara seine Jacke packte und ihn näher zog, öffnete er die Lippen. Seine Zunge strich über ihre, langsam und warm.
+
+Jakob drängte sie nicht. Er hielt eine Hand an ihrem Nacken, die andere ruhte an ihrer Taille. Mara spürte die Wärme seiner Finger durch das Shirt. Sie schob ihre Hände darunter und fuhr über seinen Rücken. Seine Haut war heiß, die Muskeln darunter angespannt.
+
+„Du riechst sexy“, murmelte er an ihrem Hals.
+
+Sein Mund glitt darüber und er biss sanft in die empfindliche Haut unter ihrem Ohr. Mara sog scharf die Luft ein und zog ihm das Shirt über den Kopf. Für einen Augenblick betrachtete sie ihn im gedämpften Licht: die Brust, die dunklen Haare darauf, die schmale Narbe an seiner Seite. Dann strich sie mit den Fingerspitzen darüber – noch wie damals.
+
+Mara küsste ihn wieder. Diesmal gab es nichts Zögerndes mehr daran. Jakob schob ihr Shirt hoch und wartete, bis sie die Arme hob. Seine Hände glitten über ihre nackte Taille, ihren Rücken, hinauf zu ihren Brüsten. Als seine Daumen über ihre harten Brustwarzen strichen, entwich ihr ein leises Stöhnen.
+
+„Das habe ich vermisst“, sagte er. „Dieses Geräusch.“
+
+Sie schlug ihm spielerisch gegen die Schulter. Er fing ihre Hand ab, führte sie an seinen Mund und küsste ihre Finger. An einer haftete noch der süße Geschmack der Trauben. Seine Zunge strich darüber, und Mara spürte die Hitze zwischen ihren Schenkeln.
+
+„Jakob.“
+
+Er sah sie an. „Was möchtest Du?“
+
+Mara nahm seine Hand und führte sie zum Bund ihrer Jeans. „Dass Du mich nicht länger teast.“
+
+Diese Worte hatte er herbeigesehnt. Er fand den Knopf ihrer Hose, ohne den Blick von ihr zu lösen. Seine Finger glitten unter den Stoff, erst über ihren Bauch, dann tiefer. Als er ihre feuchte Vulva berührte, musste sie sich an seinen Schultern festhalten.
+
+„Du weißt genau, wie.“
+
+„Ich weiß, wie es früher war.“
+
+Seine Finger strichen langsam zwischen ihren Lippen entlang. Mara legte ihre Hand über seine und führte sie dorthin, wo sie ihn am stärksten spüren wollte. Jakob begann, ihre Klitoris in langsamen Kreisen zu streicheln. Genau in dem Rhythmus, den sie ihm vorgab. Ihr Atem ging schneller. Sie schob die Jeans über ihren Po und er sank vor ihr auf die Knie.
+
+Sein Mund folgte seinen Fingern. Mara lehnte sich gegen die Holzwand. Seine Zunge glitt über ihre Klitoris, erst sanft, dann mit festerem Druck. Ihre Finger vergruben sich in seinem Haar. Sie versuchte, leise zu bleiben, doch als er zwei Finger in sie gleiten ließ, brach ein Stöhnen aus ihr heraus.
+
+„Nicht aufhören“, flüsterte sie.
+
+Jakob antwortete nicht.
+
+Die Spannung zog sich in ihrem Unterleib immer enger zusammen. Einen Fuß hatte sie inzwischen auf die kleine Holzbank gestellt. Sie bewegte ihre Hüften gegen seinen Mund, schneller, fordernder. Jakob packte sie zugleich fester am Po, als wolle er sichergehen, dass sich beide nicht voneinander lösen können, bevor die große Erlösung kam. Mara schaute an sich herunter – seinen Mund so hingebungsvoll lecken zu sehen, gab ihr den Rest. Ihr ganzer Körper bebte, als die Lust sie schließlich durchschüttelte.
+
+Danach blieb er noch einen Moment vor ihr knien. Er küsste die Innenseite ihres Oberschenkels und sah zu ihr auf. Mara zog ihn hoch.
+
+„“
+Sie ließ sich Zeit, um wieder zu sich zu finden. Für einen langen Moment hielten sie sich nur im Arm. Dann öffnete Mara seinen Gürtel und schob die Hand in seine Hose. Sein Penis war noch immer hart und heiß. Sie strich mit der Hand über seinen Schaft und beobachtete unverhohlen, wie sich sein Gesicht veränderte. Dann holte Jakob eine Decke aus dem Regal und breitete sie auf der Bank aus. Aus seiner Jackentasche nahm er ein Kondom.
+
+Mara hob eine Augenbraue. „Du warst Dir Deiner Sache ziemlich sicher.“
+
+„Ich war hoffnungsvoll.“
+
+Sie lachte, zog ihn zu sich und küsste ihn, während er das Kondom überstreifte. Dann legte sie sich zurück und zog ihn zwischen ihre Schenkel.
+
+„Sag es“, bat er.
+
+Mara sah ihm direkt in die Augen. „Ich will Dich.“
+
+Er drang langsam in sie ein. Sie schlang die Beine um seine Hüften und zog ihn tiefer. Für einen Moment bewegten sie sich kaum. Sie spürte sein Gewicht, seinen Atem an ihrem Mund und das volle, vertraute Gefühl in ihrem Körper.
+
+Dann begann er, seine Hüften zu bewegen.
+
+Die Holzbank knarrte unter ihnen. Von draußen am Hang drangen gedämpfte Musik und Gelächter herauf, doch in der Hütte gab es nur Jakobs Hände, seinen Mund und den Rhythmus, mit dem er immer wieder in sie stieß. Mara hob ihm die Hüften entgegen. Sie küsste seinen Hals, biss in seine Schulter und genoss das raue Geräusch, das ihm dabei entkam.
+
+„Härter“, flüsterte sie.
+
+Jakob folgte ihrer Bitte. Seine Stöße wurden tiefer, schneller. Er schob eine Hand zwischen ihre Körper und strich erneut über ihre Klitoris. Erst sachte, dann, als Mara sich an das Gefühl gewöhnt hatte, immer fester. Mara klammerte sich an ihm fest, bis sie ein zweites Mal kam. Diesmal vergrub sie das Gesicht an seinem Hals, um ihren Schrei zu dämpfen.
+
+Kurz darauf spannte sich sein Körper über ihr an. Er stöhnte ihren Namen und blieb schwer atmend auf ihr liegen.
+
+Draußen fuhr der Wind durch die Rebzeilen. Ein paar trockene Blätter schienen sich schon gelöst zu haben und kratzten über das Dach. Jakob zog die zweite Decke über sie und strich Mara eine Haarsträhne aus der Stirn.
+
+„Du gehst morgen wieder“, sagte er.
+
+Es war keine Frage. Mara sah durch das kleine Fenster hinunter zum erleuchteten Weingut. Dann wandte sie sich ihm zu.
+
+„Morgen helfe ich erst beim Entrappen.“
+
+„Und danach?“
+
+Sie küsste ihn langsam.
+
+„Diesmal“, sagte sie, „kannst Du mich fragen, ob ich bleibe.“
+
+Jakob lächelte. „Bleibst Du?“
+
+Mara zog ihn wieder zu sich.
+
+„Ja.“`
+            },
+            {
+              title: "Nächte auf der Dachterrasse",
+              teaser: "Ein leerer Pool, ein Urlaub auf einer Insel und zwei Menschen, zwischen denen die Spannung längst nicht mehr zu übersehen ist.",
+              text: "Der Pool auf dem Dach des Hotels war komplett leer. Unten in der Stadt waren entfernt Autos von der Hauptstraße zu hören, aber hier oben hörte man vor allem das leise Brummen der Filteranlage und das Wasser, das gegen den Beckenrand schwappte.\n\nSie saßen zuerst einfach nebeneinander im Wasser, das sich von der gleißenden Sonne des Tages aufgeheizt hatte. Beide hielten einen Drink in der Hand, den der Barkeeper von drinnen ihnen in einem viel zu großen Plastikglas überreicht hatte. Als die damit auf die Dachterrasse gegangen waren, hatten sie deshalb unweigerlich in prustendes Gelächter ausbrechen müssen.\n\nSchon auf dem Boot, das die zwei vom Festland zur Insel gebracht hatte, war beiden klar, dass sie auf der gleichen Wellenlänge lagen. Als sich John schließlich getraut hatte, Anna beim Aussteigen anzusprechen, hatten sie direkt herausgefunden, dass sie im gleichen Hotel schlafen würden. Von da an war die Spannung zwischen ihnen nicht mehr zu übersehen. Die beiden hatten sich daraufhin zum Abendessen verabredet. Lachen, kleine Blicke, dann eine Hand auf seinem Knie. Das langsame Überkreuzen ihrer Beine am Tisch. Sie wussten, dass der Abend noch viel für sie bereithielt.\n\nIhr schwarzer Bikini war durchnässt und klebte an ihrem Körper. Die Träger lagen schief auf ihren Schultern, ihre Haare waren feucht, ihr Make-up hatte sie schon im Hotelzimmer abgewaschen. Nach einem letzten großen Schluck aus dem albernen Clowns-Glas tauchte er seinen warmen Körper ins Wasser. Ihre Augen weiteten sich für einen Moment, als er wieder auftauchte, dann lächelte sie. Sie schaute gern auf seine tätowierten Schultern und Arme, die sich ihrer feuchten Haut nun näherten.\n\nDann küsste er sie. Erst zart, dass sich gerade einmal die Lippen berührten. Sie atmete spürbar aus. Den ganzen Tag hatte sie sich diesen Moment bereits vorgestellt – und gemerkt, dass sie allein beim Gedanken an ein kleines Urlaubsabenteuer mit ihm unruhig wurde. Schon die kleinen Flirtereien im Restaurant hatten sie feucht gemacht.\n\nSie erwiderte den Kuss, griff sachte an seinen Nacken und zog ihn dadurch näher zu sich. Das Wasser bewegte sich um ihre Körper, während sie sich enger aneinander drückten. Ihre Schenkel streiften sich unter Wasser, woraufhin er sie mit den Händen um ihre Hüften auf seinen Schoß zog. Sie küsste ihn wieder. Intensiver diesmal. Ihre Vulva pulsierte bei dem Gedanken, dass sie bereits auf seinem Schwanz saß. Sie konnte ihn spüren, immer drängender und härter.\n\nAls sie sich kurz von ihm löste, um in seine Augen zu schauen, biss sie sich unweigerlich auf die Unterlippe. Sein Blick war zuckersüß … Sie verstand sofort, dass er – wie sie – zu allem bereit war. Anna rutschte von seinem Schoß und zog John an den Händen sanft in den dunkleren Teil des Pools. Dort war das Wasser etwas tiefer, kaum Licht fiel hinüber. Hier würde sie auf den ersten Blick niemand bemerken, wenn sie sich ruhig verhielten.\n\nJetzt wurden beide direkter. Seine Hand glitt über ihre Oberschenkel, hoch zum Rücken und zu den Bändern ihres Oberteils. Beide schauten sich tief in die Augen, als er beide Knoten des Triangel-Tops löste – erst als ihre Brüste zum Vorschein kamen, konnte er nicht widerstehen und zuschauen, wie das Wasser über sie schwappte. Ein fast unhörbarer Seufzer und Anna spürte, wie die Beule in seiner Schwimmhose an ihr Bein stieß. Ihre Hände wanderten hinunter, lösten auch hier das Band, sodass sich die Hose herunterschieben ließ. Sein harter Schaft sprang hervor und sie griff ihn, um ihn langsam mit den Fingerspitzen zu streicheln.\n\nIhre Hüften berührten sich, dann nahm sie seine Hand unter Wasser und führte sie zu ihrer Öffnung. Er zog hörbar die Luft ein, als er ihre Nässe und die weichen, vor Erregung geschwollenen Lippen ihrer Vulva spürte. Das warme Wasser machte jede Berührung langsamer, intensiver und auch irgendwie verbotener.\n\nMit der Hand an ihrer Clit küsste er ihren Hals und spürte sofort, wie ihr Körper reagierte. Ihre Finger krallten sich in seine Schultern und sie drückte ihre Hüften leicht gegen ihn. Mit ihren Händen öffnete sie die seitlichen Knoten ihres Bikini-Unterteils. Ihre Augen trafen sich erneut – beide waren sich einig. Er drang langsam in sie ein, erst nur die heiße Spitze seines Penis, dann schließlich auch der harte Schaft. Dabei verstärkte ein intensiver Kuss ihr Verlangen nacheinander noch weiter.\n\nDas Wasser bewegte sich sanft um sie herum. Schon kleine Bewegungen genügten ihnen, um den Moment voll auszukosten. Ihre Unterarme lagen ruhig auf dem Beckenrand, während er ihre Hüften sachte im Wasser auf und ab führte. Ihr Körper drängte zu ihm, sodass sein Penis ganz in ihr Platz fand. So tief … Jetzt aufhören? Undenkbar. Niemand würde sie hier so spät noch sehen.\n\nIhre Hand massierte ihre Clit, während sie sein gleichmäßiges Stoßen genoss. Beiden gefiel, wie scharf sie sich machen konnten – und als ein Kommen unausweichlich war, schauten sie sich tief in die Augen. Gemeinsam still zum Höhepunkt. Ihre Körper stockten, während kleine Wellen um sie herum brachen. Da wussten sie: Diesen Urlaub würden sie niemals vergessen.",
+              date: "29. Oktober 2026"
+            },
+            {
+              title: "Weihnachtszauber im Tannenwald",
+              teaser: "Ein Weihnachtsbaum-Ausflug im verschneiten Wald nimmt für Line und Julian eine unerwartet leidenschaftliche Wendung.",
+              text: "Der Plan war eigentlich ganz simpel gewesen: Weihnachtsbaum holen, zurück nach Hause, Glühwein auf. Doch sobald sie den Wald betreten hatten, zeigte sich: Line und Julian würden wohl doch wieder mehr Zeit hier verbringen, als es ihnen bei frostigen –4 Grad lieb war.\n\n„Warum gibt es hier eigentlich tausend Bäume, aber keinen richtig schönen?“, fragte sie und blieb stehen. Er sah sich um.\n„Die sehen alle gleich aus.“\n„Stimmt doch gar nicht! Guck mal, der hat eine krumme Spitze, der ist größer gewachsen, hier ist das Unterteil schön buschig …“\n„Lol.“\n„Du und Deine dirty Gedanken, ey!“, lachte Line und knuffte Julian in die Seite.\n\nSie stapften weiter durch den Schnee. Ihre Nase war kalt, ihre Zehen langsam taub, aber irgendwie war die Stimmung gut. Dieses entspannte Zusammensein, ohne Termine, ohne Handyempfang. Nur sie, er und die Qual der Wahl.\n\n„Okay, der hier ist ganz süß“, sagte sie.\nEr schüttelte den Kopf. „Der sieht aus, als hätte er Stress.“\n„Ich erkenne mich wieder.“\n\nSie lachten und gingen weiter. Die Stimmen der anderen Paare, die auch im Wald waren, um ihren eigenen Baum zu schlagen, wurden leiser. Obwohl es noch nicht einmal 16 Uhr war, dämmerte es schon – die meisten hatten sich wohl ohnehin schon für ein Exemplar entschieden und machten sich auf den Weg zur Kasse.\n\nSie zog die Handschuhe aus. „Ich kann meine Finger nicht mehr fühlen.“\n„Willst du tauschen? Meine Handschuhe sind dicker.“\n„Nein. Wärm sie.“\n\nEr nahm ihre Hände, rieb sie langsam zwischen seinen. Line sah ihn an. Da war er wieder, dieser Blick, der sagte: *Ich weiß genau, was Du gerade denkst.*\n\n„Wir sind immer noch auf öffentlichem Gelände“, murmelte sie.\n„Als wäre das ein Argument gegen irgendwas.“\n\nSie blieb stehen.\n„Ich brauch’ eine Pause.“\n„Von was?“\n„Vom Bäume bewerten.“\n\nJulian trat näher. Seine warme Hand schob sich nun unter ihre Jacke.\n„Und was machen wir stattdessen?“\n„Improvisieren.“\n\nDer Kuss kam nicht überraschend, aber er traf sie trotzdem mit voller Wucht. Nicht dieses vorsichtige Antesten, sondern sofort dieses Ja, genau so. Seine Lippen waren warm und entschlossen, als hätte er nur auf diesen Moment gewartet. Sie stieß ein leises Geräusch aus, halb Lachen, halb Ausatmen, und zog ihn näher an sich.\n\nSie ging einen Schritt zurück, er folgte.\n„Das ist wirklich kein guter Ort“, sagte sie.\n„Sag mir einen besseren“, antwortete er und legte die Hände an ihre Hüften.\n\nSie seufzte gespielt und schloss kurz die Augen.\n„Stimmt auch wieder.“\n\nSchnee rieselte von den Zweigen, irgendwo knackte ein Ast. Der Wald, die Kälte, der ursprüngliche Plan – alles um sie herum schien plötzlich unwichtig.\n\n„Wir haben maximal fünf Minuten“, sagte sie.\n„Wenn Du das sagst …“\n\nEr küsste sie wieder, diesmal langsamer, tiefer, als würde er sich jede ihrer Reaktionen genau merken wollen. Seine Hände wanderten zielstrebig, öffneten den Reißverschluss der Jacke und glitten über ihre Brüste. Line spürte nun das vertraute Ziehen, das ihr signalisierte, dass sie mehr wollte – auch ihre Hände zog es nun an Julians Körper.\n\nSie griff nach seinem Mantel, zog ihn näher, spürte die Wölbung in seiner Jeans.\n„Hartholz, hm? Was, wenn uns jemand sieht?“\n„Dann hören wir sofort auf.“\nSie sah ihn an. „Lügner.“\nEr grinste. „Vielleicht.“\n\nSie führte ihn hinter eine besonders breite Tanne, öffnete ihre Hose und ließ ihre Hand ins Höschen gleiten – ihre Finger fühlten sich sofort feucht an.\n„Fühl mal, was Du mit mir machst“, sagte Line und führte ihre Hand in seine Hose.\n„Mein Gott, Du machst mich wahnsinnig. Zieh die Hose aus und dreh Dich sofort um!“\n\nDas ließ sich Line nicht zweimal sagen. Sie stellte sich breiter hin, zog Julian an den Handgelenken näher zu sich. Der hatte bereits seinen harten Penis aus der Shorts geholt. Beide atmeten schneller.\n„Das ist so dumm.“\n„Ein Wort von Dir und ich zieh die Hose wieder hoch, ich schwöre.“\n\nStattdessen packte sie seinen Penis und führte ihn zu ihrer feuchten Vulva.\n„Gib’s mir, ja?“\n\nAlles fühlte sich intensiver an als sonst: jede Berührung, jedes Geräusch, jedes Einatmen.\n„Du genießt das viel zu sehr“, flüsterte Julian, während er nun immer wieder von hinten in sie stieß.\n„Du doch auch“, keuchte sie, dabei fingerte sie ihre Clit. Sie liebte dieses Gefühl von Spontaneität.\n\nSowohl ihre Hand als auch seine Stöße wurden schneller – nun flüsterten sie sich nichts mehr zu, sondern signalisierten mit ihrem Atmen, dass sie gleich explodieren würden.\n\nWährend Line am Höhepunkt völlig verstummte, entfuhr Julian ein stumpfes Grollen. Das war es – der vollkommene Moment der Erlösung. Er fing sich schneller, hielt sie erst von hinten und drehte sie dann zu sich in seinen Arm. Ihre Stirn fiel gegen seine, sie lachte leise.\n„Nicht loslassen.“\n„Keine Sorge.“\n„Wir sollten wirklich …“, begann er.\n„Ich weiß“, sagte sie. „Gleich.“\n\nSie ließen sich Zeit beim Anziehen und Wiederordnen der Haare, Unterwäsche und Jacken. Ihre Mützen, die im Schnee gelandet waren, waren zum Glück noch nicht nass.\n\n„Wir sehen aus, als hätten wir uns um den schönsten Baum geprügelt.“\n„Oder sehr gut verstanden.“\n\nSie lachten leise, fast erleichtert.\n\n„Okay“, sagte sie schließlich. „Jetzt wirklich Weihnachtsbaum.“\n„Jetzt oder nie.“\n\nDer perfekte Baum war schnell gefunden. Nicht symmetrisch, aber solide.\n\n„Der hat was“, sagte sie.\n„Du meinst Charakter.“\n„Ich meine Erinnerungspotenzial.“",
+              date: "29. Oktober 2026"
+            },
+            {
+              title: "Die Lichtung der gefrorenen Zeit",
+              teaser: "Lena, Nina und Ben suchen im verschneiten Wald nach einer sagenhaften Lichtung – und erleben dort einen Moment außerhalb der Zeit.",
+              text: "Der Wind heulte durch die vereisten Baumkronen, während die Schneeflocken in dichten Spiralen vom Himmel tanzten. Der Weg durch den Wald war beschwerlich, doch sie waren entschlossen, weiterzugehen. Sie hatten von dieser Lichtung gelesen – in einem alten Buch aus der örtlichen Bibliothek, in der von Mythen und Legenden der Region die Rede war. „Die Lichtung der gefrorenen Zeit“, hieß es dort. Ein Ort, an dem die Zeit stillstand und von der die Menschen mit einem Lächeln, aber keinerlei Erinnerung an das Geschehene zurückkehrten.\n\nLena war fasziniert von dem Mythos. Sie hatte jede Zeile auf den vergilbten Buchseiten förmlich aufgesogen und war überzeugt, dass an der Geschichte mehr dran sein musste. „Ein Fünkchen Wahrheit steckt doch in jeder Legende.“\n\nIhr Kumpel Ben hingegen hielt dagegen alles für Unsinn. „Nur eine alte Legende“, hatte er gesagt, während er sich etwas widerwillig in seinen Schal wickelte und in die Winterschuhe stieg. „Warum sollten wir mitten in einem Schneesturm nach etwas suchen, das gar nicht existiert?“\n\nFreundin Nina war unentschlossen. Aber wenn es doch etwas Übernatürliches gab, wollte sie es mit eigenen Augen sehen: „Wenn es nur ein Märchen ist, dann haben wir wenigstens ein Abenteuer gehabt“. Sie knuffte Ben motivierend in die Seite und schob ihn aus der Tür.\n\nNach einem halbstündigen Spaziergang durch den angrenzenden Wald fanden sie das halb im Schnee versunkene Holzschild: „Lichtung der gefrorenen Zeit.“ „Süß, hat das der Ortsverein hier hingestellt? Ne richtige Tourist Trap mit dem Namen!“, witzelte Ben, während Lena und Nina über seinen zynischen Kommentar die Augen verdrehten. Als sie die Bäume hinter sich ließen, geschah jedoch etwas, das auch Ben den Atem stocken ließ. Die Luft wurde plötzlich frühlingswarm, der Wind verstummte, und selbst der Schnee auf der Lichtung wirkte mit einem Mal sanft und wattig. Es war, als hätten sie einen wohligen Traum betreten, während die reale Welt hinter einem unsichtbaren Vorhang zurückblieb.\n\n„Glaubt ihr mir jetzt?“ Lena grinste triumphierend. Ihr Blick wanderte über die Lichtung und über die alten, von Raureif überzogenen Säulen eines verwitterten Pavillons. Ben schüttelte den Kopf, doch zu seinen Zweifeln gesellte sich auch Neugierde. „Es ist… anders, als ich erwartet habe.“\n\nNina trat näher, ließ ihre Finger über eine der Säulen gleiten. Ihre Haut prickelte. „Also hier soll angeblich die Zeit stillstehen?“ Sie traute es sich nicht auszusprechen, aber sie hatte nie zuvor so intensiv gespürt, wie lebendig sie war. „Ich kann es irgendwie fühlen“, flüsterte sie.\n\nLena stand hinter ihr, ihre Wärme nur einen Hauch entfernt. „Vielleicht hält die Zeit hier nicht nur an“, sagte sie leise, ihre Finger strichen sanft über Ninas Nacken. „Vielleicht macht sie uns… freier.“\n\nBen lachte trocken. „Du glaubst echt, dass das hier magisch ist? Das ist doch …“ Doch als er Lena und Nina ansah, als er fühlte, wie sich etwas in der Luft verdichtete – etwas, das durch seine Haut drang, seine Sinne anfachte – blieb ihm die Antwort im Hals stecken.\n\nNina drehte sich um, blickte zwischen ihren beiden Freunden hin und her. Ihre Wangen waren gerötet, doch nicht von der Kälte. „Vielleicht sollten wir einfach ausprobieren, was es bedeutet… wenn die Zeit nicht weiterläuft.“\n\nLena zog Ben näher, ihre Finger streiften seine Wange. „Hör auf, zu denken, Ben. Fühl einfach.“\n\nIhre Lippen fanden sich, erst vorsichtig, dann fordernd. Lenas Hände öffneten erst ihre, dann seine Winterjacke – im Augenwinkel sah sie, wie auch Nina sich auszog. Auch Ben entging dies nicht – er wandte sich zu Nina und ließ seine Finger über ihre entblößte Haut gleiten, sein Atem heiß an ihrem Hals.\n\nAuch Lenas Lippen kamen ihrer Freundin näher, fanden den sensiblen Punkt unter ihrem Ohr. Ein leises Stöhnen drang über die Lichtung, das Ben zum Anlass nahm, seine Hände etwas tiefer gleiten zu lassen.\n\nDie Lichtung schien sie nun ganz in ihren Bann zu ziehen. Ihre warmen Körper fanden sich – Haut an Haut, wärmer als die Luft um sie herum. Finger, Zungen und Lippen erforschten einander. Zu dritt hatten sie sich noch nie so vertraut gefühlt.\n\nBen zog Lena näher, ihre Lippen trafen sich mit einer Dringlichkeit, die keine Worte brauchte. Nina presste sich gegen sie, genoss die Hitze ihrer Körper, die sich aneinander rieben, während eine Hand an Bens erigiertem Penis entlang strich und die andere in ihre warme Vulva eintauchte.\n\nDer Schnee fühlte sich nicht kalt an, als Ben sich auf den Rücken legte und Lena einlud, sich auf ihn zu setzen. Schnell fanden sie einen gemeinsamen Rhythmus, der beide tiefer atmen ließ. Nina hingegen kniete sich über sein Gesicht und ließ Bens Zunge an ihr kreisen. Ihre Hände massierten Lenas füllige Brüste. In diesem Moment auf der Lichtung verschwamm alles vor ihren Augen – ihre Lust wurde tiefer, roher. Die Zeit stand still und nichts existierte mehr außer ihnen.\n\nIhre Körper bebten und als sich ihre Lust entlud, sanken alle drei ineinander, völlig verloren in der magischen Stille.\n\nIn der Lichtung der gefrorenen Zeit gab es keine Vergangenheit und keine Zukunft. Nur Berührung, Verlangen und die Gewissheit, dass sie für einen unwirklichen Moment außerhalb aller Regeln existierten. Als sie die Augen wieder öffneten, dämmerte es bereits – die Zeit hatte wieder begonnen zu fließen und die Lichtung lag still wie zuvor. „Lena? Nina? Was machen wir hier?“, flüsterte Ben. Alle drei schauten sich an und waren ratlos. „Ich weiß es nicht, aber irgendwie fühle ich mich gerade ganz verbunden mit euch …“ Lena strahlt über beide Ohren und steckt damit die anderen beiden an. Aus Nina platz es heraus: „Was auch immer hier gerade geschehen ist, ich will das unbedingt noch einmal erleben!“",
+              date: "29. Oktober 2026"
+            }
+          ]
+        }
+      },
       letters: [
         { condition: "du traurig bist" },
         { condition: "du mich vermisst" },
@@ -2678,7 +3245,7 @@
         { code: "2648",  location: "Australien – Karte ganz nah an 39.53552, 2.45450 (Mallorca) heranzoomen" },
         { code: "92920", location: "Startseite – Intro-Brief von links nach rechts entlang des oberen Randes streichen" },
         { code: "3020", location: "Süße Texte – Poesie (5% Chance): Error #C1121C → RAL-Farbcode „Verkehrsrot“ = RAL 3020" },
-        { code: "93785", location: "Briefe – 7x öffnen → Postfach-Nachricht" }
+        { code: "93785", location: "Briefe – Herzsymbol im geöffneten Zukunftsbrief anklicken" }
       ],
       photobookSecret: [
         { image: null, caption: "0x" },
@@ -2742,26 +3309,7 @@
       document.body.classList.toggle('sub-active', targetId !== 'startseite');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       if(targetId === 'startseite') letterOpened = false;
-      if(targetId === 'briefe'){
-        briefeVisitCount++;
-        if(briefeVisitCount >= 7 && !mailboxUnlocked){
-          mailboxUnlocked = true;
-          showMailbox();
-        } else if(!letterStackReady && !mailboxUnlocked){
-          setupLetterStack();
-        }
-      }
-    }
-    let briefeVisitCount = 0;
-    let mailboxUnlocked = false;
-    function showMailbox(){
-      lettersGrid.classList.remove('is-stacked');
-      lettersGrid.innerHTML = `<div class="letters-empty-view">
-        <span class="letters-empty-view__icon" id="mailboxIcon" style="cursor:pointer;">📬</span>
-        <h3 class="letters-empty-view__title">1 neue Nachricht</h3>
-        <p class="letters-empty-view__text">Dein Postfach hat sich gefüllt. Öffne die Nachricht ✨</p>
-      </div>`;
-      document.getElementById('mailboxIcon').addEventListener('click', () => showSecretCode('93785'));
+      if(targetId === 'geschichten'){ storiesCurrentCat = null; showStoriesView('categories'); }
     }
 
     /* --- Tresor (ersetzt Code 0908) --- */
@@ -3094,6 +3642,129 @@
       });
     });
 
+    /* --- Geschichten: Kategorien → Auswahl → Lesen --- */
+    const storiesPage = document.getElementById('geschichten');
+    const storiesViewEls = {
+      categories: document.getElementById('storiesCategories'),
+      list: document.getElementById('storiesList'),
+      reader: document.getElementById('storiesReaderView')
+    };
+    let storiesCurrentCat = null;
+    let storiesCurrentIndex = 0;
+    let storiesFontStep = 0;
+
+    function showStoriesView(name){
+      Object.keys(storiesViewEls).forEach(key => { storiesViewEls[key].hidden = (key !== name); });
+      storiesPage.scrollTop = 0;
+    }
+
+    function storyReadingMinutes(text){
+      const words = text.trim().split(/\s+/).filter(Boolean).length;
+      return Math.max(1, Math.round(words / 200));
+    }
+
+    function storyTeaser(story){
+      if(story.teaser) return story.teaser;
+      const flat = story.text.replace(/\s+/g, ' ').trim();
+      return flat.length > 110 ? flat.slice(0, 110).trim() + '…' : flat;
+    }
+
+    function renderStoryCategories(){
+      const list = document.getElementById('storyCatList');
+      list.innerHTML = '';
+      Object.entries(CONFIG.geschichten).forEach(([key, cat]) => {
+        const n = cat.stories.length;
+        const count = n === 0 ? 'bald mehr' : (n === 1 ? '1 Geschichte' : n + ' Geschichten');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'story-cat' + (cat.alt ? ' story-cat--alt' : '');
+        btn.innerHTML = `
+          <span class="story-cat__icon" aria-hidden="true">${cat.icon}</span>
+          <span class="story-cat__body">
+            <span class="story-cat__title">${escapeHtml(cat.title)}${cat.alt ? '<span class="story-cat__badge">18+</span>' : ''}</span>
+            <span class="story-cat__meta">${escapeHtml(cat.subtitle)} · ${count}</span>
+          </span>
+          <span class="story-cat__chev" aria-hidden="true">›</span>`;
+        btn.addEventListener('click', () => openStoryCategory(key));
+        list.appendChild(btn);
+      });
+    }
+
+    function openStoryCategory(key){
+      const cat = CONFIG.geschichten[key];
+      storiesCurrentCat = key;
+      document.getElementById('storiesListTitle').textContent = `${cat.icon} ${cat.title}`;
+      document.getElementById('storiesListIntro').textContent = cat.intro;
+      const items = document.getElementById('storyItems');
+      items.innerHTML = '';
+      if(cat.stories.length === 0){
+        items.innerHTML = `<div class="story-empty"><span class="story-empty__icon" aria-hidden="true">✨</span><strong>Hier entsteht gerade etwas</strong>Bald findest du an dieser Stelle die ersten Geschichten.</div>`;
+      } else {
+        cat.stories.forEach((story, i) => {
+          const meta = [story.date, `ca. ${storyReadingMinutes(story.text)} Min. Lesezeit`].filter(Boolean).join(' · ');
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'story-item';
+          btn.innerHTML = `
+            <span class="story-item__title">${escapeHtml(story.title)}</span>
+            <span class="story-item__teaser">${escapeHtml(storyTeaser(story))}</span>
+            <span class="story-item__meta">${escapeHtml(meta)}</span>`;
+          btn.addEventListener('click', () => openStory(i));
+          items.appendChild(btn);
+        });
+      }
+      showStoriesView('list');
+    }
+
+    function applyStoryFontSize(){
+      const size = (1.1 + storiesFontStep * 0.1).toFixed(2) + 'rem';
+      document.getElementById('storyReader').style.setProperty('--story-size', size);
+      document.getElementById('storySizeDown').disabled = storiesFontStep <= -1;
+      document.getElementById('storySizeUp').disabled = storiesFontStep >= 4;
+    }
+
+    function openStory(index){
+      const cat = CONFIG.geschichten[storiesCurrentCat];
+      const story = cat.stories[index];
+      storiesCurrentIndex = index;
+      const reader = document.getElementById('storyReader');
+      reader.className = 'story-reader story-reader--' + (cat.theme || 'default');
+      document.getElementById('storyReaderCat').textContent = `${cat.icon} ${cat.title}`;
+      document.getElementById('storyReaderTitle').textContent = story.title;
+      document.getElementById('storyReaderMeta').textContent =
+        [story.date, `ca. ${storyReadingMinutes(story.text)} Min. Lesezeit`].filter(Boolean).join(' · ');
+      document.getElementById('storyReaderBody').classList.toggle('has-dropcap', /^[A-Za-zÄÖÜäöü0-9]/.test(story.text.trim()));
+      document.getElementById('storyReaderBody').innerHTML = story.text
+        .split(/\n\s*\n/).map(part => part.trim()).filter(Boolean)
+        .map(part => `<p>${escapeHtml(part).replace(/\n/g, '<br>')}</p>`).join('');
+      document.getElementById('storyPrev').disabled = index === 0;
+      document.getElementById('storyNext').disabled = index === cat.stories.length - 1;
+      applyStoryFontSize();
+      showStoriesView('reader');
+    }
+
+    document.getElementById('storiesBackToCats').addEventListener('click', () => {
+      storiesCurrentCat = null;
+      showStoriesView('categories');
+    });
+    document.getElementById('storiesBackToList').addEventListener('click', () => openStoryCategory(storiesCurrentCat));
+    document.getElementById('storyPrev').addEventListener('click', () => { if(storiesCurrentIndex > 0) openStory(storiesCurrentIndex - 1); });
+    document.getElementById('storyNext').addEventListener('click', () => {
+      if(storiesCurrentIndex < CONFIG.geschichten[storiesCurrentCat].stories.length - 1) openStory(storiesCurrentIndex + 1);
+    });
+    document.getElementById('storySizeDown').addEventListener('click', () => { if(storiesFontStep > -1){ storiesFontStep--; applyStoryFontSize(); } });
+    document.getElementById('storySizeUp').addEventListener('click', () => { if(storiesFontStep < 4){ storiesFontStep++; applyStoryFontSize(); } });
+
+    /* Beim Ausschalten des 18-Modus nicht in einer 18+-Kategorie hängen bleiben */
+    function refreshStoriesForMode(on){
+      if(!on && storiesCurrentCat && CONFIG.geschichten[storiesCurrentCat].alt){
+        storiesCurrentCat = null;
+        showStoriesView('categories');
+      }
+    }
+
+    renderStoryCategories();
+
     /* --- Briefe: "Öffne mich, wenn ..." --- */
     const lettersGrid = document.getElementById('lettersGrid');
     CONFIG.letters.forEach(letter => {
@@ -3116,62 +3787,9 @@
       setTimeout(() => { letterReader.hidden = true; }, 350);
     }
     futureLetterBtn.addEventListener('click', openFutureLetter);
+    document.getElementById('letterSecretHeart').addEventListener('click', () => showSecretCode('93785'));
     letterReader.addEventListener('click', e => { if(e.target.closest('[data-close]')) closeFutureLetter(); });
     document.addEventListener('keydown', e => { if(e.key === 'Escape' && !letterReader.hidden) closeFutureLetter(); });
-
-    let letterStackReady = false;
-    function setupLetterStack(){
-      const items = Array.from(lettersGrid.children);
-      if(items.length === 0) return;
-      const baseTop = items[0].offsetTop;
-      items.forEach((item, i) => {
-        const offset = item.offsetTop - baseTop;
-        item.style.setProperty('--stack-offset', `${-offset}px`);
-        item.style.setProperty('--stack-rotate', `${(i % 2 === 0 ? -1 : 1) * (3 + (i % 3))}deg`);
-        item.style.transitionDelay = `${(items.length - 1 - i) * 70}ms`;
-        item.style.transition = 'none';
-      });
-      lettersGrid.classList.add('is-stacked');
-      void lettersGrid.offsetHeight;
-      items.forEach(item => { item.style.transition = ''; });
-      letterStackReady = true;
-    }
-    
-    function createLetterRainOverlay(){
-      const overlay = document.createElement('div');
-      overlay.className = 'letter-rain-overlay';
-      const positions = [8, 25, 42, 58, 75, 92];
-      positions.forEach((pos, i) => {
-        const letterContainer = document.createElement('div');
-        letterContainer.className = 'falling-letter';
-        letterContainer.innerHTML = '<div class="falling-letter-shape"></div>';
-        letterContainer.style.left = pos + '%';
-        letterContainer.style.top = '-150px';
-        letterContainer.style.setProperty('--letter-rot', (Math.random() * 40 - 20) + 'deg');
-        letterContainer.style.animationDelay = (i * 180) + 'ms';
-        overlay.appendChild(letterContainer);
-      });
-      document.body.appendChild(overlay);
-      return overlay;
-    }
-    
-    lettersGrid.addEventListener('click', e => {
-      if(lettersGrid.classList.contains('is-stacked')){
-        e.stopPropagation();
-        const overlay = createLetterRainOverlay();
-        setTimeout(() => {
-          lettersGrid.innerHTML = `<div class="letters-empty-view">
-            <span class="letters-empty-view__icon">💌</span>
-            <h3 class="letters-empty-view__title">Schau öfters vorbei</h3>
-            <p class="letters-empty-view__text">Bald wird hier noch etwas <span id="schoenesWord">Schönes</span> auf dich warten. ✨</p>
-          </div>`;
-          lettersGrid.classList.remove('is-stacked');
-          futureLetterBtn.hidden = false;
-          futureLetterBtn.classList.add('is-revealed');
-        }, 750);
-        setTimeout(() => overlay.remove(), 1600);
-      }
-    }, true);
 
     /* --- Australien: Zeitzone & Countdown --- */
     function getOffsetMinutes(timeZone, reference){
@@ -3669,6 +4287,7 @@
       if(value === '18' || value === '0'){
         const on = value === '18';
         document.body.classList.toggle('mode-alt', on);
+        refreshStoriesForMode(on);
         if(!on){
           const activeAlt = document.querySelector('.subtab--alt.is-active');
           if(activeAlt){
